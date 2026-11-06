@@ -22,11 +22,30 @@ need.
 ## Install in a project
 
 ```bash
-./install.sh /path/to/target-repository
+./install.sh /path/to/target-repository            # install, or update an installed project
+./install.sh --dry-run /path/to/target-repository  # only show what would change
 ```
 
-The script copies the three folders (keeping the symbolic link) and regenerates
-`.claude/agents`. It stops if any of them already exists in the target.
+The script installs only committed files: it stops if `.agents`, `.claude` or `.codex` have
+uncommitted changes in this repository. It copies the three folders as they are, including
+`.claude/agents`, and links `.claude/skills` to `.agents/skills`. When the project already has a
+`.claude/skills` folder, it links each missing skill inside it instead, leaves the project's own
+skills alone, and removes the links of skills that no longer exist. It records every installed
+file and its hash in `.agents/.install-manifest.json`, so running it again updates the project:
+
+- The target must be a Git repository with no uncommitted changes in `.agents`, `.claude` or
+  `.codex`, so every change can be reviewed with `git diff` and reverted with `git checkout`.
+- Files changed here and untouched in the target are updated. Files removed here, for example
+  after a skill reorganization, are deleted.
+- Files changed in both places are overwritten and listed as conflicts; restore the project's
+  version with `git checkout -- <file>` if needed. Files changed or deleted only in the target
+  are kept as they are.
+- Files the manifest does not list, such as the project's own skills, are never touched.
+  `.claude/settings.json` and `.codex/config.toml` are installed only when absent.
+- It shows a summary and asks before changing anything; `--yes` skips that confirmation.
+- A project installed by an older version of the script has no manifest. Every file that differs
+  is then overwritten as a conflict, and old files no longer in this repository are listed but
+  not deleted.
 
 Then, in the target repository:
 
