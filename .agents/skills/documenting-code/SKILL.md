@@ -1,6 +1,6 @@
 ---
 name: documenting-code
-description: Add or update documentation attached to source code and generate language-specific documentation artifacts. Use when the user requests code or API documentation, or during a release that changes documented public interfaces. Do not use for README files, changelogs, or general product documentation.
+description: Add or update documentation attached to source code and generate language-specific documentation artifacts. Use when the user requests code or API documentation, in the documentation phase of an approved analysis plan, or during a release that changes documented public interfaces. Do not use for README files, changelogs, or general product documentation.
 ---
 
 # Documenting Code
@@ -20,7 +20,12 @@ Apply conventions in this order:
 3. Supplied Markdown profiles.
 4. This skill's generic rules.
 
-Use [references/r.md](references/r.md) for R when applicable. Additional profiles may be supplied without modifying this skill.
+## Bundled profiles
+
+- Language profiles, whenever the documented files use that language: [R](references/R.md),
+  [Python](references/python.md), and [Bash](references/bash.md).
+- Scripts, shared functions, and reports of an analysis plan: additionally the
+  [analysis guidelines](analysis.md), which take precedence where stricter.
 
 ## Workflow
 

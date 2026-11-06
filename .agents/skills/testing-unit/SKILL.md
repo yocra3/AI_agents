@@ -7,8 +7,18 @@ description: Write, run, and interpret tests for one component or behavior using
 
 Resolve `{Root_Folder}` and any test folders or commands from global project instructions.
 Load supplied Markdown language or framework profiles before choosing syntax or commands.
-For Nextflow implementation plans and their reference implementations, also load
-[Nextflow component testing](./nextflow.md).
+
+## Bundled profiles
+
+- Language profiles, whenever tests are written in that language:
+  [R and R Markdown](references/R.md), [Python](references/python.md), and
+  [Bash](references/bash.md).
+- Nextflow implementation plans and their reference implementations: also
+  [Nextflow component testing](references/nextflow.md); for nf-core module or subworkflow
+  nf-tests, also [module testing](references/nf-core/testing_modules.md) or
+  [subworkflow testing](references/nf-core/testing_subworkflows.md).
+- Analysis plans: additionally the [analysis testing rules](analysis.md), which take precedence
+  where stricter.
 
 ## TDD evidence
 

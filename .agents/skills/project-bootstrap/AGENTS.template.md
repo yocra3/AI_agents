@@ -8,6 +8,13 @@
 - **Briefing_file**: {Briefing_file}
 - **Specs_Folder**: {Specs_Folder}
 - **Plans_Folder**: {Plans_Folder}
+- **Analysis_Plans_Folder**: {Analysis_Plans_Folder}
+- **Analysis_Scripts_Folder**: {Analysis_Scripts_Folder}
+- **Analysis_Tests_Folder**: {Analysis_Tests_Folder}
+- **Analysis_Reports_Folder**: {Analysis_Reports_Folder}
+- **Analysis_Results_Folder**: {Analysis_Results_Folder}
+- **Analysis_Figures_Folder**: {Analysis_Figures_Folder}
+- **Analysis_Test_Data_Folder**: {Analysis_Test_Data_Folder}
 
 ## Product Overview
 
@@ -44,6 +51,13 @@
 ```text
 {Folder_Structure}
 ```
+
+### Analysis workflow
+
+`data_analyst` writes analysis plans in `{Analysis_Plans_Folder}` and leaves them at `Draft`.
+`analysis_coordinator` executes a plan only after the user explicitly approves its exact path and
+version. Both run as main sessions. Omit this section and the `Analysis_*` keys when the project
+has no analysis workflow.
 
 ## Environment
 - **OS dev**: {Development_OS}

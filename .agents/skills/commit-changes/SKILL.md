@@ -1,6 +1,6 @@
 ---
 name: commit-changes
-description: Create reviewed local commits when requested or after an active builder verifies a completed implementation or direct-import cycle. Never publish or rewrite history.
+description: Create reviewed local commits when requested, after an active builder verifies a completed implementation or direct-import cycle, or at a green commit point of an active analysis_coordinator. Never publish or rewrite history.
 ---
 
 # Committing Changes Skill
@@ -8,6 +8,7 @@ description: Create reviewed local commits when requested or after an active bui
 Use this skill only when the user explicitly asks for a local commit or the active builder has
 verified a completed cycle. A normal cycle requires RED, GREEN and REFACTOR; a profile-authorized
 direct-import cycle requires successful import and validation without implementation delegates.
+An active analysis_coordinator commits only at the green commit points defined by its contract.
 
 Commit completed preparatory cycles before any later human review. Do not commit a failing or
 incomplete cycle. When authorized:

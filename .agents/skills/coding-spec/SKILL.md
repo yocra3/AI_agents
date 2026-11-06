@@ -15,11 +15,21 @@ Write the smallest clear change that preserves the repository's design and publi
 4. The general guidance below.
 
 Load only profiles relevant to the changed files. The caller may provide any Markdown profile,
-and polyglot changes may provide more than one. For Nextflow scripts and configuration, use
-[Nextflow](./nextflow.md) together with [Groovy](./groovy.md). For nf-core pipelines, modules,
-and subworkflows, also use the [nf-core guidelines](./nf-core.md). For standalone Groovy code,
-use [Groovy](./groovy.md). For a preparatory reference implementation of a Nextflow contract,
-also use [Nextflow reference implementation](./nextflow-reference.md).
+and polyglot changes may provide more than one.
+
+## Bundled profiles
+
+- Language guidelines, whenever the changed files use that language: [R](references/R.md),
+  [R Markdown](references/rmarkdown.md) together with [R](references/R.md),
+  [Python](references/python.md), [Bash](references/bash.md), and [Groovy](references/groovy.md).
+- Nextflow scripts and configuration: [Nextflow](references/nextflow.md) together with
+  [Groovy](references/groovy.md).
+- nf-core modules and subworkflows: also the [nf-core guidelines index](references/nf-core.md),
+  which selects the files in `nextflow_guidelines/`.
+- Preparatory reference implementation of a Nextflow contract: also
+  [Nextflow reference implementation](nextflow-reference.md).
+- Scripts, reports, and configurations of an analysis plan: additionally the
+  [analysis guidelines](analysis.md).
 
 ## General guidance
 

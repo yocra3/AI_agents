@@ -11,6 +11,11 @@
 - Keep documentation on the public contract; do not narrate obvious implementation details.
 - Treat `NAMESPACE` and `man/*.Rd` as generated artifacts unless repository instructions say otherwise.
 
+## Scripts outside a package
+
+- Place a `#` header comment block at the top of every script, after any shebang, with its purpose, usage, inputs, and outputs.
+- Document sourced functions with roxygen-style `#'` comments: a title line, `@param`, and `@return`. They are not generated into `man/`.
+
 ## Generation
 
 Use the repository command when defined. Otherwise, prefer one of:

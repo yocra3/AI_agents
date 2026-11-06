@@ -17,7 +17,7 @@ The plan will be a set of ordered steps, each with specific tasks to complete.
 Each source specification owns one plan. Resolve an existing plan by its specification identifier
 or path before choosing an output path.
 
-For Nextflow work, also load [Nextflow planning](./nextflow.md) and [test-data discovery](./test_data.md).
+For Nextflow work, also load [Nextflow planning](references/nextflow.md) and [test-data discovery](./test_data.md).
 ## Steps to follow:
 
 ### Step 1: Think about the overall implementation.

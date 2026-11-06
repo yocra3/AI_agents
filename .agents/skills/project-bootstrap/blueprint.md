@@ -13,6 +13,24 @@ Define these values in the project's global agent instructions.
 - `{Specs_Folder}`: feature, fix, and maintenance specifications folder.
 - `{Plans_Folder}`: implementation plans folder.
 
+## Analysis workflow
+
+Required only when the project uses `data_analyst` and `analysis_coordinator`:
+
+- `{Analysis_Plans_Folder}`: analysis plans, named `analysis-<slug>.md`. It must not be, or be
+  inside, `{Specs_Folder}` or `{Plans_Folder}`.
+- `{Analysis_Scripts_Folder}`: tracked computation scripts and configurations, one
+  `<analysis-id>/` subfolder per analysis.
+- `{Analysis_Tests_Folder}`: tracked analysis tests, separate from the scripts, one
+  `<analysis-id>/` subfolder per analysis; test run outputs go to its ignored `results/` subfolder.
+- `{Analysis_Reports_Folder}`: tracked report sources; rendered reports go to ignored
+  `<analysis-id>/vN/` subfolders.
+- `{Analysis_Results_Folder}` and `{Analysis_Figures_Folder}`: ignored `<analysis-id>/vN/` outputs.
+- `{Analysis_Test_Data_Folder}`: ignored test subsets, below `{Project_Folder}`.
+
+The analysis profiles also require execution rules in `{Agents_file}` that state how to run
+commands in a plan's container image.
+
 ## Common derivations
 
 - `{Briefing_file}` commonly resolves to `{Project_Folder}/briefing.md`.
