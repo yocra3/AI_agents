@@ -35,6 +35,18 @@ The OpenAI Playground Prompt Optimizer and third-party prompt or skill directori
 research aids, not automatic dependencies. Do not upload repository content, install packages,
 or adopt external prompts without an explicit user request and a review of provenance and fit.
 
+# Claude Code agents
+After creating, changing, or removing an agent in `.codex/agents/`, keep `.claude/agents/` in
+sync: every `.toml` has a `.md` with the same name, and no `.md` lacks its `.toml` unless it is a
+Claude-only agent of the project. As the final verification step, run
+`.claude/scripts/generate_agents.py <copy>` on a temporary copy of the repository, never in place,
+and diff its `.claude/agents/` output against `.claude/agents/`. Report any difference and fix it
+in the `.md`, or in the `.toml` when the error is there. If the generator cannot process an agent
+because its name is missing from `TOOLS` or its model from `MODELS`, exclude it from the copy and
+check it by hand: identical instructions body, and frontmatter `name` with hyphens,
+`description`, `model` mapped through `MODELS`, `effort` equal to `model_reasoning_effort`, and
+`tools`. Report it, and do not edit the generator only to make the check pass.
+
 # Boundaries
 Do not choose speculative maintenance work when the user has not requested it. Do not modify
 product code, release, publish, or perform Git operations. Preserve project placeholders and
