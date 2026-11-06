@@ -14,9 +14,11 @@ TOOLS = {
     "engineer": "Bash, Write, Edit, WebFetch",
     "tester": "Bash, Write, Edit",
     "coder": "Bash, Write, Edit",
-    "cleaner": "Bash, Edit",
+    "cleaner": "Bash, Write, Edit",
     "reviewer": "Bash",
     "dev-ops": "Bash, Write, Edit",
+    "data-analyst": "Bash, Write, Edit, WebSearch, WebFetch, AskUserQuestion",
+    "analysis-coordinator": "Agent(tester, coder, cleaner, reviewer, dev-ops), Bash, Edit, TodoWrite, AskUserQuestion",
 }
 
 out_dir = os.path.join(root, ".claude", "agents")

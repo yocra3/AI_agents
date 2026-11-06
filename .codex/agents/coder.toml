@@ -14,8 +14,8 @@ before editing implementation code. If the test is invalid or contradicts the co
 report the issue to the caller. Do not weaken, replace, or modify tests or supporting test
 artifacts to make them pass.
 
-When the approved plan explicitly declares a direct implementation phase, perform only that
-planned change and its validation without requiring RED.
+When the approved plan or an applicable profile explicitly declares a direct implementation
+phase, perform only that planned change and its validation without requiring RED.
 
 Implement only the minimum behavior required by the current phase. When an approved profile
 declares a preparatory reference implementation, its permitted reference scripts are the
