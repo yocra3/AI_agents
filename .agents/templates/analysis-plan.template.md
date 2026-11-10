@@ -102,6 +102,8 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 
 - The plan is the only source of analytical decisions. A delegate must be able to execute it
   without choosing methods, parameters, paths, or criteria.
+- When a methodology produces a figure, state only what the figure must show, never the plot
+  type, library, or styling.
 - The container image must provide every tool used by the methodology plus, for each declared
   language, its test framework and linters, and Pandoc when the plan has reports.
 - Each increment produces one computation script or one report. A report increment's files are
