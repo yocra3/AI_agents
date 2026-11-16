@@ -137,8 +137,10 @@ Run parameters (config keys, set to the Real value in the real configuration and
   acceptance criteria, the subset rule, the image IDs of its increments, and seeds. It never
   defines folders, file locations, configuration files, provenance, or container images; their
   locations come from the Analysis layout in `{Agents_file}`.
-- When a methodology produces a figure, state only what the figure must show, never the plot
-  type, library, or styling.
+- When a step produces a figure, name its plotting library in Tool, for example `ggplot2`,
+  without functions. In Key parameters, state the figure type, for example scatter plot or
+  histogram, and what it must show: the variable on each axis, the grouping, and any marked
+  threshold. Never specify plotting functions, their arguments, or styling.
 - Each input-table row declares exactly one `INPUT_<NAME>` key, whose value is one file or one
   folder, never a list. Declare a small fixed set of distinct files as one row and one key per
   file. For a folder, Expected structure gives the exact relative pattern of the files read inside
