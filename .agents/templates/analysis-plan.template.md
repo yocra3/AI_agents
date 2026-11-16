@@ -24,6 +24,12 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 | --- | --- | --- | --- | --- |
 | `<name>` | `INPUT_<NAME>` | `<exact path to one file or one folder>` | `<format and compression>` | `<fields or columns with types, identifiers, relationships to other inputs; for a folder, the relative pattern of the files read and what to ignore>` |
 
+Run parameters (config keys, set to the Real value in the real configuration and to the Test value in the test configuration; the values are equal unless stated):
+
+| Parameter | Config key | Real value | Test value |
+| --- | --- | --- | --- |
+| `<meaning, including the comparison: strictly greater than, >=, ...>` | `<KEY>` | `<value>` | `<value>` |
+
 ## Methodology
 
 <!-- Analysis step. -->
@@ -32,7 +38,17 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 
 - **Tool**: `<package::function, or tool and subcommand>`
 - **Inputs**: `<inputs or upstream outputs>`
-- **Key parameters**: `<name = value, including any value that differs from the tool default>`
+- **Key parameters**: `<name = value, including any value that differs from the tool default; a Run parameters key by name only>`
+- **Filters**: `<rule and threshold, or none>`
+- **Model and covariates**: `<design or formula, or not-applicable>`
+- **Multiple-testing correction**: `<method and scope, or not-applicable>`
+- **Seed**: `<integer, or not-applicable>`
+
+### M2: <step title>
+
+- **Tool**: `<package::function, or tool and subcommand>`
+- **Inputs**: `<inputs or upstream outputs>`
+- **Key parameters**: `<name = value, including any value that differs from the tool default; a Run parameters key by name only>`
 - **Filters**: `<rule and threshold, or none>`
 - **Model and covariates**: `<design or formula, or not-applicable>`
 - **Multiple-testing correction**: `<method and scope, or not-applicable>`
@@ -40,10 +56,14 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 
 <!-- Report step: one per report increment. -->
 
-### M2: <report title>
+### M3: <report title>
 
-- **Tool**: `<rendering tool and function>`
+- **Tool**: `<rendering tool and function, and the tools of its inline analyses>`
 - **Inputs**: `<files in RESULTS_DIR and FIGURES_DIR>`
+- **Key parameters**: `<as in an analysis step, or not-applicable>`
+- **Filters**: `<rule and threshold, or none>`
+- **Model and covariates**: `<design or formula, or not-applicable>`
+- **Multiple-testing correction**: `<method and scope, or not-applicable>`
 - **Sections**:
   1. `<exact heading>`: <content it holds>
   2. `<exact heading>`: <content it holds>
@@ -100,7 +120,7 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 ## Test subset
 
 - **Rule**: `<deterministic rule deriving the subset from the inputs, with seed if sampled>`
-- **Justification**: `<why every subset increment produces meaningful output on it>`
+- **Justification**: `<why every subset increment produces meaningful output on it, and why the subset needs each Test value that differs from its Real value>`
 
 ## Changes since the last approval
 
@@ -124,12 +144,13 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
   file. For a folder, Expected structure gives the exact relative pattern of the files read inside
   it, for example `<cohort>/results/08/inversionsSummary.txt`, and anything that must be ignored.
   Do not use manifest files.
+- Declare in Run parameters every parameter whose Test value differs from its Real value or that more than one step uses.
 - Every `Image` ID must exist, with its digest, in `{Analysis_Images_file}` before the plan is
   approved.
 - A methodology step is either an analysis step or a report step. An analysis step has Tool,
   Inputs, Key parameters, Filters, Model and covariates, Multiple-testing correction, and Seed. A
-  report step has only Tool, Inputs, and Sections: a numbered list, in order, where each item is
-  the exact section heading followed by the content it holds.
+  report step has the same fields except Seed, plus Sections: a numbered list, in order, where
+  each item is the exact section heading followed by the content it holds.
 - Each increment produces one computation script or one report. `Files` lists file names only;
   their folders come from `{Analysis_Script_file}` and `{Analysis_Report_Source_file}`. A report
   increment's files are its `.Rmd` source and its render script, with the same `NN` and slug.
@@ -156,12 +177,12 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
   `RESULTS_DIR/de-results.tsv`. Never depend on analysis results, such as a number of significant
   genes, or on subset sizes, such as a fixed number of rows.
 - Every acceptance criterion maps to exactly one increment, and every increment has at least one.
-- Each report increment has exactly one report step. Its acceptance criterion refers to that
-  step's Sections, for example "contains the sections of M2, in order", instead of listing the
-  headings again. A report increment MAY also be assigned analysis steps for figures drawn inline
-  in the report and for simple, cheap analyses of files in `RESULTS_DIR` and `FIGURES_DIR`.
-  Assign costly computations and every definitive figure, saved in `FIGURES_DIR`, to computation
-  increments. Reports never interpret, conclude, or discuss.
+- Each report increment has exactly one methodology step, its report step, which also defines
+  the figures drawn inline and the simple, cheap, deterministic analyses of files in
+  `RESULTS_DIR` and `FIGURES_DIR` that the report computes. Its acceptance criterion refers to
+  that step's Sections, for example "contains the sections of M3, in order", instead of listing
+  the headings again. Assign costly or random computations and every definitive figure, saved in
+  `FIGURES_DIR`, to computation increments. Reports never interpret, conclude, or discuss.
 - Expected outputs list only the analysis's own outputs, never provenance files. `RESULTS_DIR`,
   `FIGURES_DIR`, and `REPORTS_DIR` resolve to the plan version's
   `{Analysis_Results_Version_Folder}`, `{Analysis_Figures_Version_Folder}`, and
@@ -179,7 +200,7 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
   removal tasks are complete may be deleted.
 - On every revision, reset to pending the markers of the modified increments and of every
   Finalization phase. Also reset `tester: test-setup` and `coder: real-config` when the input
-  data, the subset rule, or the version changes, and `coder: renumber` when a new version changes
+  data, the run parameters, the subset rule, or the version changes, and `coder: renumber` when a new version changes
   any increment number. Unmodified increments keep their markers, including renumbered ones; at a
   new version their tests run again on the regenerated subset.
 - Within a version, never renumber increments; append new increments at the end. An increment that
