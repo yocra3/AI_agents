@@ -1,5 +1,27 @@
 {
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-5-5"
+  },
+  "permissions": {
+    "deny": [
+      "Bash(*tu run*)",
+      "Bash(*tu\" run*)",
+      "Bash(*tu test*)",
+      "Bash(*tu\" test*)",
+      "Bash(*tu serve*)",
+      "Bash(*tu\" serve*)",
+      "Bash(*tu connect*)",
+      "Bash(*tu\" connect*)",
+      "Bash(*tu disconnect*)",
+      "Bash(*tu\" disconnect*)",
+      "Bash(*tu remote*)",
+      "Bash(*tu\" remote*)",
+      "Bash(*tu build*)",
+      "Bash(*tu\" build*)",
+      "Bash(*tu doctor*)",
+      "Bash(*tu\" doctor*)",
+      "Bash(*tu status*)",
+      "Bash(*tu\" status*)"
+    ]
   }
 }
