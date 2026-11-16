@@ -2,7 +2,17 @@
 # Usage: python3 .claude/scripts/generate_agents.py [repository-root]
 import glob, os, re, sys
 
-root = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+USAGE = "usage: python3 .claude/scripts/generate_agents.py [repository-root]"
+args = sys.argv[1:]
+if any(a in ("-h", "--help") for a in args):
+    print(USAGE)
+    sys.exit(0)
+if any(a.startswith("-") for a in args) or len(args) > 1:
+    sys.exit(USAGE)
+root = args[0] if args else os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sources = sorted(glob.glob(os.path.join(root, ".codex", "agents", "*.toml")))
+if not sources:
+    sys.exit("error: no .toml agents in %s" % os.path.join(root, ".codex", "agents"))
 MODELS = {"gpt-6-sol": "claude-opus-5-5", "gpt-5.6-terra": "claude-sonnet-5-5", "gpt-6-luna": "claude-haiku-5-5"}
 BASE = "Read, Grep, Glob, Skill"
 TOOLS = {
@@ -23,7 +33,7 @@ TOOLS = {
 
 out_dir = os.path.join(root, ".claude", "agents")
 os.makedirs(out_dir, exist_ok=True)
-for path in sorted(glob.glob(os.path.join(root, ".codex", "agents", "*.toml"))):
+for path in sources:
     text = open(path).read()
     field = lambda k: re.search(r'^%s = "(.*)"$' % k, text, re.M).group(1)
     body = re.search(r'developer_instructions = """\n(.*?)"""', text, re.S).group(1)
