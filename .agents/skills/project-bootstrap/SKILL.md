@@ -19,6 +19,7 @@ not already exist.
 3. Render `{Agents_file}` from the template. Replace named content placeholders, include the
    observed folder structure, and omit optional fields that do not apply. Include the Analysis
    layout, with the blueprint's defaults, only when the project has an analysis workflow.
+   Include `ToolUniverse_CLI` only when the user gives its path.
 4. Confirm that the generated file contains no anonymous or unresolved template placeholders.
 5. Update `{Briefing_file}` with a short, feature-focused product summary.
 6. Create `{Root_Folder}/CHANGELOG.md` from the changelog template when it is absent. Never replace

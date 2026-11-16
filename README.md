@@ -87,9 +87,14 @@ flowchart TD
 ```
 
 - **The plan is the single source of analytical decisions**: it holds the inputs, methodology,
-  expected outputs, formal acceptance criteria, test subset rule and container images. Paths
-  come from the Analysis layout in the project's `AGENTS.md`. The coding and testing
-  conventions come from the `analysis.md` profiles.
+  expected outputs, formal acceptance criteria, test subset rule and the image of each
+  increment, by its ID in the project's container image registry. Paths come from the Analysis
+  layout in the project's `AGENTS.md`. The coding and testing conventions come from the
+  `analysis.md` profiles.
+- **Methodology**: `data_analyst` can search the
+  [ToolUniverse](https://github.com/mims-harvard/ToolUniverse) catalog to improve the definition
+  of the methodology, when the project declares `ToolUniverse_CLI` in `AGENTS.md`; see its
+  repository for installation.
 - **Agents never touch real data**:
   - They run every script on a deterministic test subset, inside its increment's container
     image.

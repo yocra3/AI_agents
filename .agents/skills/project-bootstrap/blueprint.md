@@ -32,6 +32,7 @@ Analysis layout section explains their role and pattern variables. Fill each wit
 unless the project confirms another layout, and keep the pattern variables as written.
 
 - `{Analysis_Plan_file}`: `{Analysis_Plans_Folder}/<analysis-id>.md`
+- `{Analysis_Images_file}`: `{Project_Folder}/container-images.md`
 - `{Analysis_Script_file}`: `{Analysis_Scripts_Folder}/<analysis-id>/<NN>-<slug>.<ext>`
 - `{Analysis_Shared_Functions_file}`: `{Analysis_Scripts_Folder}/<analysis-id>/functions.<ext>`
 - `{Analysis_Real_Config_file}`: `{Analysis_Scripts_Folder}/<analysis-id>/config/real.conf`
@@ -47,7 +48,12 @@ unless the project confirms another layout, and keep the pattern variables as wr
 - `{Analysis_Provenance_file}`: `<RESULTS_DIR>/<NN>-<slug>.provenance.tsv`
 
 The analysis profiles also require execution rules in `{Agents_file}` that state how to run a
-command in an increment's container image.
+command in an increment's container image, the `{Analysis_Images_file}` entry named by its `Image`
+ID.
+
+Optional `{ToolUniverse_CLI}`: path of the ToolUniverse `tu` executable, used by
+`searching-tooluniverse-catalog`. Required only when the project uses ToolUniverse. It has no
+default: include it only with the path the user gives, never a guessed or derived one.
 
 ## Common derivations
 

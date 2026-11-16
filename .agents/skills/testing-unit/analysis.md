@@ -5,7 +5,8 @@ acceptance criteria of the plan through output files. They never validate experi
 Tests, the execution runner, and the test-subset script live in `{Analysis_Test_Code_Folder}`,
 and every other path comes from the Analysis layout keys in `{Agents_file}`. Read the increment,
 its acceptance criteria, and its verification mode from the plan. Under the execution rules in
-`{Agents_file}`, each increment's scripts and checks run in the increment's image (`Image`).
+`{Agents_file}`, each increment's scripts and checks run in the increment's image, the
+`{Analysis_Images_file}` entry named by its `Image` ID.
 
 ## Allowed and forbidden checks
 

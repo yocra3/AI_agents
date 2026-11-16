@@ -24,12 +24,6 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 | --- | --- | --- | --- | --- |
 | `<name>` | `INPUT_<NAME>` | `<exact path to one file or one folder>` | `<format and compression>` | `<fields or columns with types, identifiers, relationships to other inputs; for a folder, the relative pattern of the files read and what to ignore>` |
 
-## Container images
-
-| ID | Image | Purpose |
-| --- | --- | --- |
-| `r` | `<URI with digest or pinned tag>` | R analysis |
-
 ## Methodology
 
 <!-- Analysis step. -->
@@ -75,7 +69,7 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 
 - **Kind**: `<computation | report>`
 - **Language**: `<R | R Markdown | Python | Bash>`
-- **Image**: `<ID>`
+- **Image**: `<ID from {Analysis_Images_file}>`
 - **Verification**: `<subset | post-run>`
 - **Files**: `<NN>-<slug>.<ext>`
 - **Methodology**: `<M1, M2>`
@@ -120,9 +114,9 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 - The plan is the only source of analytical decisions. A delegate must be able to execute it
   without choosing methods, parameters, input paths, outputs, or criteria.
 - The plan holds only what is specific to the analysis: inputs, methodology, its own outputs,
-  acceptance criteria, the subset rule, the container images, and seeds. It never defines folders,
-  file locations, configuration files, or provenance; their locations come from the Analysis layout
-  in `{Agents_file}`.
+  acceptance criteria, the subset rule, the image IDs of its increments, and seeds. It never
+  defines folders, file locations, configuration files, provenance, or container images; their
+  locations come from the Analysis layout in `{Agents_file}`.
 - When a methodology produces a figure, state only what the figure must show, never the plot
   type, library, or styling.
 - Each input-table row declares exactly one `INPUT_<NAME>` key, whose value is one file or one
@@ -130,9 +124,8 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
   file. For a folder, Expected structure gives the exact relative pattern of the files read inside
   it, for example `<cohort>/results/08/inversionsSummary.txt`, and anything that must be ignored.
   Do not use manifest files.
-- Each container image has a short ID and a Purpose of a few words. Each image provides the tools
-  of the increments whose `Image` names it and, for their language, the test framework and the
-  linter. The image of a report increment also provides rmarkdown and Pandoc.
+- Every `Image` ID must exist, with its digest, in `{Analysis_Images_file}` before the plan is
+  approved.
 - A methodology step is either an analysis step or a report step. An analysis step has Tool,
   Inputs, Key parameters, Filters, Model and covariates, Multiple-testing correction, and Seed. A
   report step has only Tool, Inputs, and Sections: a numbered list, in order, where each item is

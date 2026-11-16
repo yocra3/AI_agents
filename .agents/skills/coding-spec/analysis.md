@@ -69,8 +69,9 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
 ## Phases
 
 Read the increment, its files, its image, and its methodology from the plan. Run every command
-of an increment phase in the increment's image (`Image`) under the execution rules in
-`{Agents_file}`; `renumber`, `real-config`, and `remove-code` only move, write, or delete files.
+of an increment phase in the increment's image, the `{Analysis_Images_file}` entry named by its
+`Image` ID, under the execution rules in `{Agents_file}`; `renumber`, `real-config`, and
+`remove-code` only move, write, or delete files.
 Lint each script in its increment's image, each test file in the image of the increment it tests,
 and each `{Analysis_Shared_Functions_file}` in the image of any increment of its language.
 Every phase except `subset-implementation`, which follows tester's RED, is a direct phase.

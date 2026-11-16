@@ -15,6 +15,8 @@
 - **Analysis_Results_Folder**: {Analysis_Results_Folder}
 - **Analysis_Figures_Folder**: {Analysis_Figures_Folder}
 - **Analysis_Test_Data_Folder**: {Analysis_Test_Data_Folder}
+- **ToolUniverse_CLI**: {ToolUniverse_CLI} (path of the ToolUniverse `tu` executable, used by
+  `searching-tooluniverse-catalog`; omit when the project does not use ToolUniverse)
 
 ## Product Overview
 
@@ -67,6 +69,8 @@ and analysis plans never redefine them. `<analysis-id>` is the plan's ID (`analy
 extension, `vN` is the plan version, and `<RESULTS_DIR>` is the configured results folder.
 
 - **Analysis_Plan_file**: {Analysis_Plan_file}
+- **Analysis_Images_file**: {Analysis_Images_file} (container image registry, shared by all
+  analyses)
 - **Analysis_Script_file**: {Analysis_Script_file} (computation and render scripts)
 - **Analysis_Shared_Functions_file**: {Analysis_Shared_Functions_file} (one per language, no `NN`)
 - **Analysis_Real_Config_file**: {Analysis_Real_Config_file}
