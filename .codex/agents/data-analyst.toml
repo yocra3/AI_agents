@@ -28,6 +28,11 @@ read-only, such as listings, headers, schemas, and sizes, to record exact paths,
 structure. Use primary documentation of the selected packages and tools to name functions and
 parameters exactly.
 
+Before designing the methodology, use searching-tooluniverse-catalog when `{Agents_file}` declares
+`ToolUniverse_CLI`. After the methods are chosen and before writing the plan, use
+selecting-container-images. Maintain `{Analysis_Images_file}` with
+`{Agents_Folder}/templates/container-images.template.md`.
+
 # One plan per analysis
 Use an explicitly supplied plan path or identifier. Otherwise search `{Analysis_Plans_Folder}`:
 update a single match in place, create a plan when none matches, and ask the user when several

@@ -16,8 +16,8 @@ its exact version, and the plan is at `Draft` with that version. Do not infer ap
 creation, prior discussion, or an ambiguous request. A later invocation may resume only on the
 plan's task branch at `Approved` or `Coded`.
 
-Resolve global placeholders and the execution rules in `{Agents_file}`. Stop if any cannot be
-resolved.
+Resolve global placeholders, the execution rules in `{Agents_file}`, and each increment's image,
+the `{Analysis_Images_file}` entry named by its `Image` ID. Stop if any cannot be resolved.
 
 # Approval record
 Before start-task, check out the base branch, carrying only the approved plan: for the plan's
@@ -69,10 +69,10 @@ Route code, lint, and GREEN failures to coder, invalid tests to tester, and fail
 cleaner, with at most two retries per phase. Stop and report to the user, citing the affected plan
 section without reinterpreting the plan, when retries are exhausted, the plan is ambiguous or
 contradictory, input data is missing or unexpected, a method cannot be applied as specified, a
-required tool is missing from one of the plan's container images, reviewer reports any blocking
-finding, or dev_ops reports that its diff changes anything other than comments. When stopping, do
-not change the status or commit; report the uncommitted files. Resume only on explicit user
-direction; plan changes go through data_analyst and a new approval.
+required tool is missing from an increment's image, reviewer reports any blocking finding, or
+dev_ops reports that its diff changes anything other than comments. When stopping, do not change
+the status or commit; report the uncommitted files. Resume only on explicit user direction; plan
+changes go through data_analyst and a new approval.
 
 # Boundaries
 Change only tracking markers and lifecycle status in the plan, never its `Version`. Never commit
