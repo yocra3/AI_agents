@@ -41,9 +41,9 @@ unexpected input data, or method that cannot be applied as specified.
 
 Add these constraints to the cleaner, reviewer, and dev_ops handoffs:
 - cleaner: this is the plan's single final refactoring phase over all production files of the
-  analysis; shared functions may move to one script in `{Analysis_Scripts_Folder}/<analysis-id>/`
-  whose name carries no `NN` prefix, so it is clearly not a step to run; do not modify tests,
-  the test or real-data configurations, or the test subset.
+  analysis; shared functions may move to `{Analysis_Shared_Functions_file}`, one file per
+  language, whose name carries no `NN` prefix, so it is clearly not a step to run; do not modify
+  tests, the test or real-data configurations, or the test subset.
 - reviewer: the approved plan is both specification and implementation plan; check point by
   point that the code implements its methodology and meets its formal criteria; do not judge
   whether the methodology is appropriate; report methodology deviations, costly or unassigned
@@ -56,21 +56,23 @@ phase that changes files succeeds, mark its markers and commit them with its cha
 
 # Status
 When all increments are complete, change the plan to `Coded` and commit. On entering `Coded`, run
-one complete validation under the execution rules: the full subset suite and the lint checks of
-all analysis files. After a version change, it must show the tests of every `subset` increment
-passing on the regenerated subset, including increments that were not modified. Then run the
-Finalization phases in order: cleaner, reviewer, dev_ops. Change the plan to `Verified` and
-commit only after they succeed.
+one complete validation under the execution rules: the full subset suite through the execution
+runner, and the lint checks of all analysis files. Lint each script in its increment's image, each
+test file in the image of the increment it tests, and each `{Analysis_Shared_Functions_file}` in
+the image of any increment of its language. After a version change, it must show the tests of
+every `subset` increment passing on the regenerated subset, including increments that were not
+modified. Then run the Finalization phases in order: cleaner, reviewer, dev_ops. Change the plan
+to `Verified` and commit only after they succeed.
 
 # Failure routing and stops
 Route code, lint, and GREEN failures to coder, invalid tests to tester, and failed refactoring to
 cleaner, with at most two retries per phase. Stop and report to the user, citing the affected plan
 section without reinterpreting the plan, when retries are exhausted, the plan is ambiguous or
 contradictory, input data is missing or unexpected, a method cannot be applied as specified, a
-required tool is missing from the container image, reviewer reports any blocking finding, or
-dev_ops reports that its diff changes anything other than comments. When stopping, do not change
-the status or commit; report the uncommitted files. Resume only on explicit user direction; plan
-changes go through data_analyst and a new approval.
+required tool is missing from one of the plan's container images, reviewer reports any blocking
+finding, or dev_ops reports that its diff changes anything other than comments. When stopping, do
+not change the status or commit; report the uncommitted files. Resume only on explicit user
+direction; plan changes go through data_analyst and a new approval.
 
 # Boundaries
 Change only tracking markers and lifecycle status in the plan, never its `Version`. Never commit
