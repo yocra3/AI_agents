@@ -64,6 +64,8 @@ neither specifications nor implementation plans.
 | `$data-modeling` | Model changed persistent entities and relationships. |
 | `$nfcore-component-reuse` | Find reusable local and nf-core components before Nextflow planning. |
 | `$importing-nf-core` | Import an approved nf-core module or subworkflow with nf-core tools. |
+| `$searching-tooluniverse-catalog` | Find candidate analysis methods in the ToolUniverse catalog. |
+| `$selecting-container-images` | Match analysis methods to registry images and propose gaps. |
 | `$coding-spec` | Apply repository and language coding conventions. |
 | `$linting` | Run repository lint checks and fix requested findings. |
 | `$testing-unit` | Write and run isolated tests. |
@@ -80,3 +82,4 @@ neither specifications nor implementation plans.
 | --- | --- |
 | [`agents.template.md`](templates/agents.template.md) | Base structure used by `craftsman` for Codex custom agents. |
 | [`analysis-plan.template.md`](templates/analysis-plan.template.md) | Analysis plan structure used by `data_analyst`. |
+| [`container-images.template.md`](templates/container-images.template.md) | Project container image registry maintained by `data_analyst`. |
