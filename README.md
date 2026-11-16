@@ -19,6 +19,94 @@ R Markdown, Python and Bash coding guidelines usable by any workflow. Language a
 profiles live in each skill's `references/` folder; remove the ones a target project does not
 need.
 
+## Workflows
+
+The agents support two workflows: one for programming and one for data analysis. They share the
+implementation agents (`tester`, `coder`, `cleaner`, `reviewer`, `dev_ops`) and the same rules:
+
+- A person approves the exact document, a specification or an analysis plan, before any code is
+  written. Agents never infer approval.
+- A coordinator runs as the main session, owns one task branch and commits only green work. It
+  never pushes, merges or tags unless asked.
+- Work advances in small increments, each with a failing test first (RED), then the code that
+  makes it pass (GREEN).
+- Every document has one file that is revised in place, and its status records where the work
+  stands.
+- When a delegate finds an ambiguity, missing data or a blocking review finding, the coordinator
+  stops and reports it instead of guessing.
+
+### Programming workflow
+
+```mermaid
+flowchart TD
+    AN["analyst: PRD"] -. optional .-> PO
+    AR["architect: ADD"] -. optional .-> PO
+    PO["product_owner<br/>specification: Draft"] --> HA{{"Human approval<br/>of the exact revision"}}
+    HA --> BU["builder<br/>task branch, specification: Approved"]
+    BU --> EN["engineer<br/>implementation plan and ER model<br/>specification: Planned"]
+    EN --> INC
+    subgraph INC ["For each plan increment"]
+        direction LR
+        T["tester<br/>RED"] --> C["coder<br/>GREEN"] --> CL["cleaner<br/>REFACTOR"] --> CM["commit"]
+    end
+    INC --> VA["full validation and reviewer<br/>specification: Coded"]
+    VA --> HR{{"Human review"}}
+    HR --> VE["specification: Verified"]
+    VE -. on request .-> DO["dev_ops<br/>documentation, release: Released"]
+```
+
+- **Documents in layers**:
+  - The PRD (product) and the ADD (architecture) are optional and describe the whole project.
+  - Each work item has one specification with testable acceptance criteria in EARS format.
+  - `engineer` turns it into one implementation plan of ordered increments, each with the
+    phases and agents that execute it, plus an ER model when persistent data change.
+- **Status flow**: `Draft` → `Approved` → `Planned` → `Coded` → `Verified` → `Released`. Each
+  transition belongs to one agent, and none can be skipped.
+- **Increments**: `builder` runs the phases the plan declares, one after another, and commits
+  each increment only when its tests pass. In Nextflow projects, existing nf-core modules are
+  imported with nf-core tools instead of being rewritten.
+- **Closing**: a full validation and an independent read-only review against the specification
+  and the plan. A blocking finding stops the cycle until a person decides.
+
+### Analysis workflow
+
+```mermaid
+flowchart TD
+    DA["data_analyst<br/>analysis plan: Draft"] --> HA{{"Human approval<br/>of plan path and version"}}
+    HA --> AC["analysis_coordinator<br/>task branch, plan: Approved"]
+    AC --> SE["Setup<br/>renumber, test subset and runner, real configuration"]
+    SE --> INC
+    subgraph INC ["For each increment, in NN order"]
+        direction LR
+        T["tester<br/>formal checks: RED"] --> C["coder<br/>script on the test subset: GREEN"] --> CM["commit"]
+    end
+    INC --> CO["full subset suite and lint<br/>plan: Coded"]
+    CO --> FI["cleaner, reviewer, dev_ops<br/>refactor, plan fidelity, comments"]
+    FI --> VE["plan: Verified"]
+    VE --> US["User<br/>full run on real data, post-run checks, interpretation"]
+```
+
+- **The plan is the single source of analytical decisions**: it holds the inputs, methodology,
+  expected outputs, formal acceptance criteria, test subset rule and container images. Paths
+  come from the Analysis layout in the project's `AGENTS.md`. The coding and testing
+  conventions come from the `analysis.md` profiles.
+- **Agents never touch real data**:
+  - They run every script on a deterministic test subset, inside its increment's container
+    image.
+  - The same code runs on the test and real data, through two configuration files.
+  - The user runs the full analysis. Its outputs go to folders versioned by plan version
+    (`vN`).
+- **Tests check form, not results**: they check the files, formats, columns, row counts
+  relative to an input, provenance files, report sections and reproducibility. They never check
+  statistics or other values.
+- **Steps that cannot run on a subset** are `post-run` increments. They are checked only after
+  the user's full run.
+- **Revisions**:
+  - A change reopens the plan at `Draft`, with change markers, and needs a new approval.
+  - A new version renumbers the increments and reruns everything into empty folders.
+- **Agents never interpret results or draft conclusions**; reports state only what each table
+  or figure shows.
+
 ## Install in a project
 
 ```bash
@@ -57,9 +145,9 @@ Then, in the target repository:
    with `claude --agent <name>`; this includes `data-analyst` and `analysis-coordinator`.
 3. Create `agents_data/specs/` and `agents_data/plans/`, where the lifecycle artifacts are stored.
    For the analysis workflow, also define the `Analysis_*` folders (tests go in their own
-   `Analysis_Tests_Folder`) and the container execution rules in `AGENTS.md`, and ignore the
-   rendered reports, results, figures, test subsets and test run outputs
-   (`<Analysis_Tests_Folder>/*/results/`).
+   `Analysis_Tests_Folder`), the Analysis layout keys and the container execution rules in
+   `AGENTS.md`, and ignore the rendered reports, results, figures, test subsets and test run
+   outputs (`<Analysis_Tests_Folder>/*/results/` with the default layout).
 
 ## Update
 

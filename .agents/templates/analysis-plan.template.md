@@ -1,8 +1,8 @@
 # Analysis plan template
 
-Use this template for `{Analysis_Plans_Folder}/<analysis-id>.md`, where `<analysis-id>` is
-`analysis-<slug>`. `data_analyst` owns the content; `analysis_coordinator` may change only the
-tracking markers and `Status`. Write acceptance criteria with the
+Use this template for `{Analysis_Plan_file}`, where `<analysis-id>` is `analysis-<slug>`.
+`data_analyst` owns the content; `analysis_coordinator` may change only the tracking markers and
+`Status`. Write acceptance criteria with the
 [EARS format guide](../skills/generating-specs/EARS.md).
 
 ```markdown
@@ -11,7 +11,6 @@ tracking markers and `Status`. Write acceptance criteria with the
 - **ID**: `analysis-<slug>`
 - **Version**: `v1`
 - **Status**: Draft
-- **Container image**: `<immutable image URI with digest or pinned version tag>`
 
 Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after approval reopens this file at Draft.
 
@@ -23,9 +22,17 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 
 | Input | Config key | Path | Format | Expected structure |
 | --- | --- | --- | --- | --- |
-| `<name>` | `INPUT_<NAME>` | `<exact path>` | `<format and compression>` | `<fields or columns with types, identifiers, relationships to other inputs>` |
+| `<name>` | `INPUT_<NAME>` | `<exact path to one file or one folder>` | `<format and compression>` | `<fields or columns with types, identifiers, relationships to other inputs; for a folder, the relative pattern of the files read and what to ignore>` |
+
+## Container images
+
+| ID | Image | Purpose |
+| --- | --- | --- |
+| `r` | `<URI with digest or pinned tag>` | R analysis |
 
 ## Methodology
+
+<!-- Analysis step. -->
 
 ### M1: <step title>
 
@@ -36,6 +43,16 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 - **Model and covariates**: `<design or formula, or not-applicable>`
 - **Multiple-testing correction**: `<method and scope, or not-applicable>`
 - **Seed**: `<integer, or not-applicable>`
+
+<!-- Report step: one per report increment. -->
+
+### M2: <report title>
+
+- **Tool**: `<rendering tool and function>`
+- **Inputs**: `<files in RESULTS_DIR and FIGURES_DIR>`
+- **Sections**:
+  1. `<exact heading>`: <content it holds>
+  2. `<exact heading>`: <content it holds>
 
 ## Removed
 
@@ -58,8 +75,9 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 
 - **Kind**: `<computation | report>`
 - **Language**: `<R | R Markdown | Python | Bash>`
+- **Image**: `<ID>`
 - **Verification**: `<subset | post-run>`
-- **Files**: `{Analysis_Scripts_Folder}/<analysis-id>/<NN>-<slug>.<ext>`
+- **Files**: `<NN>-<slug>.<ext>`
 - **Methodology**: `<M1, M2>`
 - **Depends on**: `<increment numbers or none>`
 - **Acceptance criteria**: `<AC1, AC2>`
@@ -87,7 +105,6 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 
 ## Test subset
 
-- **Location**: `{Analysis_Test_Data_Folder}/<analysis-id>/`
 - **Rule**: `<deterministic rule deriving the subset from the inputs, with seed if sampled>`
 - **Justification**: `<why every subset increment produces meaningful output on it>`
 
@@ -101,14 +118,28 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
 ## Authoring rules
 
 - The plan is the only source of analytical decisions. A delegate must be able to execute it
-  without choosing methods, parameters, paths, or criteria.
+  without choosing methods, parameters, input paths, outputs, or criteria.
+- The plan holds only what is specific to the analysis: inputs, methodology, its own outputs,
+  acceptance criteria, the subset rule, the container images, and seeds. It never defines folders,
+  file locations, configuration files, or provenance; their locations come from the Analysis layout
+  in `{Agents_file}`.
 - When a methodology produces a figure, state only what the figure must show, never the plot
   type, library, or styling.
-- The container image must provide every tool used by the methodology plus, for each declared
-  language, its test framework and linters, and Pandoc when the plan has reports.
-- Each increment produces one computation script or one report. A report increment's files are
-  its source, `{Analysis_Reports_Folder}/<analysis-id>/<NN>-<slug>.Rmd`, and its render script,
-  `{Analysis_Scripts_Folder}/<analysis-id>/<NN>-<slug>.<ext>`, with the same `NN` and slug.
+- Each input-table row declares exactly one `INPUT_<NAME>` key, whose value is one file or one
+  folder, never a list. Declare a small fixed set of distinct files as one row and one key per
+  file. For a folder, Expected structure gives the exact relative pattern of the files read inside
+  it, for example `<cohort>/results/08/inversionsSummary.txt`, and anything that must be ignored.
+  Do not use manifest files.
+- Each container image has a short ID and a Purpose of a few words. Each image provides the tools
+  of the increments whose `Image` names it and, for their language, the test framework and the
+  linter. The image of a report increment also provides rmarkdown and Pandoc.
+- A methodology step is either an analysis step or a report step. An analysis step has Tool,
+  Inputs, Key parameters, Filters, Model and covariates, Multiple-testing correction, and Seed. A
+  report step has only Tool, Inputs, and Sections: a numbered list, in order, where each item is
+  the exact section heading followed by the content it holds.
+- Each increment produces one computation script or one report. `Files` lists file names only;
+  their folders come from `{Analysis_Script_file}` and `{Analysis_Report_Source_file}`. A report
+  increment's files are its `.Rmd` source and its render script, with the same `NN` and slug.
 - `NN` in a file name is the increment number, two digits zero-padded (`01`, `02`, ...), and also
   the execution order: the user runs the scripts in `NN` order. An increment may depend only on
   earlier increments.
@@ -125,18 +156,23 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
   then `coder: remove-code`, and is empty when no increment has been removed. The section order
   Removed, Setup, Increments, Finalization is the execution order.
 - Acceptance criteria are formal only: file existence, format, column names and types, row counts
-  relative to an input, successful execution, provenance, seed reproducibility on the test
-  subset, report rendering, and required report sections. Name outputs by their configuration
-  folder, for example `RESULTS_DIR/de-results.tsv`. Never depend on analysis results, such as a
-  number of significant genes, or on subset sizes, such as a fixed number of rows.
+  relative to an input, successful execution, seed reproducibility on the test subset, report
+  rendering, and report sections. A reproducibility criterion applies only to an increment with a
+  random step, one whose methodology declares a Seed, and covers its outputs in `RESULTS_DIR`. Never
+  write a provenance criterion. Name outputs by their configuration folder, for example
+  `RESULTS_DIR/de-results.tsv`. Never depend on analysis results, such as a number of significant
+  genes, or on subset sizes, such as a fixed number of rows.
 - Every acceptance criterion maps to exactly one increment, and every increment has at least one.
-- Report increments list their required section headings in an acceptance criterion. A report
-  increment MAY be assigned methodology steps for figures drawn inline in the report and for
-  simple, cheap analyses of files in `RESULTS_DIR` and `FIGURES_DIR`. Assign costly computations
-  and every definitive figure, saved in `FIGURES_DIR`, to computation increments. Reports never
-  interpret, conclude, or discuss.
-- Versioned folders are `vN`, the plan version: `{Analysis_Results_Folder}/<analysis-id>/vN/`,
-  `{Analysis_Figures_Folder}/<analysis-id>/vN/`, and `{Analysis_Reports_Folder}/<analysis-id>/vN/`.
+- Each report increment has exactly one report step. Its acceptance criterion refers to that
+  step's Sections, for example "contains the sections of M2, in order", instead of listing the
+  headings again. A report increment MAY also be assigned analysis steps for figures drawn inline
+  in the report and for simple, cheap analyses of files in `RESULTS_DIR` and `FIGURES_DIR`.
+  Assign costly computations and every definitive figure, saved in `FIGURES_DIR`, to computation
+  increments. Reports never interpret, conclude, or discuss.
+- Expected outputs list only the analysis's own outputs, never provenance files. `RESULTS_DIR`,
+  `FIGURES_DIR`, and `REPORTS_DIR` resolve to the plan version's
+  `{Analysis_Results_Version_Folder}`, `{Analysis_Figures_Version_Folder}`, and
+  `{Analysis_Reports_Version_Folder}`.
 
 ## Versions and revisions
 
@@ -165,5 +201,5 @@ Allowed status flow: Draft -> Approved -> Coded -> Verified. A revision after ap
   `Removed: 04-report.Rmd, 04-report.sh`, with its removal phases as pending markers. The entry is
   its `[removed]` marker; list it in the changes table. It takes no number in a new version's
   sequence, so headings never repeat.
-- For a new version, every increment runs from the start into empty `vN` folders; never reuse
+- For a new version, every increment runs from the start into empty version folders; never reuse
   outputs of another version.
