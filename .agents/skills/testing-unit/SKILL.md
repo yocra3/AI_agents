@@ -18,7 +18,7 @@ Load supplied Markdown language or framework profiles before choosing syntax or 
   nf-tests, also [module testing](references/nf-core/testing_modules.md) or
   [subworkflow testing](references/nf-core/testing_subworkflows.md).
 - Analysis plans: additionally the [analysis testing rules](analysis.md), which take precedence
-  where stricter.
+  over the language profiles and this skill's general guidance where they differ.
 
 ## TDD evidence
 

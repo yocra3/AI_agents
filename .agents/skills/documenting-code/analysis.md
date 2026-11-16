@@ -21,12 +21,15 @@ Place a `#` header at the top of every computation and render script, after any 
 
 ```text
 # Purpose: <what the script computes, citing the plan's methodology steps, e.g. M1-M2>
-# Plan: {Analysis_Plans_Folder}/<analysis-id>.md
+# Plan: <resolved {Analysis_Plan_file}>
 # Usage: <Rscript|python3|bash> <script path>, from the repository root. Loads ANALYSIS_CONFIG,
-#   or the real-data configuration by default.
+#   or <resolved {Analysis_Real_Config_file}> by default.
 # Inputs: <configuration keys and upstream files>
-# Outputs: <files written to RESULTS_DIR, FIGURES_DIR, or REPORTS_DIR, including provenance>
+# Outputs: <files written to RESULTS_DIR, FIGURES_DIR, or REPORTS_DIR; for a computation script,
+#   also its provenance file>
 ```
+
+Resolve the layout keys from `{Agents_file}` for the plan's analysis.
 
 For a report, add one HTML comment `<!-- ... -->` after the YAML front matter with its purpose,
 render script, and files read.
@@ -41,5 +44,7 @@ so the diff stays comments-only. Place a function's block immediately above `def
 
 - Every added or removed line in the diff is blank, a full-line comment starting with `#` after
   indentation, or part of an HTML comment in a `.Rmd` file. The shebang is unchanged.
-- The lint checks and the `subset` test suite still pass, run in the plan's container image under
-  the execution rules in `{Agents_file}`.
+- Under the execution rules in `{Agents_file}`, the lint checks still pass and the `subset` test
+  suite still passes through the execution runner. Lint each script in its increment's image, each
+  test file in the image of the increment it tests, and each `{Analysis_Shared_Functions_file}` in
+  the image of any increment of its language.

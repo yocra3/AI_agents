@@ -56,8 +56,31 @@
 
 `data_analyst` writes analysis plans in `{Analysis_Plans_Folder}` and leaves them at `Draft`.
 `analysis_coordinator` executes a plan only after the user explicitly approves its exact path and
-version. Both run as main sessions. Omit this section and the `Analysis_*` keys when the project
-has no analysis workflow.
+version. Both run as main sessions. Omit this section, the Analysis layout section, and the
+`Analysis_*` keys when the project has no analysis workflow.
+
+### Analysis layout
+
+These keys hold every path and file-name pattern of an analysis. The analysis profiles cite them,
+and analysis plans never redefine them. `<analysis-id>` is the plan's ID (`analysis-<slug>`),
+`<NN>-<slug>` is an increment's two-digit number and slug, `<ext>` is the script language's
+extension, `vN` is the plan version, and `<RESULTS_DIR>` is the configured results folder.
+
+- **Analysis_Plan_file**: {Analysis_Plan_file}
+- **Analysis_Script_file**: {Analysis_Script_file} (computation and render scripts)
+- **Analysis_Shared_Functions_file**: {Analysis_Shared_Functions_file} (one per language, no `NN`)
+- **Analysis_Real_Config_file**: {Analysis_Real_Config_file}
+- **Analysis_Test_Config_file**: {Analysis_Test_Config_file}
+- **Analysis_Report_Source_file**: {Analysis_Report_Source_file}
+- **Analysis_Results_Version_Folder**: {Analysis_Results_Version_Folder}
+- **Analysis_Figures_Version_Folder**: {Analysis_Figures_Version_Folder}
+- **Analysis_Reports_Version_Folder**: {Analysis_Reports_Version_Folder}
+- **Analysis_Test_Code_Folder**: {Analysis_Test_Code_Folder} (tests, runner, test-subset script)
+- **Analysis_Test_Subset_Folder**: {Analysis_Test_Subset_Folder}
+- **Analysis_Test_Run_Folder**: {Analysis_Test_Run_Folder} (`subset` mode outputs)
+- **Analysis_Test_Rerun_Folder**: {Analysis_Test_Rerun_Folder} (reproducibility rerun outputs)
+- **Analysis_Provenance_file**: {Analysis_Provenance_file} (one per computation script, at the
+  root of `RESULTS_DIR`)
 
 ## Environment
 - **OS dev**: {Development_OS}
