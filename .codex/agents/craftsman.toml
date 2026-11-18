@@ -42,10 +42,12 @@ Claude-only agent of the project. As the final verification step, run
 `.claude/scripts/generate_agents.py <copy>` on a temporary copy of the repository, never in place,
 and diff its `.claude/agents/` output against `.claude/agents/`. Report any difference and fix it
 in the `.md`, or in the `.toml` when the error is there. If the generator cannot process an agent
-because its name is missing from `TOOLS` or its model from `MODELS`, exclude it from the copy and
-check it by hand: identical instructions body, and frontmatter `name` with hyphens,
-`description`, `model` mapped through `MODELS`, `effort` equal to `model_reasoning_effort`, and
-`tools`. Report it, and do not edit the generator only to make the check pass.
+because its name is missing from `TOOLS` or its model has neither a `CLAUDE_MODELS` override nor
+a `MODELS` mapping, exclude it from the copy and check it by hand: identical instructions body,
+and frontmatter `name` with hyphens, `description`, `model` taken from the agent's
+`CLAUDE_MODELS` override or else mapped through `MODELS`, `effort` equal to
+`model_reasoning_effort`, and `tools`. Report it, and do not edit the generator only to make the
+check pass.
 
 # Boundaries
 Do not choose speculative maintenance work when the user has not requested it. Do not modify

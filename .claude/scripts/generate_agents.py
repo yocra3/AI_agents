@@ -14,6 +14,8 @@ sources = sorted(glob.glob(os.path.join(root, ".codex", "agents", "*.toml")))
 if not sources:
     sys.exit("error: no .toml agents in %s" % os.path.join(root, ".codex", "agents"))
 MODELS = {"gpt-6-sol": "claude-opus-5-5", "gpt-5.6-terra": "claude-sonnet-5-5", "gpt-6-luna": "claude-haiku-5-5"}
+# Per-agent Claude model overrides, keyed by hyphenated name; they take precedence over MODELS.
+CLAUDE_MODELS = {"coder": "claude-sonnet-5-5", "tester": "claude-sonnet-5-5", "cleaner": "claude-sonnet-5-5"}
 BASE = "Read, Grep, Glob, Skill"
 TOOLS = {
     "analyst": "Write, Edit, WebSearch, WebFetch, AskUserQuestion",
@@ -38,11 +40,12 @@ for path in sources:
     field = lambda k: re.search(r'^%s = "(.*)"$' % k, text, re.M).group(1)
     body = re.search(r'developer_instructions = """\n(.*?)"""', text, re.S).group(1)
     name = field("name").replace("_", "-")
+    model = CLAUDE_MODELS.get(name) or MODELS[field("model")]
     front = [
         "---",
         "name: %s" % name,
         "description: %s" % field("description"),
-        "model: %s" % MODELS[field("model")],
+        "model: %s" % model,
         "effort: %s" % field("model_reasoning_effort"),
         "tools: %s, %s" % (BASE, TOOLS[name]),
         "---",
@@ -50,4 +53,4 @@ for path in sources:
     ]
     with open(os.path.join(out_dir, name + ".md"), "w") as fh:
         fh.write("\n".join(front) + body)
-    print(name, MODELS[field("model")], field("model_reasoning_effort"))
+    print(name, model, field("model_reasoning_effort"))

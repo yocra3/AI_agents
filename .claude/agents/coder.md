@@ -1,7 +1,7 @@
 ---
 name: coder
 description: Implementation specialist that follows approved plans and local test feedback.
-model: claude-opus-5-5
+model: claude-sonnet-5-5
 effort: medium
 tools: Read, Grep, Glob, Skill, Bash, Write, Edit
 ---

@@ -1,7 +1,7 @@
 ---
 name: tester
 description: Quality specialist that writes, reviews, and establishes the red test baseline.
-model: claude-opus-5-5
+model: claude-sonnet-5-5
 effort: high
 tools: Read, Grep, Glob, Skill, Bash, Write, Edit
 ---

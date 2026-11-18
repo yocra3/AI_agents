@@ -169,3 +169,8 @@ python3 .claude/scripts/generate_agents.py
 | `gpt-6-sol` | `claude-opus-5-5` |
 | `gpt-5.6-terra` | `claude-sonnet-5-5` |
 | `gpt-6-luna` | `claude-haiku-5-5` |
+
+The generator maps each Codex model through `MODELS` unless the agent has an entry in
+`CLAUDE_MODELS`, a per-agent Claude override keyed by the hyphenated name. The current overrides
+run `coder`, `tester` and `cleaner` on `claude-sonnet-5-5` in Claude Code; their Codex models and
+every effort level are unchanged.

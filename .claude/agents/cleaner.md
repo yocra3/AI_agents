@@ -1,7 +1,7 @@
 ---
 name: cleaner
 description: Refactoring specialist for behavior-preserving cleanup after verification.
-model: claude-haiku-5-5
+model: claude-sonnet-5-5
 effort: medium
 tools: Read, Grep, Glob, Skill, Bash, Write, Edit
 ---
