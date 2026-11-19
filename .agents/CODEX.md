@@ -20,16 +20,16 @@ Revisions update those files in place instead of creating parallel artifacts.
 
 ## Analysis Flow
 
-The user-facing sequence is `data_analyst` -> human approval of the exact plan path and version
--> `analysis_coordinator` -> the user's full run. `data_analyst` and `analysis_coordinator` run as
-main sessions.
+The user-facing sequence is `data_analyst` -> the user's explicit authorization to execute the
+named plan -> `analysis_coordinator` -> the user's full run. `data_analyst` and
+`analysis_coordinator` run as main sessions.
 
 Each analysis owns one plan in `{Analysis_Plans_Folder}` with an `analysis-` identifier; revisions
 update it in place. The user manages the plan version; agents never change it. Analysis plans are
 neither specifications nor implementation plans.
 
 - `data_analyst`: creates or revises the plan as `Draft`.
-- Human approval: authorizes the exact plan path and version.
+- Human approval: explicitly authorizes executing the named plan.
 - `analysis_coordinator`: records `Approved` in the approval commit, delegates to `tester`,
   `coder`, `cleaner`, `reviewer`, and `dev_ops`, and advances the plan to `Coded` and `Verified`.
 - User: runs the full analysis and the post-run checks, and interprets the results.

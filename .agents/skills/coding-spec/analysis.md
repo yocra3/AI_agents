@@ -103,6 +103,19 @@ Every phase except `subset-implementation`, which follows tester's RED, is a dir
   real configuration. Its optional positional arguments `[FROM [TO]]` are inclusive `NN` bounds:
   no arguments run everything, `run-analysis.sh 10` resumes from `10`, and
   `run-analysis.sh 13 16` runs `13` to `16`. Validate it only with lint; never execute it.
+- `full-validation`: validate the complete analysis without changing any file. Under the
+  execution rules in `{Agents_file}`:
+  1. Run the full `subset` suite through the execution runner: every `subset` increment from
+     the first, as the testing profile's `subset` mode defines it.
+  2. Lint every analysis file: each script in its increment's image, each test file in the
+     image of the increment it tests, each `{Analysis_Shared_Functions_file}` in the image of
+     any increment of its language, the execution runner and the test-subset script on the host
+     or in any image that provides the lint checks of their language, and `run-analysis.sh` on
+     the host or in any image that provides the Bash lint checks.
+
+  Do not fix findings, apply lint fixes, run `post-run` checks, or execute `run-analysis.sh`.
+  Report the exact commands, the result of each increment's checks, the lint result of each
+  file, and the file and increment of every failure.
 
 ## Loading the configuration
 

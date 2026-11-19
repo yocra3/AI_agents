@@ -72,7 +72,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    DA["data_analyst<br/>analysis plan: Draft"] --> HA{{"Human approval<br/>of plan path and version"}}
+    DA["data_analyst<br/>analysis plan: Draft"] --> HA{{"Human authorization<br/>to execute the named plan"}}
     HA --> AC["analysis_coordinator<br/>task branch, plan: Approved"]
     AC --> SE["Setup<br/>renumber, test subset and runner, real configuration"]
     SE --> INC
@@ -80,8 +80,8 @@ flowchart TD
         direction LR
         T["tester<br/>formal checks: RED"] --> C["coder<br/>script on the test subset: GREEN"] --> CM["commit"]
     end
-    INC --> CO["full subset suite and lint<br/>plan: Coded"]
-    CO --> FI["cleaner, coder, reviewer, dev_ops<br/>refactor, run script, plan fidelity, comments"]
+    INC --> CO["plan: Coded"]
+    CO --> FI["cleaner, coder, coder, reviewer, dev_ops<br/>refactor, run script, full validation, plan fidelity, comments"]
     FI --> VE["plan: Verified"]
     VE --> US["User<br/>full run on real data, post-run checks, interpretation"]
 ```

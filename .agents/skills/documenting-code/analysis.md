@@ -44,9 +44,6 @@ so the diff stays comments-only. Place a function's block immediately above `def
 
 - Every added or removed line in the diff is blank, a full-line comment starting with `#` after
   indentation, or part of an HTML comment in a `.Rmd` file. The shebang is unchanged.
-- Under the execution rules in `{Agents_file}`, the lint checks still pass and the `subset` test
-  suite still passes through the execution runner. Lint each script in its increment's image (the
-  `{Analysis_Images_file}` entry named by its `Image` ID), each test file in the image of the
-  increment it tests, each `{Analysis_Shared_Functions_file}` in the image of any increment of
-  its language, and `run-analysis.sh` with the Bash lint checks in any image that provides them or
-  on the host.
+- Under the execution rules in `{Agents_file}`, lint each changed file in the image of its
+  increment, or of any increment of its language for a shared functions file, and
+  `run-analysis.sh` on the host or in any image that provides the Bash lint checks.

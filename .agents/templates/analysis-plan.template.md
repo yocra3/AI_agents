@@ -103,6 +103,7 @@ Run parameters (config keys, set to the Real value in the real configuration and
 
 - [ ] `cleaner: analysis-refactor`
 - [ ] `coder: run-script`
+- [ ] `coder: full-validation`
 - [ ] `reviewer: plan-fidelity-review`
 - [ ] `dev_ops: code-documentation`
 
@@ -201,6 +202,9 @@ Run parameters (config keys, set to the Real value in the real configuration and
 - Mark every changed item in place with `[added]`, `[modified]`, or `[removed]`, and list it in the
   changes table. Delete markers and table rows whose tasks are complete. Removed items whose
   removal tasks are complete may be deleted.
+- When an increment is modified, `data_analyst` reviews every increment that depends on it,
+  directly or transitively, through `Depends on`, and marks `[modified]` each one whose
+  methodology, inputs, or acceptance criteria must change.
 - On every revision, reset to pending the markers of the modified increments and of every
   Finalization phase. Also reset `tester: test-setup` and `coder: real-config` when the input
   data, the run parameters, the subset rule, or the version changes, and `coder: renumber` when a new version changes

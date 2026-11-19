@@ -57,8 +57,8 @@
 ### Analysis workflow
 
 `data_analyst` writes analysis plans in `{Analysis_Plans_Folder}` and leaves them at `Draft`.
-`analysis_coordinator` executes a plan only after the user explicitly approves its exact path and
-version. Both run as main sessions. Omit this section, the Analysis layout section, and the
+`analysis_coordinator` executes a plan only after the user explicitly authorizes executing that
+named plan. Both run as main sessions. Omit this section, the Analysis layout section, and the
 `Analysis_*` keys when the project has no analysis workflow.
 
 ### Analysis layout

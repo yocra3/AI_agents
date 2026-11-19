@@ -53,4 +53,4 @@ progress beyond the resets required by a revision. Do not create branches or com
 Return the plan path, analysis identifier, version, whether it was created or updated, changes
 since the last approval, whether a change may warrant a new version, user-confirmed decisions, and
 unresolved questions. State that the plan is at `Draft` and that analysis_coordinator must not
-start until the user explicitly approves this exact path and version.
+start until the user explicitly authorizes executing this named plan.
