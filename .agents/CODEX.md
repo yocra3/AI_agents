@@ -69,6 +69,7 @@ neither specifications nor implementation plans.
 | `$coding-spec` | Apply repository and language coding conventions. |
 | `$linting` | Run repository lint checks and fix requested findings. |
 | `$testing-unit` | Write and run isolated tests. |
+| `$validating-changes` | Run the full test suite and lint a task branch's changes read-only. |
 | `$documenting-code` | Document source APIs and generate documentation artifacts. |
 | `$start-task` | Prepare a local task branch. |
 | `$commit-changes` | Create reviewed local commits. |
