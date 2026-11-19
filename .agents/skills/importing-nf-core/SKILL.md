@@ -21,4 +21,4 @@ transitive changes with the applicable repository and nf-core lint checks. If th
 is unavailable or incompatible, stop instead of creating a local substitute.
 
 Report the command, component and SHA, every changed file, validation result, and blockers to
-builder. Do not implement consuming wiring or perform Git operations.
+the caller. Do not implement consuming wiring or perform Git operations.

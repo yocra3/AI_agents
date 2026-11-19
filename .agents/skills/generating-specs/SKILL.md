@@ -76,5 +76,5 @@ For Nextflow work, also load [Nextflow specifications](references/nextflow.md).
 
 - [ ] A specification markdown file named `{Specs_Folder}/<spec-slug-id>.spec.md`.
 - [ ] Exactly one lifecycle specification for the work item, left at `Draft`.
-- [ ] Report its stable identifier, path, whether it was created or updated, and that explicit
-  human approval is required before builder starts.
+- [ ] Report its stable identifier, path, whether it was created or updated, and that builder
+  starts only on the user's explicit authorization to execute the named specification.

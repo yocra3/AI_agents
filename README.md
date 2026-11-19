@@ -41,7 +41,7 @@ implementation agents (`tester`, `coder`, `cleaner`, `reviewer`, `dev_ops`) and 
 flowchart TD
     AN["analyst: PRD"] -. optional .-> PO
     AR["architect: ADD"] -. optional .-> PO
-    PO["product_owner<br/>specification: Draft"] --> HA{{"Human approval<br/>of the exact revision"}}
+    PO["product_owner<br/>specification: Draft"] --> HA{{"Human authorization<br/>to execute the named specification"}}
     HA --> BU["builder<br/>task branch, specification: Approved"]
     BU --> EN["engineer<br/>implementation plan and ER model<br/>specification: Planned"]
     EN --> INC
@@ -49,8 +49,8 @@ flowchart TD
         direction LR
         T["tester<br/>RED"] --> C["coder<br/>GREEN"] --> CL["cleaner<br/>REFACTOR"] --> CM["commit"]
     end
-    INC --> VA["full validation and reviewer<br/>specification: Coded"]
-    VA --> HR{{"Human review"}}
+    INC --> VA["specification: Coded<br/>full validation, fixes committed, reviewer"]
+    VA --> HR{{"Human implementation review"}}
     HR --> VE["specification: Verified"]
     VE -. on request .-> DO["dev_ops<br/>documentation, release: Released"]
 ```
@@ -61,12 +61,15 @@ flowchart TD
   - `engineer` turns it into one implementation plan of ordered increments, each with the
     phases and agents that execute it, plus an ER model when persistent data change.
 - **Status flow**: `Draft` → `Approved` → `Planned` → `Coded` → `Verified` → `Released`. Each
-  transition belongs to one agent, and none can be skipped.
+  transition belongs to one agent, and none can be skipped. `builder` records `Approved` in an
+  approval commit, and later commits must leave the specification otherwise unchanged.
 - **Increments**: `builder` runs the phases the plan declares, one after another, and commits
   each increment only when its tests pass. In Nextflow projects, existing nf-core modules are
   imported with nf-core tools instead of being rewritten.
-- **Closing**: a full validation and an independent read-only review against the specification
-  and the plan. A blocking finding stops the cycle until a person decides.
+- **Closing**: at `Coded`, a full validation, with any fixes committed, and an independent
+  read-only review against the specification and the plan. A blocking finding stops the cycle
+  until a person decides. `Verified` is set only when the user approves the implementation
+  review.
 
 ### Analysis workflow
 

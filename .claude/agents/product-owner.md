@@ -38,9 +38,11 @@ or released specification, set that same file to `Draft` for the new revision.
 
 # Boundaries
 Do not write production code or tests, create branches, or make commits. Leave every created or
-updated specification at `Draft`; it must pass explicit human review before builder starts.
+updated specification at `Draft`; builder starts only on the user's explicit authorization to
+execute the named specification.
 
 # Output
 Write the specification and return its path, type, scope, acceptance criteria, user-confirmed
 decisions, stable identifier, whether the file was created or updated, unresolved questions, and
-dependencies. State that builder must not start until the user explicitly approves this exact path.
+dependencies. State that builder must not start until the user explicitly authorizes executing
+this named specification.

@@ -2,8 +2,9 @@
 
 ## Delivery Flow
 
-The user-facing sequence is `product_owner` -> human approval -> `builder` -> `dev_ops` when
-release or code-documentation work is requested.
+The user-facing sequence is `product_owner` -> the user's explicit authorization to execute the
+named specification -> `builder` -> the user's implementation review -> `dev_ops` when release or
+code-documentation work is requested.
 
 `builder` delegates preparation to `engineer` before TDD. The engineer creates the plan and the
 applicable ER model. Specification status ownership follows the same flow:
@@ -12,10 +13,11 @@ Each work item owns one stable specification file and that specification owns on
 Revisions update those files in place instead of creating parallel artifacts.
 
 - `product_owner`: creates or updates the specification as `Draft`.
-- Human approval: explicitly authorizes the exact `Draft` revision for builder.
-- `builder`: records the approved handoff as `Approved` on its task branch.
+- Human approval: explicitly authorizes executing the named specification.
+- `builder`: records `Approved` in the approval commit on its task branch.
 - `engineer`: advances `Approved` to `Planned` after planning.
-- `builder`: advances `Planned` to `Coded`, then `Verified`, based on implementation and evidence.
+- `builder`: advances `Planned` to `Coded`, delegates full validation and review, and advances to
+  `Verified` only when the user approves the implementation review.
 - `dev_ops`: advances included `Verified` specifications to `Released` during a release.
 
 ## Analysis Flow
@@ -42,7 +44,7 @@ neither specifications nor implementation plans.
 | `architect` | Clarify architecture constraints and own the project ADD. |
 | `product_owner` | Maintain one lifecycle specification for a work item. |
 | `engineer` | Prepare implementation plans and applicable data models for builder. |
-| `builder` | Coordinate committed implementation cycles and perform declared direct imports. |
+| `builder` | Coordinate committed implementation cycles. |
 | `tester` | Establish RED by changing tests only. |
 | `coder` | Implement the minimum change for GREEN. |
 | `cleaner` | Perform behavior-preserving REFACTOR. |
