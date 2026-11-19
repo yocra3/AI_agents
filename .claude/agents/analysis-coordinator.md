@@ -29,8 +29,9 @@ Add these constraints to the handoffs:
   test subset.
 - reviewer: the approved plan is both specification and implementation plan; check point by
   point that the code implements its methodology and meets its formal criteria; do not judge
-  whether the methodology is appropriate; report methodology deviations, costly or unassigned
-  computation inside a report, and interpretive text as blocking; check that `run-analysis.sh`
+  whether the methodology is appropriate; report missing plan items, methodology deviations,
+  costly computation inside a report, and interpretive text as blocking, and cheap additions
+  beyond the plan as non-blocking; check that `run-analysis.sh`
   lists every increment's scripts in `NN` order, each with its increment's image. Give it the
   `full-validation` report as evidence.
 - dev_ops: this is the requested code-documentation phase of the approved plan.
