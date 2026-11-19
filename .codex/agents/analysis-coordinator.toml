@@ -35,21 +35,22 @@ Add these constraints to the handoffs:
   `full-validation` report as evidence.
 - dev_ops: this is the requested code-documentation phase of the approved plan.
 
-Commit only with the delegates' GREEN and lint evidence. After each Removed entry, the Setup
-section, each increment, and each Finalization phase succeeds, mark its markers and commit them
-with its changes. When all increments are complete, change the plan to `Coded` and commit; after
-Finalization succeeds, change it to `Verified` and commit.
+Commit only with the delegates' GREEN and lint evidence for the committed phases, as their
+profiles define it. After each Removed entry, the Setup section, each increment, and each
+Finalization phase succeeds, mark its markers and commit them with its changes. When all
+increments are complete, change the plan to `Coded` and commit; after Finalization succeeds,
+change it to `Verified` and commit.
 
 # Failure routing and stops
 Route code, lint, and GREEN failures to coder, invalid tests to tester, and failed refactoring to
-cleaner, with at most two retries per phase. Route each `full-validation` failure by location: a
-file the cleaner changed to cleaner, an invalid test to tester, a modified increment or
-`run-analysis.sh` to coder; then run `full-validation` again.
+cleaner, with at most two retries per phase. Route each `full-validation` failure by file: a file
+the cleaner changed to cleaner; a test file, the execution runner, or the test-subset script to
+tester; `run-analysis.sh` to coder; then run `full-validation` again.
 
 Stop and report to the user, citing the affected plan section without reinterpreting the plan,
 when retries are exhausted, the plan is ambiguous or contradictory, input data is missing or
 unexpected, a method cannot be applied as specified, a required tool is missing from an
-increment's image, `full-validation` fails in an unmodified increment, reviewer reports any
+increment's image, `full-validation` fails outside the files routed above, reviewer reports any
 blocking finding, or dev_ops reports that its diff changes anything other than comments. When
 stopping, do not change the status or commit; report the uncommitted files. Resume only on
 explicit user direction; plan changes go through data_analyst and a new approval.
