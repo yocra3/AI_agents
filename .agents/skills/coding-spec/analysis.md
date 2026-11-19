@@ -96,12 +96,13 @@ Every phase except `subset-implementation`, which follows tester's RED, is a dir
 - `remove-code`: delete the removed increment's code, the files its Removed entry lists.
 - `run-script`: write or rewrite `run-analysis.sh`, with no `NN` prefix, in the folder of
   `{Analysis_Script_file}`. It is a plain Bash script with `set -euo pipefail`, run on the host
-  from the repository root, with no SLURM headers, logging, extra checks, or dry-run mode. It runs
-  every computation script and render script of the plan, including `post-run` increments, in
-  `NN` order, each in its increment's image under the execution rules in `{Agents_file}`, and
-  stops at the first failure. It does not set `ANALYSIS_CONFIG`, so each script uses its default
-  real configuration. Its optional positional arguments `[FROM [TO]]` are inclusive `NN` bounds:
-  no arguments run everything, `run-analysis.sh 10` resumes from `10`, and
+  from the repository root, with no SLURM headers, extra checks, or dry-run mode. Before each
+  script it prints one line with the script's `NN`, file name, and start time, and no other
+  logging. It runs every computation script and render script of the plan, including `post-run`
+  increments, in `NN` order, each in its increment's image under the execution rules in
+  `{Agents_file}`, and stops at the first failure. It does not set `ANALYSIS_CONFIG`, so each
+  script uses its default real configuration. Its optional positional arguments `[FROM [TO]]` are
+  inclusive `NN` bounds: no arguments run everything, `run-analysis.sh 10` resumes from `10`, and
   `run-analysis.sh 13 16` runs `13` to `16`. Validate it only with lint; never execute it.
 
 ## Loading the configuration
