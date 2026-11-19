@@ -47,5 +47,6 @@ so the diff stays comments-only. Place a function's block immediately above `def
 - Under the execution rules in `{Agents_file}`, the lint checks still pass and the `subset` test
   suite still passes through the execution runner. Lint each script in its increment's image (the
   `{Analysis_Images_file}` entry named by its `Image` ID), each test file in the image of the
-  increment it tests, and each `{Analysis_Shared_Functions_file}` in the image of any increment of
-  its language.
+  increment it tests, each `{Analysis_Shared_Functions_file}` in the image of any increment of
+  its language, and `run-analysis.sh` with the Bash lint checks in any image that provides them or
+  on the host.

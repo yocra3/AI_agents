@@ -102,6 +102,7 @@ Run parameters (config keys, set to the Real value in the real configuration and
 ## Finalization
 
 - [ ] `cleaner: analysis-refactor`
+- [ ] `coder: run-script`
 - [ ] `reviewer: plan-fidelity-review`
 - [ ] `dev_ops: code-documentation`
 

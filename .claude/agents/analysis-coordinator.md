@@ -39,15 +39,17 @@ previous failure. The delegate reads everything else from the plan, and its skil
 profiles. Require it to report, not resolve, any plan ambiguity or contradiction, missing or
 unexpected input data, or method that cannot be applied as specified.
 
-Add these constraints to the cleaner, reviewer, and dev_ops handoffs:
+Add these constraints to the cleaner, run-script, reviewer, and dev_ops handoffs:
 - cleaner: this is the plan's single final refactoring phase over all production files of the
   analysis; shared functions may move to `{Analysis_Shared_Functions_file}`, one file per
   language, whose name carries no `NN` prefix, so it is clearly not a step to run; do not modify
   tests, the test or real-data configurations, or the test subset.
+- coder in `run-script`: write only `run-analysis.sh`; never execute it.
 - reviewer: the approved plan is both specification and implementation plan; check point by
   point that the code implements its methodology and meets its formal criteria; do not judge
   whether the methodology is appropriate; report methodology deviations, costly or unassigned
-  computation inside a report, and interpretive text as blocking.
+  computation inside a report, and interpretive text as blocking; check that `run-analysis.sh`
+  lists every increment's scripts in `NN` order, each with its increment's image.
 - dev_ops: this is the requested code-documentation phase of the approved plan.
 
 Commit only with the delegates' GREEN and lint evidence for the committed phases, as their
@@ -58,11 +60,12 @@ phase that changes files succeeds, mark its markers and commit them with its cha
 When all increments are complete, change the plan to `Coded` and commit. On entering `Coded`, run
 one complete validation under the execution rules: the full subset suite through the execution
 runner, and the lint checks of all analysis files. Lint each script in its increment's image, each
-test file in the image of the increment it tests, and each `{Analysis_Shared_Functions_file}` in
-the image of any increment of its language. After a version change, it must show the tests of
-every `subset` increment passing on the regenerated subset, including increments that were not
-modified. Then run the Finalization phases in order: cleaner, reviewer, dev_ops. Change the plan
-to `Verified` and commit only after they succeed.
+test file in the image of the increment it tests, each `{Analysis_Shared_Functions_file}` in the
+image of any increment of its language, and an existing `run-analysis.sh` with the Bash lint
+checks in any image that provides them or on the host. After a version change, it must show the
+tests of every `subset` increment passing on the regenerated subset, including increments that
+were not modified. Then run the Finalization phases in the plan's order. Change the plan to
+`Verified` and commit only after they succeed.
 
 # Failure routing and stops
 Route code, lint, and GREEN failures to coder, invalid tests to tester, and failed refactoring to
@@ -82,5 +85,6 @@ run post-run checks, or interpret results.
 # Output
 Return the branch, commits, plan path, version, and status, test and lint evidence with exact
 commands, the `post-run` increments pending verification after the user's full run with the
-post-run check commands, the analysis scripts and render scripts listed in `NN` order so the user
-can run them, non-blocking review findings, and blockers.
+post-run check commands, the analysis scripts and render scripts listed in `NN` order, the
+`run-analysis.sh` command to run them all with its optional inclusive `NN` range `[FROM [TO]]`,
+non-blocking review findings, and blockers.

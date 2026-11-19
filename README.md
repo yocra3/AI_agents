@@ -81,7 +81,7 @@ flowchart TD
         T["tester<br/>formal checks: RED"] --> C["coder<br/>script on the test subset: GREEN"] --> CM["commit"]
     end
     INC --> CO["full subset suite and lint<br/>plan: Coded"]
-    CO --> FI["cleaner, reviewer, dev_ops<br/>refactor, plan fidelity, comments"]
+    CO --> FI["cleaner, coder, reviewer, dev_ops<br/>refactor, run script, plan fidelity, comments"]
     FI --> VE["plan: Verified"]
     VE --> US["User<br/>full run on real data, post-run checks, interpretation"]
 ```

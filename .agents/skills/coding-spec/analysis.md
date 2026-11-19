@@ -10,9 +10,10 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
 
 ## Configuration
 
-- Scripts run from the repository root and take no command-line parameters. Each loads exactly
-  one configuration file at its top, from the path in the `ANALYSIS_CONFIG` environment variable,
-  defaulting to the resolved `{Analysis_Real_Config_file}`.
+- Computation and render scripts run from the repository root and take no command-line
+  parameters; the `run-analysis.sh` wrapper of the `run-script` phase is the only exception.
+  Each loads exactly one configuration file at its top, from the path in the `ANALYSIS_CONFIG`
+  environment variable, defaulting to the resolved `{Analysis_Real_Config_file}`.
 - The configuration is a `KEY=value` file with optional double quotes, `#` comment lines, and
   `${VAR}` expansion, and no other code.
 - Required keys: `ANALYSIS_ID`, `PLAN_VERSION`, `RESULTS_DIR`, `FIGURES_DIR`, `REPORTS_DIR`, and
@@ -26,8 +27,8 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
   `ANALYSIS_OUTPUT_ROOT`.
 - Code MUST be identical for both configurations: no mode flags, subset-specific branches, or
   hardcoded data paths.
-- Each script MUST remain runnable line by line in an interactive session. Do not use
-  command-line arguments, `quit()`, or a `main()` entry point.
+- Each computation and render script MUST remain runnable line by line in an interactive
+  session. Do not use command-line arguments, `quit()`, or a `main()` entry point.
 
 ## Outputs
 
@@ -73,7 +74,8 @@ of an increment phase in the increment's image, the `{Analysis_Images_file}` ent
 `Image` ID, under the execution rules in `{Agents_file}`; `renumber`, `real-config`, and
 `remove-code` only move, write, or delete files.
 Lint each script in its increment's image, each test file in the image of the increment it tests,
-and each `{Analysis_Shared_Functions_file}` in the image of any increment of its language.
+each `{Analysis_Shared_Functions_file}` in the image of any increment of its language, and
+`run-analysis.sh` with the Bash lint checks in any image that provides them or on the host.
 Every phase except `subset-implementation`, which follows tester's RED, is a direct phase.
 
 - `renumber`: in one pass, rename the computation scripts, render scripts, and `.Rmd` sources of
@@ -92,6 +94,15 @@ Every phase except `subset-implementation`, which follows tester's RED, is a dir
 - `post-run-implementation`: implement exactly the increment's methodology. Validate it only with
   lint and syntax checks; never run the script.
 - `remove-code`: delete the removed increment's code, the files its Removed entry lists.
+- `run-script`: write or rewrite `run-analysis.sh`, with no `NN` prefix, in the folder of
+  `{Analysis_Script_file}`. It is a plain Bash script with `set -euo pipefail`, run on the host
+  from the repository root, with no SLURM headers, logging, extra checks, or dry-run mode. It runs
+  every computation script and render script of the plan, including `post-run` increments, in
+  `NN` order, each in its increment's image under the execution rules in `{Agents_file}`, and
+  stops at the first failure. It does not set `ANALYSIS_CONFIG`, so each script uses its default
+  real configuration. Its optional positional arguments `[FROM [TO]]` are inclusive `NN` bounds:
+  no arguments run everything, `run-analysis.sh 10` resumes from `10`, and
+  `run-analysis.sh 13 16` runs `13` to `16`. Validate it only with lint; never execute it.
 
 ## Loading the configuration
 
