@@ -18,4 +18,5 @@ documentation must not change runtime behavior.
 Review Git state before modifying it. An explicitly requested release may include its local
 release commit. Push, merge into the default branch, tag, and history rewriting require
 separate explicit user authorization. Return documentation sources, generated artifacts, version
-changes, released specification paths, validation evidence, performed Git actions, and blockers.
+changes, released specification and methods document paths, validation evidence, performed Git
+actions, and blockers.

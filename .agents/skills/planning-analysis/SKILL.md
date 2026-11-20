@@ -17,7 +17,7 @@ Resolve global placeholders from `{Agents_file}`. Read:
 - `{Agents_Folder}/templates/analysis-methods.template.md` and
   `{Agents_Folder}/references/analysis-inputs.md`, which define how the document is written and
   read, including the omission rules of methods steps;
-- the [implementation plan template](plan.template.md), which defines the plan's format, phases,
+- the [implementation plan template](plan.template.md), which defines its format, phases,
   and content rules;
 - `{Analysis_Images_file}`.
 
@@ -29,18 +29,18 @@ git log -1 --format='%H %s' --fixed-strings --grep='docs(<analysis-id>): approve
 git diff <commit> -- <path>
 ```
 
-The plan is `{Plans_Folder}/<analysis-id>.plan.md`. Update a single existing plan of the analysis
+The implementation plan is `{Plans_Folder}/<analysis-id>.plan.md`. Update a single existing one
 in place, create it when none exists, and stop when several candidates exist.
 
 # Workflow
 
 ## 1. Choose the mode
 
-- **New plan**: no plan exists.
-- **Same-version replanning**: the plan's `Version` equals the document's.
+- **New plan**: no implementation plan exists.
+- **Same-version replanning**: the implementation plan's `Version` equals the document's.
 - **New-version replanning**: the document has a new `Version`.
 
-Write the document's `Version` and its last approval commit in the plan's header.
+Write the document's `Version` and its last approval commit in the implementation plan's header.
 
 ## 2. Read the methods
 
@@ -50,10 +50,8 @@ result to report, and input for the stop conditions below before planning.
 
 ## 3. Select software and images
 
-Use selecting-container-images for every increment and for the input checks, with the version
-that the document fixes for each package, if any. Record the registry entries it adds, fill the
-Images table, marking the images that a missing Wave CLI sent to tier 4, and add one
-`tester: image-check` and `coder: image-build` pair to Setup for each tier-4 image. Fill Software
+Use selecting-container-images for every increment and for the input checks, with any version
+that the document fixes. From its records, fill Images and the Setup image pairs; fill Software
 and effective parameters from the resolved versions and their documentation.
 
 ## 4. Define inputs and test data
@@ -87,18 +85,17 @@ Leave the document's `Status` unchanged; the caller owns lifecycle transitions.
 
 # Replanning
 
-Replan from the diff between the approval commit in the plan's header and the current document,
-`git diff <plan's approval commit> -- <path>`, not from the version control table. Replanning for
-implementation evidence, with no document change, follows the same rules.
+Replan from the diff between the approval commit in the implementation plan's header and the
+current document, `git diff <that commit> -- <path>`, not from the version control table.
+Replanning for implementation evidence, with no document change, follows the same rules.
 
-- Map each changed step, input, global parameter, and result to the plan items that use it, and
+- Map each changed step, input, global parameter, and result to the items that use it, and
   propagate the change, directly or transitively through `Depends on`, to every increment whose
   methods, inputs, images, outputs, or criteria must change. Unchanged increments keep their
   markers, also when renumbered.
-- Keep the resolved versions and the chosen images. A revision never updates a version; only a
-  version that the user fixes in the document does, which may need a new image with a new ID.
-- Re-resolve a chosen image only when the user asks or a methods change requires it, so an image
-  that a missing Wave CLI sent to tier 4 stays at tier 4.
+- Keep the resolved versions and the chosen images, also an image that a missing Wave CLI sent
+  to tier 4. Re-resolve an image only when the user asks or a methods change requires it; only a
+  version that the user fixes in the document updates a version, which may need a new image ID.
 - Reset to pending:
   - the Execution markers of every modified increment;
   - every Finalization marker;
@@ -108,16 +105,12 @@ implementation evidence, with no document change, follows the same rules.
   - `coder: renumber` when a new version changes some increment number.
   New tier-4 images add new, pending image pairs.
 - Within a version, only append: new increments go at the end, with the next `NN`, and no
-  increment is removed or renumbered. Stop and suggest a new version when the diff contains a
-  change that requires one under the methods template's revision rules, such as a removed or
-  modified step, or when a change needs an increment before an existing one, such as a new
-  dependency of an increment on a later one.
+  increment is removed or renumbered.
 - At a new version, move each removed increment from Increments to Removed, as one entry with all
   its old files and pending removal markers. Then renumber the increments consecutively from `01`
   in execution order, and update the headings, `Depends on`, the `Increment` columns, Seeds,
   Reports, and each increment's `Files`. Renumbering alone does not modify an increment;
-  `coder: renumber` renames its files. Every increment then runs from the start into empty
-  version folders; no output of another version is reused.
+  `coder: renumber` renames its files.
 - Delete Removed entries whose markers are complete.
 
 # Stop conditions
@@ -131,17 +124,18 @@ the document or choosing for it, when:
 - implementing a step needs a choice that the text does not state and that is not a default
   value, such as which annotation field maps identifiers or how replicates are aggregated;
 - within the same `Version`, the diff contains a change that requires a new `Version` under the
-  methods template's revision rules, or a change needs an increment inserted before an existing
+  methods template's revision rules, such as a removed or modified step, or a change needs an
+  increment inserted before an existing one, such as a new dependency of an increment on a later
   one; suggest a new version, which only the user sets;
-- the document has no approval commit or differs from it, several plans match, or a package
-  version cannot be provided by any image tier.
+- the document has no approval commit or differs from it, several implementation plans match,
+  or a package version cannot be provided by any image tier.
 
 For a scientific gap, say in plain language what the document must state, not which value to
 choose.
 
 # Output
 
-Return the plan path, whether it was created or updated, the mode, `Version` and approval commit,
-the registry entries added, the tier-4 images and their Setup phases, whether the Wave CLI was
-missing and which images it sent to tier 4, the markers reset, the Software and effective
-parameters table, and any stop with its cited section.
+Return the implementation plan path, whether it was created or updated, the mode, `Version` and
+approval commit, the registry entries added, the tier-4 images and their Setup phases, whether
+the Wave CLI was missing and which images it sent to tier 4, the markers reset, the Software and
+effective parameters table, and any stop with its cited section.

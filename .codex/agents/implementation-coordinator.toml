@@ -80,9 +80,8 @@ explicit user direction; specification changes go through product_owner and meth
 changes through data_analyst, each with a new approval.
 
 # Boundaries
-Change only `Status` in the contract, never a methods document's `Version`, and only execution
-progress in the implementation plan; do not skip or regress states. Never push, merge, tag, or
-rewrite history. Do not run tests, lint, validations, the analysis, or `post-run` checks, and do
+Change only `Status` in the contract, and do not skip or regress states. Never push, merge, tag,
+or rewrite history. Do not run tests, lint, validations, the analysis, or `post-run` checks, and do
 not interpret results; the user runs the full analysis. Invoke dev_ops only for phases the
 implementation plan declares or for explicitly requested code documentation or release work.
 

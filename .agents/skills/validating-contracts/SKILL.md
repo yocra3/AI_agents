@@ -49,12 +49,11 @@ were read:
 | Model | The formula or design |
 | Correction | The multiple-testing method and its scope |
 
-Decide which fields a step requires with the template's table of required elements, from what
-its functions do and not from what the paragraph says. For example, a step that uses
-`DESeq2::results` produces p-values, so it requires Correction even when its paragraph does not
-mention p-values. In each field, write the value, `not applicable` when the step's functions do
-not call for it, or `missing` when it is required and not stated. When you cannot establish what
-a function does, write `unverified` with your assumption.
+Decide which fields a step requires with the template's required elements, from what its
+functions do and not from what the paragraph says. In each field, write the value,
+`not applicable` when the step's functions do not call for it, or `missing` when it is required
+and not stated. When you cannot establish what a function does, write `unverified` with your
+assumption.
 
 - Blocking: each `missing` required element.
 - Non-blocking: each `unverified` field, which the user confirms.
@@ -63,10 +62,8 @@ a function does, write `unverified` with your assumption.
 
 Each failed check is blocking:
 
-1. Every result in Results to report comes from a methods step or is a simple calculation:
-   descriptive and deterministic on existing results, such as counts, proportions, means, or the
-   first N. Anything inferential or model based, such as a test, p-values, a fit, or clustering,
-   needs a methods step.
+1. Every result in Results to report comes from a methods step or is a simple calculation, as
+   the template defines it.
 2. Every comparison of interest in Design is performed by a methods step, as stated and in its
    direction.
 3. Every step uses defined inputs: each input is an `INPUT_<NAME>` or `REF_<NAME>` key defined
@@ -90,20 +87,18 @@ git log -1 --format='%H %s' --fixed-strings --grep='docs(<analysis-id>): approve
 git diff <commit> -- <path>
 ```
 
-With no approval commit, the version control table must hold exactly the initial row
-`| v1 | Document | added | Initial document | First approval |`. Any other table is blocking.
+With no approval commit, the version control table must hold exactly the template's initial
+row. Any other table is blocking.
 
 With an approval commit, check the diff against the table:
 
 - Blocking: a content change to Methods, to a global parameter that a step uses, to Input data,
   or to Results to report that no row records.
 - Blocking: while `Version` is still the approved one, a change that requires a new `Version`
-  under the template's revision rules: a removed methods step; a changed tool, parameter, filter,
-  model, or correction of an existing step; a changed global parameter that a step uses; a change
-  to Design or Input data; or a new step whose output an existing step uses, explicitly or by the
-  omission rule. Explain that the change alters how results are computed, while the user may
-  already have run the approved version's scripts into its output folders, so it needs a new
-  `Version`, which only the user sets.
+  under the template's revision rules, including a new step whose output an existing step uses by
+  the omission rule. Explain that the change alters how results are computed, while the user may
+  already have run the approved version's scripts, so it needs a new `Version`, which only the
+  user sets.
 - Blocking: a row of the table at the approval commit that was deleted or changed. Approved rows
   are immutable; rows added since that commit may still be edited.
 - Non-blocking: an imprecise row added since the approval, such as a wrong section, change type,

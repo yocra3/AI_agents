@@ -62,8 +62,6 @@ Write acceptance criteria with the EARS guide in
 
 ## Removed
 
-<!-- One entry per increment removed at a new version; leave this section empty in a new plan. -->
-
 ### Removed: `<old file>`, `<old file>`
 
 - [ ] `tester: remove-tests`
@@ -145,31 +143,27 @@ each phase is done; this table gives its meaning.
 | Finalization | `cleaner: analysis-refactor` | Refactor all analysis code once. |
 | Finalization | `coder: run-script` | Write `run-analysis.sh`. |
 | Finalization | `coder: full-validation` | Run the complete test suite and lint every changed file. |
-| Finalization | `reviewer: implementation-review` | Review the implementation against the methods document and this plan. |
+| Finalization | `reviewer: implementation-review` | Review the implementation against the methods document and this implementation plan. |
 | Finalization | `dev_ops: code-documentation` | Add comments to the analysis code. |
 
 ## Content rules
 
 - The implementation plan holds the engineering decisions only. Every scientific decision comes
   from the methods document; never add, choose, or change one here.
-- The plan defines only what is specific to the analysis. Folders, file locations, configuration
-  files, and provenance come from the Analysis layout in `{Agents_file}`; standard configuration
-  keys, such as `ANALYSIS_ID`, `ANALYSIS_VERSION`, `RESULTS_DIR`, `FIGURES_DIR`, and
-  `REPORTS_DIR`, come from the coding profile. Never copy a phase's general rules into the plan.
+- It defines only what is specific to the analysis. Folders, file locations, configuration files,
+  and provenance come from the Analysis layout in `{Agents_file}`; standard configuration keys,
+  such as `ANALYSIS_ID`, `ANALYSIS_VERSION`, `RESULTS_DIR`, `FIGURES_DIR`, and `REPORTS_DIR`, come
+  from the coding profile. Never copy a phase's general rules into it.
 - Paths may be absolute or relative to the repository root. Write them relative to the repository
   root, and keep a path outside the repository absolute.
 - `Version` always equals the methods document's `Version`. `Approval commit` is the approval
-  commit the plan was last planned from.
-- The plan has no change markers; its history is in Git.
+  commit it was last planned from.
+- It has no change markers; its history is in Git.
 
 ## Software and effective parameters
 
-- One row per package that a methods step or a report uses, with the version resolved once, at
-  planning, in the tier order below, and the image that provides it.
-- Tier order: (1) the project registry, (2) BioContainers, (3) Seqera Containers, (4) a recipe.
-  A registry image that already has the package wins even without its latest version, unless the
-  methods document fixes another version. A new image, of tiers 2 to 4, uses the latest version
-  available, or the version that the document fixes.
+- One row per package that a methods step or a report uses, with the version that
+  selecting-container-images resolves and the image that provides it.
 - Digest is the image's digest for tiers 1 to 3, and `registry` for tier 4: `coder` records it in
   `{Analysis_Images_file}` under the image ID at `coder: image-build`.
 - Effective parameters lists, for each step, the values that the resolved version uses for the
@@ -180,17 +174,13 @@ each phase is done; this table gives its meaning.
 
 ## Images
 
-- Every increment and the input checks run in exactly one image of the Images table. An image
-  provides the tools of every increment that names it and, for their language, the test framework
-  and the linter. The image of a report increment also provides rmarkdown and Pandoc. The image
-  of the input checks, which also runs the synthetic data generator and the reference subset
-  script, provides the tools that read each input format, such as `samtools` for BAM headers.
-- Each image has an ID made of a short name and a version, such as `r-deseq2-v1`. Tier-1 images
-  keep their registry ID. Tier-2 and tier-3 images have a registry entry, with their digest, when
-  the plan is written. A tier-4 image's Image is its recipe path in `{Analysis_Recipes_Folder}`,
-  its Contents give the base image and every package with its version, and it has one
-  `tester: image-check` and `coder: image-build` pair in Setup. When a missing Wave CLI sent the
-  image to tier 4, its Tier is `4 recipe, Wave CLI missing`.
+- Every increment and the input checks run in exactly one image of the Images table, as
+  selecting-container-images selects it. The image of the input checks also runs the synthetic
+  data generator and the reference subset script.
+- A tier-4 image's Image is its recipe path in `{Analysis_Recipes_Folder}`, its Contents give the
+  base image and every package with its version, and it has one `tester: image-check` and
+  `coder: image-build` pair in Setup. When a missing Wave CLI sent the image to tier 4, its Tier
+  is `4 recipe, Wave CLI missing`.
 
 ## Configuration
 
@@ -214,8 +204,6 @@ each phase is done; this table gives its meaning.
 
 ## Test data
 
-- Tests use synthetic data instead of the user's data and real reference resources reduced to a
-  subset. They never use the user's real data.
 - Synthetic inputs: one rule per `INPUT_<NAME>` key. The data have the format, compression, and
   structure of Input data and are plausible: reasonable distributions, real identifiers taken
   from the reference subsets, such as gene IDs from the annotation subset, every level of each
@@ -290,8 +278,7 @@ each phase is done; this table gives its meaning.
   `coder: real-config`; `tester: real-input-check`. Omit the image pairs when there is no tier-4
   image. The `coder: renumber` marker is complete except at a new version in which some increment
   number changes.
-- Within a version, increments are only appended, never removed or renumbered. The Removed
-  section holds one entry per increment removed at a new version, with the phases
+- The Removed section holds one entry per increment removed at a new version, with the phases
   `tester: remove-tests` then `coder: remove-code`, and is empty when no increment has been
   removed. An entry lists all the increment's old files, for example
   `Removed: 04-report.Rmd, 04-report.sh`, and takes no number in the increment sequence.

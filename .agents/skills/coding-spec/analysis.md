@@ -89,10 +89,7 @@ phase.
   names, such as the `.Rmd` path in render scripts, the provenance file name and `script` row,
   header `Usage:` paths, and calls or sources between scripts, so provenance file names follow
   the script's `NN`. Change nothing else, and use no git commands.
-- `image-build`: build the tier-4 image that the marker names with building-container-images,
-  which writes its recipe, builds it, and adds its registry entry. Reach GREEN with tester's image
-  check. When Docker or `fakeroot` permissions are missing, stop and report what to ask the
-  administrator for.
+- `image-build`: use building-container-images for the tier-4 image that the marker names.
 - `real-config`: write `{Analysis_Real_Config_file}` with `ANALYSIS_ID`, `ANALYSIS_VERSION` set to
   the implementation plan's `Version`, the output folders set to the version folders of the
   Analysis layout, and every `INPUT_<NAME>`, `REF_<NAME>`, and global parameter key of

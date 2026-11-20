@@ -8,7 +8,7 @@ description: Select the container image of each increment and of the input check
 Give every increment of the implementation plan, and its input checks, one image that provides
 all their tools, following the rules of `{Agents_Folder}/templates/container-images.template.md`.
 `engineer` resolves tiers 1 to 3 here and records their registry entries; a tier-4 image becomes
-Setup phases of the plan, where `coder` writes its recipe and builds it.
+Setup phases of the implementation plan, where `coder` writes its recipe and builds it.
 
 # Requirements
 
@@ -94,15 +94,15 @@ at `https://seqera.io/containers/`. A missing Wave CLI is never a stop condition
 
 ## 4. Recipe
 
-When no tier provides every requirement, specify the image for the plan: a base image, every
-package with its version, and the recipe path in `{Analysis_Recipes_Folder}`. Do not write the
-recipe or build the image.
+When no tier provides every requirement, specify the image for the implementation plan: a base
+image, every package with its version, and the recipe path in `{Analysis_Recipes_Folder}`. Do not
+write the recipe or build the image.
 
 # Registry entries
 
-Give each image an ID made of a short name and a version, such as `r-deseq2-v1`. Add a registry
-entry, with its digest, for each new tier-2 and tier-3 image, as the registry template defines.
-Never modify or remove an entry. Tier-4 entries are added by `coder` after it builds the image.
+A registry image keeps its ID; give each new image an ID as the registry template defines. Add a
+registry entry, with its digest, for each new tier-2 and tier-3 image. Tier-4 entries are added by
+`coder` after it builds the image.
 
 # Output
 

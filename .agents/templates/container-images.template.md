@@ -30,6 +30,3 @@ ID.
 - Never modify or remove an entry. A rebuilt image gets a new ID and a new entry.
 - Recipes are versioned in `{Analysis_Recipes_Folder}`. Built image files are kept in
   `{Analysis_Images_Folder}`, which Git ignores.
-- An image provides the tools of every increment that names it and, for their language, the test
-  framework and the linter. The image of a report increment also provides rmarkdown and Pandoc,
-  and the image of the input checks provides the tools that read each input format.

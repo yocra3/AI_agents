@@ -1,7 +1,7 @@
 # Analysis inputs reference
 
 Rules for the Input data section of an analysis methods document. The same text feeds the
-synthetic test-data generator, the input tests, and the data section of the manuscript, so it
+synthetic data generator, the input checks, and the data section of the manuscript, so it
 uses fixed fields and a closed vocabulary. The methods document template refers to this file,
 `defining-analysis-inputs` helps write the section, and contract validation checks it against the
 completeness criteria below.
@@ -9,14 +9,14 @@ completeness criteria below.
 ## Principles
 
 - Describe only what the analysis uses, with its shape. Do not describe columns, fields, slots, or
-  files that no methods step uses; input tests accept them.
+  files that no methods step uses; input checks accept them.
 - Never record counts, such as rows, variants, genes, or samples. The only count allowed is the
   minimum number of replicates per level of a design variable.
 - Never record per-record values, measurements, sample or patient identifiers, or free text taken
   from the data. Describe identifiers by their pattern.
 - Record what the user knows about the data, not what the methods require of it. Technical
   requirements derived from the methods, such as integer counts for DESeq2 or a sorted and indexed
-  BAM, belong to the implementation plan, where `engineer` turns them into input tests.
+  BAM, belong to the implementation plan, where `engineer` turns them into input checks.
 - Use only the formats and the vocabulary below. A missing format is added to this reference
   through `craftsman`; never write "other".
 - The section may be written by the user, by `data_analyst`, or with `defining-analysis-inputs`,
@@ -106,8 +106,8 @@ A manifest is a table whose column holds paths to other files, such as a samples
 FASTQ files. Describe it as a table. Each path column is a used column of type `string`, with the
 format and compression of the files it points to and the structure items of that format's family,
 and its ID pattern as a constraint. Paths are values: record the pattern, never the paths. As in
-Location, the paths may be absolute or relative to the repository root. Input tests check that
-every listed path exists and that every listed file meets its declared format.
+Location, the paths may be absolute or relative to the repository root. The input checks verify
+that every listed path exists and that every listed file meets its declared format.
 
 ```markdown
 ### `INPUT_SAMPLESHEET`

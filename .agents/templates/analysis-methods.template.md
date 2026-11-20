@@ -102,8 +102,6 @@ elements of the step.>
   | Uses non-default values | Each of them, with its exact value. |
 
 - A step that uses a global parameter names it instead of repeating its value.
-- Anything inferential or model based, such as a statistical test, p-values, a model fit, or
-  clustering, needs a methods step.
 
 ## Results to report
 
@@ -111,8 +109,9 @@ elements of the step.>
   reports, their sections, or file names, and never specify plotting functions, their arguments,
   or styling; `engineer` decides how results are reported.
 - Each result comes from a methods step or is a simple calculation: descriptive and deterministic
-  on existing results, such as counts, proportions, means, or the first N. Anything else needs a
-  methods step.
+  on existing results, such as counts, proportions, means, or the first N. Anything inferential or
+  model based, such as a statistical test, p-values, a model fit, or clustering, needs a methods
+  step.
 - Never ask for interpretations or conclusions; the user interprets the results.
 
 ## Input data

@@ -17,14 +17,17 @@ not already exist.
 2. Review the existing `{Agents_file}`, `{Briefing_file}`, `{Root_Folder}/CHANGELOG.md`, repository
    structure, applicable technical profiles, and verified development commands.
 3. Render `{Agents_file}` from the template. Replace named content placeholders, include the
-   observed folder structure, and omit optional fields that do not apply. Include the Analysis
-   layout, with the blueprint's defaults, only when the project has an analysis workflow.
-   Include `ToolUniverse_CLI` only when the user gives its path.
+   observed folder structure, and omit optional fields that do not apply. Only when the project
+   has an analysis workflow, include the Analysis layout, with the blueprint's defaults, and the
+   Container execution rules, each confirmed with the user. Include `ToolUniverse_CLI` only when
+   the user gives its path.
 4. Confirm that the generated file contains no anonymous or unresolved template placeholders.
 5. Update `{Briefing_file}` with a short, feature-focused product summary.
 6. Create `{Root_Folder}/CHANGELOG.md` from the changelog template when it is absent. Never replace
    or truncate an existing changelog.
-7. Report the resolved global placeholders, selected profiles, commands, and changed files.
+7. Report the resolved global placeholders, selected profiles, commands, and changed files. For
+   an analysis workflow, also give the blueprint's recommendation to deny `Read` on the data
+   folders.
 
 Do not infer paths that would move work outside `{Root_Folder}`. This skill is a manual
 bootstrap workflow and must not be invoked implicitly by other agents.

@@ -15,8 +15,7 @@ confirm that failure demonstrates missing behavior. A missing required productio
 be valid RED; syntax, fixture, environment, and setup errors are not. Validate expected
 results independently of the implementation under test, following the applicable profile.
 
-Change only tests and supporting test artifacts. For an analysis implementation plan, these
-include the test configuration, the execution runner, the reference subset script, the synthetic
-data generator, the input checks, and the image checks. Do not create or modify production code,
-structural skeletons, branches, commits, or release artifacts. Return the covered behavior,
-changed files, exact commands and results, expected failure reason, and unresolved work.
+Change only tests and supporting test artifacts, including those that the applicable profile
+lists. Do not create or modify production code, structural skeletons, branches, commits, or
+release artifacts. Return the covered behavior, changed files, exact commands and results,
+expected failure reason, and unresolved work.

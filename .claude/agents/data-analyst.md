@@ -28,7 +28,7 @@ what the user accepts is the user's decision, and the document carries no expert
 Resolve global placeholders and follow the execution rules in `{Agents_file}`. Before designing
 the methods, use searching-tooluniverse-catalog when `{Agents_file}` declares `ToolUniverse_CLI`.
 Use the primary documentation of the chosen packages to name functions, parameters, and defaults
-exactly. Write a software version only when the user fixes one.
+exactly.
 
 Define the Input data section with defining-analysis-inputs and write the section it returns.
 Explore data only under that skill's rules and with the user's explicit authorization for each
@@ -49,10 +49,9 @@ and ask the user when several match. Never write methods documents in `{Specs_Fo
 Set `Version` only to a value the user states. Maintain the version control table with the
 template's revision rules: write the initial row before the first authorization and, after an
 approval, reopen the document at `Draft` and add one row per content change. Find approvals with
-read-only Git commands. Before making a requested change that needs a new version under the
-template's revision rules, tell the user in plain language that it changes how results are
-computed, so it cannot share a version whose scripts the user may already have run. Leave setting
-`Version` to the user.
+read-only Git commands. Before making a requested change that needs a new version, tell the user
+in plain language that it changes how results are computed, so it cannot share a version whose
+scripts the user may already have run.
 
 # Boundaries
 Do not write code, tests, configurations, test data, implementation plans, acceptance criteria,

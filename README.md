@@ -35,7 +35,7 @@ person approves a contract, a specification or an analysis methods document, and
 - `engineer` turns the approved contract into one implementation plan, which declares every
   phase to run, including the final ones.
 - The coordinator runs as the main session, owns one task branch and commits only green work. It
-  never pushes, merges or tags unless asked.
+  never pushes, merges or tags; those are separate requests.
 - Work advances in small increments, each with a failing test first (RED), then the code that
   makes it pass (GREEN).
 - Every document has one file that is revised in place, and its status records where the work
@@ -160,14 +160,11 @@ flowchart TD
 - **Steps that cannot run on synthetic data** are `post-run` increments. They are checked only
   after the user's full run, which `Verified` requires.
 - **Revisions**: a change after an approval reopens the methods document at `Draft` and needs a
-  new approval. Each content change adds a row to the document's version control table, which is
-  cumulative and whose approved rows never change. The user sets `Version`; agents only suggest a
-  new one. A change to how results are computed needs a new version: removing or modifying a
-  methods step, changing a global parameter that a step uses, changing the design or the input
-  data, or adding a step whose output an existing step uses. Within a version fit only new steps
-  at the end that no existing step uses, changes to the results to report or the references, and
-  wording corrections. A new version renumbers the increments and reruns everything into empty
-  folders.
+  new approval. Each content change adds a row to the document's cumulative version control
+  table, whose approved rows never change. The user sets `Version`; agents only suggest a new
+  one. A change to how results are computed, such as modifying a methods step, needs a new
+  version, which renumbers the increments and reruns everything into empty folders; the methods
+  template lists which changes fit within a version.
 - **Agents never interpret results or draft conclusions**; reports state only what each table
   or figure shows.
 

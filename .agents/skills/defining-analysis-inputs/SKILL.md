@@ -1,6 +1,6 @@
 ---
 name: defining-analysis-inputs
-description: Write or revise the Input data section of an analysis methods document, by interview or, with explicit authorization for each path, by exploring the structure of the data; authorizing a manifest also covers the header and format of the files it lists. Never creates the methods document.
+description: Write or revise the Input data section of an analysis methods document, by interview or, with explicit authorization for each path, by exploring the structure of the data. Use from data_analyst or when the user asks to define an analysis's inputs. Never creates the methods document.
 ---
 
 # Purpose
@@ -48,18 +48,11 @@ to compute a summary, but only summaries may reach the context, in this order of
 
 Never load a data file into the context with a file-reading tool or a command that prints it.
 
-Record only the shape: column names, types, levels of the design variables, identifier patterns
-as regular expressions, generic constraints, and standard format headers. Check that every level
-of a design variable reaches the minimum number of replicates without recording how many it has.
-Never record counts, per-record values, measurements, sample or patient identifiers, or free
-text. When column names are identifiers, such as the sample columns of a count matrix, record
-their pattern, not the names. A variable whose levels identify people is an identifier: record
-its pattern and its number of levels. Paths in a manifest are values: record the path column and
-the pattern of its paths, never the paths.
-
-Locations and the paths in a manifest may be absolute or relative to the repository root, where
-scripts run. Write a location relative to the repository root when you can, and you may tell the
-user that relative paths are preferred.
+Record only the shape, under the reference's principles: column names, types, levels of the
+design variables, identifier patterns as regular expressions, generic constraints, and standard
+format headers. Check that every level of a design variable reaches the minimum number of
+replicates without recording how many it has. When column names are identifiers, such as the
+sample columns of a count matrix, record their pattern, not the names.
 
 Read binary formats with, in this order:
 
@@ -101,7 +94,5 @@ paths explored; the missing items from the completeness check; and the open ques
 
 - Creating the methods document or changing any section other than Input data.
 - Exploring a path without the user's explicit authorization for it.
-- Writing technical requirements that follow from the methods, such as integer counts for a
-  method that needs them.
 - Modifying data, installing packages, downloading resources, or sending any project data, such
   as paths, file contents, or identifiers, to an external service.

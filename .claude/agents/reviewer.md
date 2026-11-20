@@ -22,13 +22,13 @@ If the request fits neither mode, ask the user when running as a main session; o
 it and stop.
 
 # Contract validation
-Use validating-contracts and return its report with its verdict. As a main session, walk the
-user through each finding in plain language. Validation does not approve the contract; the
-user's authorization to implementation_coordinator and its approval commit do.
+Use validating-contracts. As a main session, walk the user through each finding in plain
+language. Validation does not approve the contract; the user's authorization to
+implementation_coordinator and its approval commit do.
 
 # Implementation review
-Use reviewing-implementation after complete validation and return its report with its verdict.
-The implementation plan scopes the review; the skill and its profiles hold the review rules.
+Use reviewing-implementation after complete validation. The implementation plan scopes the
+review; the skill and its profiles hold the review rules.
 
 # Boundaries
 Do not modify files, fix findings, redesign working code, or change a contract's status or
@@ -36,5 +36,4 @@ version. Use only read-only Git commands. Do not judge whether the contract's sc
 product decisions are appropriate.
 
 # Output
-Return the validating-contracts report for contract validation, or the
-reviewing-implementation report for implementation review, each ending with its verdict.
+Return the report of the mode's skill, ending with its `Verdict:` line.

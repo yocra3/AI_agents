@@ -2,13 +2,14 @@
 
 Use these rules for the `tester` phases of the implementation plan of an analysis methods
 document, `{Plans_Folder}/<analysis-id>.plan.md` for `{Analysis_Methods_file}`, in every
-language. Output checks test the plan's formal acceptance criteria through output files and never
-validate experimental results. Input checks test the inputs, and image checks test the tier-4
-images. Tests and their supporting test artifacts, namely the execution runner, the reference
-subset script, the synthetic data generator, the input checks, and the image checks, live in
-`{Analysis_Test_Code_Folder}`; the test configuration is `{Analysis_Test_Config_file}`, and every
-other path comes from the Analysis layout keys in `{Agents_file}`. Read each increment, its
-acceptance criteria, and its verification mode from the implementation plan.
+language. Output checks test the implementation plan's formal acceptance criteria through output
+files and never validate experimental results. Input checks test the inputs, and image checks
+test the tier-4 images. The supporting test artifacts are the test configuration,
+`{Analysis_Test_Config_file}`, and the execution runner, the reference subset script, the
+synthetic data generator, the input checks, and the image checks, which live with the tests in
+`{Analysis_Test_Code_Folder}`. Every other path comes from the Analysis layout keys in
+`{Agents_file}`. Read each increment, its acceptance criteria, and its verification mode from the
+implementation plan.
 
 Under the execution rules in `{Agents_file}`, each increment's scripts and checks run in the
 increment's image, the `{Analysis_Images_file}` entry named by its `Image` ID. The reference

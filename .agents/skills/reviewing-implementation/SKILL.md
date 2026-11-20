@@ -26,26 +26,27 @@ plan is missing or cannot be resolved.
 
 # Checks
 
-- **Fidelity**: the work satisfies the contract and every acceptance criterion of the
-  implementation plan, and implements every plan item as planned.
-- **Correctness**: the code does what the contract and the plan state, including error handling
-  and edge cases that they name.
-- **Regressions**: the changes do not break behavior outside the plan's scope.
+- **Fidelity**: the work satisfies the contract and every acceptance criterion, and implements
+  every implementation plan item as planned.
+- **Correctness**: the code does what the contract and the implementation plan state, including
+  error handling and edge cases that they name.
+- **Regressions**: the changes do not break behavior outside the implementation plan's scope.
 - **Tests**: every acceptance criterion has a test that checks it and that would fail if the
   criterion were not met.
-- **Scope**: the branch changes nothing that the contract and the plan do not authorize.
+- **Scope**: the branch changes nothing that the contract and the implementation plan do not
+  authorize.
 - **Consistency**: planned and implemented behavior agree, such as names, interfaces, outputs, and
   dependencies.
 
 # Classification
 
 - **Blocking**: the work does not meet the contract or an acceptance criterion, misses or
-  deviates from a plan item, is incorrect, causes a regression, leaves a criterion without a test
-  that can fail, or changes behavior that the contract does not authorize. The work must change
-  before the user's review.
+  deviates from an implementation plan item, is incorrect, causes a regression, leaves a
+  criterion without a test that can fail, or changes behavior that the contract does not
+  authorize. The work must change before the user's review.
 - **Non-blocking**: any other actionable finding, such as maintainability or readability
-  problems, tests that could be stronger beyond the criteria, or small additions beyond the plan
-  that change no contracted behavior.
+  problems, tests that could be stronger beyond the criteria, or small additions beyond the
+  implementation plan that change no contracted behavior.
 
 A profile below may classify specific cases; its classification takes precedence.
 
@@ -68,13 +69,11 @@ this structure, writing `None.` under an empty list:
 
 ## Blocking findings
 
-1. **<file:line>** (<contract section or criterion, or plan step, increment, or phase>):
-   <finding and evidence>
+1. **<file:line>** (<affected contract or implementation plan item>): <finding and evidence>
 
 ## Non-blocking findings
 
-1. **<file:line>** (<contract section or criterion, or plan step, increment, or phase>):
-   <finding and evidence>
+1. **<file:line>** (<affected contract or implementation plan item>): <finding and evidence>
 
 Verdict: <blocking findings present | no blocking findings>
 ```

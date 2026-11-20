@@ -104,7 +104,7 @@ The following named placeholders guide generation but do not need to remain as g
 - `{Deploy_Command}`: deployment command when the project has one.
 - `{Profiles}`: optional Markdown profiles mapped to their language, framework, or test scope.
 - `{Folder_Structure}`: concise structure observed in the repository, including the resolved
-  agent, skill, project, specification, and plan paths.
+  agent, skill, project, specification, and implementation plan paths.
 - `{Development_OS}`, `{Development_Shell}`, `{Git_Remote}`, `{Default_Branch}`: observed local and
   repository environment values.
 
