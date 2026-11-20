@@ -34,6 +34,11 @@
 
 - [ ] {One line Task 1 description}
 
+## Finalization
+
+- [ ] `coder: full-validation`
+- [ ] `reviewer: implementation-review`
+
 ## Blockers
 
 - `<blocker or none>`

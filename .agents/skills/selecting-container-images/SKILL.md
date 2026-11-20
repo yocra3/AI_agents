@@ -1,38 +1,61 @@
 ---
 name: selecting-container-images
-description: Match the chosen methods of an analysis plan to the project's container image registry and propose images for the gaps. Use after the methods are chosen and before writing the plan. Never build images or change recipes.
+description: Select the container image of each increment and of the input checks of an analysis implementation plan, in tier order from the project registry, BioContainers, and Seqera Containers, and specify a recipe when none fits. Use from planning-analysis while engineer plans a methods document. Never build images locally or write recipes.
 ---
 
 # Purpose
 
-Give every increment of the plan an image from `{Analysis_Images_file}` that provides its tools,
-following the rules of `{Agents_Folder}/templates/container-images.template.md`. The user builds
-images and changes recipes; `data_analyst` proposes options and records registry entries.
+Give every increment of the implementation plan, and its input checks, one image that provides
+all their tools, following the rules of `{Agents_Folder}/templates/container-images.template.md`.
+`engineer` resolves tiers 1 to 3 here and records their registry entries; a tier-4 image becomes
+Setup phases of the plan, where `coder` writes its recipe and builds it.
 
-# Workflow
+# Requirements
 
-## 1. Match the registry
+List what each image must provide:
 
-Compare each chosen package or tool with the Contents of the registry entries and decide which
-image covers each operation. An increment runs in one image, so the tools of one increment, its
-test framework, and its linter must all be in that image.
+- the packages and tools of the increment's steps, with the version that the methods document
+  fixes, if any;
+- the test framework and the linter of the increment's language, and rmarkdown and Pandoc for a
+  report increment;
+- for the input checks, the tools that read each input format, such as `samtools` for BAM
+  headers.
 
-## 2. Verify registry images
+An increment runs in one image, so all its requirements must be in that image.
 
-When Contents do not settle whether a package or tool is present, check it with a read-only
-command in the image under the execution rules in `{Agents_file}`, for example:
+# Tiers
+
+Try the tiers in this order and stop at the first that provides every requirement:
+
+1. **Project registry**: an entry of `{Analysis_Images_file}`.
+2. **BioContainers**: a single-package image of a Bioconda package.
+3. **Seqera Containers**: an image built on request for a combination of Conda or PyPI packages.
+4. **Recipe**: an image that `coder` builds from a recipe.
+
+Versions:
+
+- A registry image that already has the package wins even without its latest version, unless the
+  methods document fixes another version.
+- A new image, of tiers 2 to 4, uses the latest version available in the package index, or the
+  version that the document fixes, compatible with the other packages of the image.
+- Resolve each version once, at planning; replanning keeps it unless the document fixes a new one.
+
+## 1. Project registry
+
+Compare the requirements with the Contents of the registry entries. When Contents do not settle
+whether a package or tool is present, check it with a read-only command in the image under the
+execution rules in `{Agents_file}`, for example:
 
     apptainer exec <image> Rscript -e 'packageVersion("coloc")'
     apptainer exec <image> samtools --version
 
 Never execute anything else in an image.
 
-## 3. Search the gaps
+## 2. BioContainers
 
-For each missing package or tool, query the public indexes below with its name only, never with
-project data. Conda names are lower case: Bioconductor packages are `bioconductor-<name>` in
-Bioconda, CRAN packages are `r-<name>` in conda-forge and sometimes in Bioconda, and other tools
-usually keep their name.
+Query the public indexes below with package names only. Conda names are lower case: Bioconductor
+packages are `bioconductor-<name>` in Bioconda, CRAN packages are `r-<name>` in conda-forge and
+sometimes in Bioconda, and other tools usually keep their name.
 
 - Bioconda and conda-forge, through the Anaconda.org API used by `anaconda-client`.
   `<channel>` is `bioconda` or `conda-forge`. The first query returns `versions` and
@@ -52,29 +75,53 @@ usually keep their name.
       curl -s 'https://quay.io/api/v1/repository/biocontainers/<conda-name>/tag/?onlyActiveTags=true&filter_tag_name=like:<version>'
       curl -sI https://depot.galaxyproject.org/singularity/<conda-name>:<tag>
 
-An analysis that needs several packages in one image, typical of R, usually needs a custom image.
-BioContainers images hold one package and its dependencies; a multi-package "mulled" image exists
-only for combinations requested in `BioContainers/multi-package-containers`.
+A BioContainers image holds one package and its dependencies, so it fits only when that package
+covers every requirement, including the test framework and the linter.
 
-## 4. Propose
+## 3. Seqera Containers
 
-Propose one option per gap to the user: use a BioContainers image, add packages to an existing
-recipe, or create a new image. Flag a BioContainers image that lacks the test framework, linter,
-rmarkdown, or Pandoc that the registry rules require. The user decides and builds the image; then
-add its registry entry and use its ID in the plan.
+Request one image with every requirement as Conda or PyPI packages, each with its channel and
+version, through the Wave CLI. Add `--singularity` for an Apptainer image:
+
+    wave --freeze --await --conda-package bioconda::<conda-name>=<version> --conda-package conda-forge::<conda-name>=<version>
+
+A request triggers a build in the Seqera service that may take several minutes; wait for it with
+`--await`. The images are public, at `community.wave.seqera.io`, and the same packages always
+return the same image. Record the URI that the request returns and its manifest digest from the
+registry. When the build fails, for example because the packages conflict, use tier 4. When the
+Wave CLI is not available, stop and report it; the user can install it or request the image at
+`https://seqera.io/containers/`.
+
+## 4. Recipe
+
+When no tier provides every requirement, specify the image for the plan: a base image, every
+package with its version, and the recipe path in `{Analysis_Recipes_Folder}`. Do not write the
+recipe or build the image.
+
+# Registry entries
+
+Give each image an ID made of a short name and a version, such as `r-deseq2-v1`. Add a registry
+entry, with its digest, for each new tier-2 and tier-3 image, as the registry template defines.
+Never modify or remove an entry. Tier-4 entries are added by `coder` after it builds the image.
+
+# Output
+
+Return one record per image:
 
 ```yaml
-- gap: <package or tool>
-  needed_by: <operations>
-  found: <conda channel and version, BioContainers tag and digest, or not found>
-  proposal: <biocontainers | add-to-recipe | new-image>
-  detail: <image with tag and digest, recipe and packages to add, or base and packages>
-  missing: <test framework, linter, rmarkdown, or Pandoc the registry requires, or none>
+- id: <image ID>
+  tier: <1 | 2 | 3 | 4>
+  image: <URI, or recipe path for tier 4>
+  digest: <sha256:..., or registry for tier 4>
+  contents: <base for tier 4; packages with versions; test framework; linter; rmarkdown and Pandoc>
+  used_by: <increments and input checks>
+  entry_added: <true | false>
 ```
 
 # Prohibited
 
-- Building images or modifying recipes.
+- Building images locally, writing or modifying recipes, or modifying registry entries.
 - Running commands other than the package-presence checks on registry images, the read-only
-  queries above, and the sha256 of a local image file.
-- Sending project data, such as paths, sample names, or file contents, to any external service.
+  queries above, Seqera Containers requests, and the sha256 of a local image file.
+- Sending project data, such as paths, sample names, or file contents, to any external service;
+  queries and requests carry package names and versions only.

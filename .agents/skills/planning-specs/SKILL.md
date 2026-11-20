@@ -33,6 +33,7 @@ For Nextflow work, also load [Nextflow planning](references/nextflow.md) and [te
  - [ ] Tasks should be verifiable by the delegated agent without prescribing internal implementation tactics.
 ### Step 4: Resolve and write the implementation plan.
  - [ ] Follow the format in the [Implementation Plan template](plan.template.md).
+ - [ ] Keep the template's Finalization section after the last step, with its phases pending.
  - [ ] If exactly one plan already maps to the specification, update it in place and preserve its path.
  - [ ] If no plan maps to the specification, create `{Plans_Folder}/<spec-slug-id>.plan.md`.
  - [ ] If multiple candidates exist, stop and ask the user; do not create another plan.
