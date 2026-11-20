@@ -24,7 +24,9 @@ and the section records only the shape of what the analysis uses.
 # Modes
 
 Use the interview unless the user explicitly authorizes exploring a path. An authorization covers
-only the paths it names; use the interview for every other input. The modes can be mixed.
+only the paths it names; use the interview for every other input. An authorization to explore a
+manifest also covers reading the header and format of each file it lists, and nothing more of
+those files; the exploration rules below apply to them. The modes can be mixed.
 
 ## Interview
 
@@ -54,6 +56,10 @@ text. When column names are identifiers, such as the sample columns of a count m
 their pattern, not the names. A variable whose levels identify people is an identifier: record
 its pattern and its number of levels. Paths in a manifest are values: record the path column and
 the pattern of its paths, never the paths.
+
+Locations and the paths in a manifest may be absolute or relative to the project folder. Write
+a location relative to the project folder when you can, and you may tell the user that relative
+paths are preferred.
 
 Read binary formats with, in this order:
 

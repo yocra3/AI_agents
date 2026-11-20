@@ -58,7 +58,7 @@ inputs.
 | --- | --- |
 | Key | `INPUT_<NAME>` for the user's data, `REF_<NAME>` for a reference resource such as a genome, an annotation, or a public database. `<NAME>` uses upper-case letters, digits, and underscores, and is unique in the document. |
 | Content | One sentence that states what the data are, with their biological meaning. |
-| Location | The exact path of one file or one folder, never a list. A small fixed set of distinct files is one input per file. For a folder, give the relative pattern of the files read, for example `<sample>/quant.sf`, and what is ignored. |
+| Location | The exact path of one file or one folder, never a list. Absolute paths and paths relative to the project folder are accepted; agents prefer relative paths when they write one. A small fixed set of distinct files is one input per file. For a folder, give the relative pattern of the files read, for example `<sample>/quant.sf`, and what is ignored. |
 | Format | One format from the list below, with its compression, for example `TSV, gzip`, `VCF, bgzip`, or `BAM`. |
 | Structure | The items of the format's family, below. |
 | Constraints | Constraints from the vocabulary below for each used column or field. Missing values are always declared. |
@@ -105,21 +105,22 @@ levels instead of its levels.
 A manifest is a table whose column holds paths to other files, such as a samplesheet with paths to
 FASTQ files. Describe it as a table. Each path column is a used column of type `string`, with the
 format and compression of the files it points to and the structure items of that format's family,
-and its ID pattern as a constraint. Paths are values: record the pattern, never the paths. Input
-tests check that every listed path exists and that every listed file meets its declared format.
+and its ID pattern as a constraint. Paths are values: record the pattern, never the paths. As in
+Location, the paths may be absolute or relative to the project folder. Input tests check that
+every listed path exists and that every listed file meets its declared format.
 
 ```markdown
 ### `INPUT_SAMPLESHEET`
 
 - **Content**: Raw RNA-seq reads of each sample.
-- **Location**: `/data/rnaseq/samplesheet.csv`
+- **Location**: `data/rnaseq/samplesheet.csv`
 - **Format**: CSV, uncompressed
 - **Structure**: Table with a header; one row per sample; key column `sample`.
   - `sample`: `string`, sample identifier.
   - `fastq_1`, `fastq_2`: `string`, paths to the read 1 and read 2 files of the sample. Files:
     FASTQ, gzip; paired-end.
 - **Constraints**: `sample` unique, ID pattern `^S[0-9]{3}$`, missing values not allowed.
-  `fastq_1`, `fastq_2` unique, ID pattern `^/data/rnaseq/fastq/S[0-9]{3}_R[12]\.fastq\.gz$`,
+  `fastq_1`, `fastq_2` unique, ID pattern `^data/rnaseq/fastq/S[0-9]{3}_R[12]\.fastq\.gz$`,
   missing values not allowed.
 ```
 
@@ -129,7 +130,7 @@ tests check that every listed path exists and that every listed file meets its d
 ### `INPUT_COUNTS`
 
 - **Content**: Gene-level RNA-seq read counts per sample.
-- **Location**: `/data/rnaseq/counts.tsv.gz`
+- **Location**: `data/rnaseq/counts.tsv.gz`
 - **Format**: TSV, gzip
 - **Structure**: Matrix with a header. Rows are genes, ID pattern `^ENSG[0-9]{11}$`, in the first
   column `gene_id`; columns are samples, ID pattern `^S[0-9]{3}$`. Values are `integer`.
@@ -138,7 +139,7 @@ tests check that every listed path exists and that every listed file meets its d
 ### `INPUT_METADATA`
 
 - **Content**: Experimental condition of each sample.
-- **Location**: `/data/rnaseq/samples.csv`
+- **Location**: `data/rnaseq/samples.csv`
 - **Format**: CSV, uncompressed
 - **Structure**: Table with a header; one row per sample; key column `sample_id`.
   - `sample_id`: `string`, sample identifier.
@@ -150,7 +151,7 @@ tests check that every listed path exists and that every listed file meets its d
 ### `REF_ANNOTATION`
 
 - **Content**: Gene annotation used to name genes and keep protein-coding genes.
-- **Location**: `/refs/gencode.v44.annotation.gtf.gz`
+- **Location**: `refs/gencode.v44.annotation.gtf.gz`
 - **Format**: GTF, gzip
 - **Structure**: `chr` prefix on chromosome names; attributes `gene_id` and `gene_type` used.
 - **Constraints**: `gene_id` ID pattern `^ENSG[0-9]{11}\.[0-9]+$`; missing values not allowed.
