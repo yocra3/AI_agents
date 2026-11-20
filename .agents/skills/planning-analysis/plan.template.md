@@ -9,7 +9,7 @@ Write acceptance criteria with the EARS guide in
 ```markdown
 # Implementation plan: <analysis-id>
 
-- **Methods document**: `<resolved {Analysis_Methods_file}>`
+- **Methods document**: `<resolved {Analysis_Methods_file}, relative to the repository root>`
 - **Version**: `vN`
 - **Approval commit**: `<hash>` `docs(<analysis-id>): approve methods vN`
 
@@ -103,24 +103,6 @@ Write acceptance criteria with the EARS guide in
 - [ ] `reviewer: implementation-review`
 - [ ] `dev_ops: code-documentation`
 
-Phase constraints:
-
-- `cleaner: analysis-refactor`: this is the implementation plan's single final refactoring
-  phase; shared functions may move to `{Analysis_Shared_Functions_file}`; do not modify the test
-  or real configurations, the tests, the input checks, the synthetic data generator, the
-  reference subset script, the test inputs, or the image recipes.
-- `reviewer: implementation-review`: the methods document is the contract and this
-  implementation plan is its implementation plan; check point by point that the code implements
-  the methods steps as stated, with the software and images of this plan, and meets the
-  acceptance criteria; do not judge whether the methods are appropriate; report missing
-  implementation plan items, methods deviations, costly or inferential computation inside a
-  report, and interpretive text as blocking, and cheap additions beyond the implementation plan
-  as non-blocking; check that `run-analysis.sh` runs the input checks and checks every image it
-  uses before the first script, then lists every increment's scripts in `NN` order, each with its
-  increment's image. Use the `full-validation` report as evidence.
-- `dev_ops: code-documentation`: this phase is declared by the implementation plan and is
-  therefore requested; it changes comments only.
-
 ## Reports
 
 ### Report of increment <n>: <title>
@@ -143,8 +125,8 @@ Phase constraints:
 
 ## Phases
 
-Every marker names its phase as `<agent>: <phase>`. The agents' profiles define how each phase is
-done; this table gives its meaning.
+Every marker names its phase as `<agent>: <phase>`. The agents' skills and profiles define how
+each phase is done; this table gives its meaning.
 
 | Section | Phase | Meaning |
 | --- | --- | --- |
@@ -173,7 +155,9 @@ done; this table gives its meaning.
 - The plan defines only what is specific to the analysis. Folders, file locations, configuration
   files, and provenance come from the Analysis layout in `{Agents_file}`; standard configuration
   keys, such as `ANALYSIS_ID`, `ANALYSIS_VERSION`, `RESULTS_DIR`, `FIGURES_DIR`, and
-  `REPORTS_DIR`, come from the coding profile.
+  `REPORTS_DIR`, come from the coding profile. Never copy a phase's general rules into the plan.
+- Paths may be absolute or relative to the repository root. Write them relative to the repository
+  root, and keep a path outside the repository absolute.
 - `Version` always equals the methods document's `Version`. `Approval commit` is the approval
   commit the plan was last planned from.
 - The plan has no change markers; its history is in Git.
@@ -199,8 +183,8 @@ done; this table gives its meaning.
 - Every increment and the input checks run in exactly one image of the Images table. An image
   provides the tools of every increment that names it and, for their language, the test framework
   and the linter. The image of a report increment also provides rmarkdown and Pandoc. The image
-  of the input checks provides the tools that read each input format, such as `samtools` for BAM
-  headers.
+  of the input checks, which also runs the synthetic data generator and the reference subset
+  script, provides the tools that read each input format, such as `samtools` for BAM headers.
 - Each image has an ID made of a short name and a version, such as `r-deseq2-v1`. Tier-1 images
   keep their registry ID. Tier-2 and tier-3 images have a registry entry, with their digest, when
   the plan is written. A tier-4 image's Image is its recipe path in `{Analysis_Recipes_Folder}`,
@@ -219,21 +203,14 @@ done; this table gives its meaning.
 
 ## Input checks
 
-- Input checks check the Input data of the methods document: every used column or field with its
-  type and constraints, the design variables with their levels, reference level, and minimum
-  replicates, the relations between inputs, the files that a manifest lists, and the existence,
-  version, and assembly of every reference resource, read from its headers when its format
-  carries them. They also check every technical requirement of this section.
+- Input checks check the Input data of the methods document and every technical requirement of
+  this section.
 - A technical requirement is what a step's functions require of an input that Input data does
   not state, such as integer counts for `DESeq2::DESeqDataSetFromMatrix`, a sorted and indexed
   BAM, or the same chromosome naming in two inputs. Derive it only from what the functions
   require.
-- In large formats, such as BAM, CRAM, FASTQ, VCF, and BCF, check the header and the relations
-  with other inputs; check the full content only of tables and matrices.
-- A failure message states which check failed, in which column or field, and how many times,
-  never a value.
-- The input checks run on the synthetic inputs in every test run, which checks the generator; on
-  the real inputs in `tester: real-input-check`; and at the start of every `run-analysis.sh` run.
+- In large formats, such as BAM, CRAM, FASTQ, VCF, and BCF, a technical requirement can be
+  checked only in the header and in the relations with other inputs.
 
 ## Test data
 
@@ -243,17 +220,13 @@ done; this table gives its meaning.
   structure of Input data and are plausible: reasonable distributions, real identifiers taken
   from the reference subsets, such as gene IDs from the annotation subset, every level of each
   design variable with its reference level and at least its minimum replicates, and every
-  relation between inputs. `tester` writes the generator in `tester: test-setup` as a versioned,
-  deterministic script with the Generator seed.
+  relation between inputs. The generator sets the Generator seed.
 - Planted signal: enough signal that no `synthetic` step produces empty outputs, for example a
   set of features with a large difference between the levels of each comparison. It is not a
   scientific decision: tests never check values.
 - Reference subsets: one rule per `REF_<NAME>` key that derives a small, deterministic subset of
   the real resource at its Location, such as one chromosome, or the nf-core test-datasets of that
-  resource when they exist. `tester` creates them in `tester: test-setup` and stops, naming the
-  missing file, when the resource is not at its Location.
-- The generator, the reference subset script, and the input checks run in the image of the input
-  checks.
+  resource when they exist.
 
 ## Seeds
 
@@ -291,8 +264,6 @@ done; this table gives its meaning.
   means, or the first N, and may draw figures inline. Anything inferential or model based, such
   as a test, p-values, a fit, or clustering, belongs to a computation increment that implements
   its methods step. Every definitive figure is saved in `FIGURES_DIR` by a computation increment.
-- Reports never interpret, conclude, or discuss. Rendering a report creates or modifies no file
-  in `RESULTS_DIR` or `FIGURES_DIR`.
 
 ## Expected outputs and acceptance criteria
 
@@ -324,5 +295,4 @@ done; this table gives its meaning.
   `tester: remove-tests` then `coder: remove-code`, and is empty when no increment has been
   removed. An entry lists all the increment's old files, for example
   `Removed: 04-report.Rmd, 04-report.sh`, and takes no number in the increment sequence.
-- Finalization always has the five phases of the template, in that order, with their phase
-  constraints copied unchanged.
+- Finalization always has the five phases of the template, in that order.

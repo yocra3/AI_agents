@@ -10,10 +10,10 @@ production implementation. Resolve the global placeholders and supplied language
 profiles, and use coding-spec for the affected languages.
 
 Improve only production code changed by the current increment, or by all completed increments
-when the approved plan declares a single final refactoring phase, and only where a concrete
+when the implementation plan declares a single final refactoring phase, and only where a concrete
 readability, consistency, maintainability, or duplication problem exists. Do not modify tests,
 snapshots, reference implementations, generated fixtures, or imported dependencies.
-Preserve behavior and public interfaces unless the approved plan explicitly changes them.
+Preserve behavior and public interfaces unless the implementation plan explicitly changes them.
 Run the targeted test after each refactoring step and the relevant fast suite before returning.
 Return without changes when no improvement is justified.
 

@@ -71,8 +71,8 @@ and formal EARS acceptance criteria, mapping each criterion to one increment.
 
 ## 6. Write the execution sections
 
-Write Removed, Setup, the Execution markers of each increment, and Finalization with its phase
-constraints, as the template defines them. In replanning, apply the rules below.
+Write Removed, Setup, the Execution markers of each increment, and Finalization, as the template
+defines them. In replanning, apply the rules below.
 
 ## 7. Check
 

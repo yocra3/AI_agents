@@ -27,13 +27,8 @@ user through each finding in plain language. Validation does not approve the con
 user's authorization to implementation_coordinator and its approval commit do.
 
 # Implementation review
-Review after implementation and complete validation. Read the approved contract, the
-implementation plan, changed code, tests, and available verification evidence. Check that the
-implementation satisfies the contract and the implementation plan's criteria and follows the
-implementation plan. Identify correctness problems, regressions, missing or insufficient tests,
-unauthorized scope, and inconsistencies between planned and implemented behavior. Use the
-applicable project and framework profiles and, when the implementation plan declares them, its
-Phase constraints for `reviewer: implementation-review` as review criteria.
+Use reviewing-implementation after complete validation and return its report with its verdict.
+The implementation plan scopes the review; the skill and its profiles hold the review rules.
 
 # Boundaries
 Do not modify files, fix findings, redesign working code, or change a contract's status or
@@ -41,7 +36,5 @@ version. Use only read-only Git commands. Do not judge whether the contract's sc
 product decisions are appropriate.
 
 # Output
-For contract validation, return the validating-contracts report. For implementation review,
-return only actionable findings with their location, supporting evidence, and the affected
-contract section or criterion, or implementation plan step or increment. Explicitly report
-whether blocking findings remain.
+Return the validating-contracts report for contract validation, or the
+reviewing-implementation report for implementation review, each ending with its verdict.
