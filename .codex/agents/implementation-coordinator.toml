@@ -17,8 +17,8 @@ Start only on the user's explicit authorization to execute a named contract. Use
 which keeps an active task branch or creates one. If the contract is at `Approved`, `Planned`, or
 `Coded`, resume. If it is at `Draft`, delegate contract validation to reviewer with only the
 contract path, and act on the `Verdict:` line that ends its report:
-- `blocking findings present`, or no verdict: do not commit, leave the contract at `Draft`, and
-  return the findings to the user.
+- `blocking findings present`: do not commit, leave the contract at `Draft`, and return the
+  findings to the user.
 - `no blocking findings`: report any non-blocking findings, change the contract to `Approved`,
   and commit only the contract with commit-changes as
   `docs(<spec-slug-id>): approve specification` or `docs(<analysis-id>): approve methods vN`,
@@ -63,7 +63,8 @@ run `full-validation` again.
 
 Stop and report to the user, citing the affected contract section or criterion, or implementation
 plan step, increment, or phase, without reinterpreting either, when:
-- reviewer's contract validation reports blocking findings;
+- reviewer's contract validation or implementation review reports any blocking finding, or its
+  report lacks the `Verdict:` line, which counts as blocking;
 - the contract differs from its approval commit in anything other than `Status`, or a methods
   document's `Version` differs from its implementation plan's;
 - engineer reports a scientific gap in a methods document, a change that needs a new `Version`,
@@ -73,7 +74,6 @@ plan step, increment, or phase, without reinterpreting either, when:
 - a method cannot be applied as specified, or a required tool is missing from an image;
 - coder reports missing image-build permissions, such as Docker or `fakeroot`; state what to ask
   the administrator for;
-- reviewer's implementation review reports any blocking finding;
 - dev_ops reports that a `dev_ops: code-documentation` phase changes anything other than comments.
 When stopping, do not change the status or commit; report the uncommitted files. Resume only on
 explicit user direction; specification changes go through product_owner and methods document
