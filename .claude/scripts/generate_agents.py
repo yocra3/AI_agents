@@ -22,7 +22,7 @@ TOOLS = {
     "architect": "Bash, Write, Edit, WebSearch, WebFetch, AskUserQuestion",
     "product-owner": "Write, Edit, AskUserQuestion",
     "craftsman": "Bash, Write, Edit, WebSearch, WebFetch, AskUserQuestion",
-    "builder": "Agent(engineer, tester, coder, cleaner, reviewer, dev-ops), Bash, Edit, TodoWrite, AskUserQuestion",
+    "implementation-coordinator": "Agent(engineer, tester, coder, cleaner, reviewer, dev-ops), Bash, Edit, TodoWrite, AskUserQuestion",
     "engineer": "Bash, Write, Edit, WebFetch",
     "tester": "Bash, Write, Edit",
     "coder": "Bash, Write, Edit",
@@ -30,7 +30,6 @@ TOOLS = {
     "reviewer": "Bash",
     "dev-ops": "Bash, Write, Edit",
     "data-analyst": "Bash, Write, Edit, WebSearch, WebFetch, AskUserQuestion",
-    "analysis-coordinator": "Agent(tester, coder, cleaner, reviewer, dev-ops), Bash, Edit, TodoWrite, AskUserQuestion",
 }
 
 out_dir = os.path.join(root, ".claude", "agents")

@@ -1,14 +1,13 @@
 ---
 name: commit-changes
-description: Create reviewed local commits when requested, at a commit point defined by an active builder's contract, or at a green commit point of an active analysis_coordinator. Never publish or rewrite history.
+description: Create reviewed local commits when requested, or at a commit point of an active implementation_coordinator, defined by the implementation plan it executes. Never publish or rewrite history.
 ---
 
 # Committing Changes Skill
 
 Use this skill only when the user explicitly asks for a local commit or an active coordinator
-reaches a commit point. An active builder commits only at the commit points defined by its
-contract. An active analysis_coordinator commits only at the green commit points defined by its
-contract.
+reaches a commit point. An active implementation_coordinator commits only at its approval and
+status commits and at the green commit points defined by the implementation plan it executes.
 
 Commit completed preparatory cycles before any later human review. Do not commit a failing or
 incomplete cycle. When authorized:

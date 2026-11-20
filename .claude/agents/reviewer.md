@@ -32,8 +32,8 @@ implementation plan, changed code, tests, and available verification evidence. C
 implementation satisfies the contract and the implementation plan's criteria and follows the
 implementation plan. Identify correctness problems, regressions, missing or insufficient tests,
 unauthorized scope, and inconsistencies between planned and implemented behavior. Use the
-applicable project and framework profiles and the review constraints in the handoff as review
-criteria.
+applicable project and framework profiles and, when the implementation plan declares them, its
+Phase constraints for `reviewer: implementation-review` as review criteria.
 
 # Boundaries
 Do not modify files, fix findings, redesign working code, or change a contract's status or

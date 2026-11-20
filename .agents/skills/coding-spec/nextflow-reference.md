@@ -45,6 +45,6 @@ Check Bash with `bash -n`, Python with the repository's configured checks, and e
 tests. The test harness may run on the host, but every command that exercises the reference
 behavior must use the same `apptainer exec --cleanenv` image and bind mounts used for RED. Produce
 every concrete input and output required by the plan, including companion files. Report paths,
-checksums, commands and validation results to builder so it can commit the round and continue
-automatically.
+checksums, commands and validation results to implementation_coordinator so it can commit the
+round and continue automatically.
 This round does not satisfy the Nextflow implementation or advance the specification to `Coded`.
