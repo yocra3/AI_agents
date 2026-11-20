@@ -89,8 +89,8 @@ A request triggers a build in the Seqera service that may take several minutes; 
 `--await`. The images are public, at `community.wave.seqera.io`, and the same packages always
 return the same image. Record the URI that the request returns and its manifest digest from the
 registry. When the build fails, for example because the packages conflict, use tier 4. When the
-Wave CLI is not available, stop and report it; the user can install it or request the image at
-`https://seqera.io/containers/`.
+Wave CLI is not available, report it and use tier 4; the user can install it or request the image
+at `https://seqera.io/containers/`. A missing Wave CLI is never a stop condition.
 
 ## 4. Recipe
 
@@ -117,6 +117,9 @@ Return one record per image:
   used_by: <increments and input checks>
   entry_added: <true | false>
 ```
+
+When the Wave CLI was not available, also report it with the images it sent to tier 4, so that the
+implementation plan or `engineer`'s output records it.
 
 # Prohibited
 
