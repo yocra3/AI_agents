@@ -15,23 +15,26 @@ Define these values in the project's global agent instructions.
 
 ## Analysis workflow
 
-Required only when the project uses `data_analyst` and `analysis_coordinator`:
+Required only when the project uses `data_analyst` and analysis methods documents:
 
-- `{Analysis_Plans_Folder}`: analysis plans. It must not be, or be inside, `{Specs_Folder}` or
-  `{Plans_Folder}`.
+- `{Analysis_Methods_Folder}`: analysis methods documents. It must not be, or be inside,
+  `{Specs_Folder}` or `{Plans_Folder}`; their implementation plans go in `{Plans_Folder}`.
 - `{Analysis_Scripts_Folder}`: tracked computation scripts, render scripts, shared functions, and
   configurations.
 - `{Analysis_Tests_Folder}`: tracked analysis tests, separate from the scripts; test run outputs
   are ignored.
 - `{Analysis_Reports_Folder}`: tracked report sources; rendered reports are ignored.
 - `{Analysis_Results_Folder}` and `{Analysis_Figures_Folder}`: ignored outputs.
-- `{Analysis_Test_Data_Folder}`: ignored test subsets, below `{Project_Folder}`.
+- `{Analysis_Test_Data_Folder}`: ignored test inputs, one folder per analysis, below
+  `{Project_Folder}`.
+- `{Analysis_Recipes_Folder}`: tracked recipes of tier-4 container images, shared by all analyses.
+- `{Analysis_Images_Folder}`: ignored built image files, shared by all analyses.
 
 The Analysis layout keys place each analysis's files inside these folders; the template's
 Analysis layout section explains their role and pattern variables. Fill each with its default
 unless the project confirms another layout, and keep the pattern variables as written.
 
-- `{Analysis_Plan_file}`: `{Analysis_Plans_Folder}/<analysis-id>.md`
+- `{Analysis_Methods_file}`: `{Analysis_Methods_Folder}/<analysis-id>.methods.md`
 - `{Analysis_Images_file}`: `{Project_Folder}/container-images.md`
 - `{Analysis_Script_file}`: `{Analysis_Scripts_Folder}/<analysis-id>/<NN>-<slug>.<ext>`
 - `{Analysis_Shared_Functions_file}`: `{Analysis_Scripts_Folder}/<analysis-id>/functions.<ext>`
@@ -42,14 +45,34 @@ unless the project confirms another layout, and keep the pattern variables as wr
 - `{Analysis_Figures_Version_Folder}`: `{Analysis_Figures_Folder}/<analysis-id>/vN/`
 - `{Analysis_Reports_Version_Folder}`: `{Analysis_Reports_Folder}/<analysis-id>/vN/`
 - `{Analysis_Test_Code_Folder}`: `{Analysis_Tests_Folder}/<analysis-id>/`
-- `{Analysis_Test_Subset_Folder}`: `{Analysis_Test_Data_Folder}/<analysis-id>/`
-- `{Analysis_Test_Run_Folder}`: `{Analysis_Tests_Folder}/<analysis-id>/results/subset/`
+- `{Analysis_Test_Inputs_Folder}`: `{Analysis_Test_Data_Folder}/<analysis-id>/`
+- `{Analysis_Test_Run_Folder}`: `{Analysis_Tests_Folder}/<analysis-id>/results/synthetic/`
 - `{Analysis_Test_Rerun_Folder}`: `{Analysis_Tests_Folder}/<analysis-id>/results/rerun/`
 - `{Analysis_Provenance_file}`: `<RESULTS_DIR>/<NN>-<slug>.provenance.tsv`
 
-The analysis profiles also require execution rules in `{Agents_file}` that state how to run a
-command in an increment's container image, the `{Analysis_Images_file}` entry named by its `Image`
-ID.
+The analysis profiles and skills also require the template's Container execution rules. They
+have no defaults; confirm each with the user:
+
+- `{Container_Engine}`: Apptainer, which builds images with `fakeroot`, or Docker. It runs every
+  image, and `building-container-images` writes and builds tier-4 recipes for it.
+- `{Container_Run_Rule}`: how to run a command in the image of an `{Analysis_Images_file}` entry,
+  from the repository root, with the bind mounts that make the repository and the configured
+  input paths visible in it.
+- `{Container_Image_Availability}`: what makes an image available on the user's machine, which
+  `run-analysis.sh` checks before each run. A tier-4 image is available when its image file exists
+  in `{Analysis_Images_Folder}`. For a registry image of tiers 1 to 3, state the project's rule,
+  for example an image file pulled from its URI into a cache folder, or a pull by digest when it
+  runs.
+- `{Container_Build_Permissions}`: that building tier-4 images needs build permissions, Apptainer
+  `fakeroot` for the user or access to the Docker daemon, and whether the user has them. Without
+  them, `coder` stops at `coder: image-build` and states what to ask the administrator for.
+
+Data access: when the project has an analysis workflow, recommend in the bootstrap report that
+the user deny Claude Code's `Read` tool on the folders that hold the real data and reference
+resources, in the project's `.claude/settings.json`, with one deny rule per folder the user names,
+such as `Read(/data/**)` for a folder below the repository root or `Read(//abs/path/**)` for an
+absolute path. Do not write the file. The rule blocks only the file-reading tools; the exploration
+rules of `defining-analysis-inputs` still apply to commands.
 
 Optional `{ToolUniverse_CLI}`: path of the ToolUniverse `tu` executable, used by
 `searching-tooluniverse-catalog`. Required only when the project uses ToolUniverse. It has no

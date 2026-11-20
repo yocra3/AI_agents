@@ -8,13 +8,16 @@
 - **Briefing_file**: {Briefing_file}
 - **Specs_Folder**: {Specs_Folder}
 - **Plans_Folder**: {Plans_Folder}
-- **Analysis_Plans_Folder**: {Analysis_Plans_Folder}
+- **Analysis_Methods_Folder**: {Analysis_Methods_Folder}
 - **Analysis_Scripts_Folder**: {Analysis_Scripts_Folder}
 - **Analysis_Tests_Folder**: {Analysis_Tests_Folder}
 - **Analysis_Reports_Folder**: {Analysis_Reports_Folder}
 - **Analysis_Results_Folder**: {Analysis_Results_Folder}
 - **Analysis_Figures_Folder**: {Analysis_Figures_Folder}
 - **Analysis_Test_Data_Folder**: {Analysis_Test_Data_Folder}
+- **Analysis_Recipes_Folder**: {Analysis_Recipes_Folder} (versioned recipes of tier-4 container
+  images)
+- **Analysis_Images_Folder**: {Analysis_Images_Folder} (built image files, ignored by Git)
 - **ToolUniverse_CLI**: {ToolUniverse_CLI} (path of the ToolUniverse `tu` executable, used by
   `searching-tooluniverse-catalog`; omit when the project does not use ToolUniverse)
 
@@ -56,19 +59,24 @@
 
 ### Analysis workflow
 
-`data_analyst` writes analysis plans in `{Analysis_Plans_Folder}` and leaves them at `Draft`.
-`analysis_coordinator` executes a plan only after the user explicitly authorizes executing that
-named plan. Both run as main sessions. Omit this section, the Analysis layout section, and the
-`Analysis_*` keys when the project has no analysis workflow.
+`data_analyst` writes analysis methods documents in `{Analysis_Methods_Folder}` and leaves them at
+`Draft`. `implementation_coordinator` executes a methods document only after the user explicitly
+authorizes executing that named document; it first delegates contract validation to `reviewer`,
+and `engineer` writes the implementation plan in `{Plans_Folder}`. Before authorizing, the user
+should validate the document by running `reviewer` as a main session. `data_analyst` and
+`implementation_coordinator` run as main sessions. Omit this section, the Analysis layout and
+Container execution rules sections, and the `Analysis_*` keys when the project has no analysis
+workflow.
 
 ### Analysis layout
 
 These keys hold every path and file-name pattern of an analysis. The analysis profiles cite them,
-and analysis plans never redefine them. `<analysis-id>` is the plan's ID (`analysis-<slug>`),
-`<NN>-<slug>` is an increment's two-digit number and slug, `<ext>` is the script language's
-extension, `vN` is the plan version, and `<RESULTS_DIR>` is the configured results folder.
+and implementation plans never redefine them. `<analysis-id>` is the methods document's ID
+(`analysis-<slug>`), `<NN>-<slug>` is an increment's two-digit number and slug, `<ext>` is the
+script language's extension, `vN` is the methods document's version, and `<RESULTS_DIR>` is the
+configured results folder.
 
-- **Analysis_Plan_file**: {Analysis_Plan_file}
+- **Analysis_Methods_file**: {Analysis_Methods_file}
 - **Analysis_Images_file**: {Analysis_Images_file} (container image registry, shared by all
   analyses)
 - **Analysis_Script_file**: {Analysis_Script_file} (computation and render scripts)
@@ -79,12 +87,24 @@ extension, `vN` is the plan version, and `<RESULTS_DIR>` is the configured resul
 - **Analysis_Results_Version_Folder**: {Analysis_Results_Version_Folder}
 - **Analysis_Figures_Version_Folder**: {Analysis_Figures_Version_Folder}
 - **Analysis_Reports_Version_Folder**: {Analysis_Reports_Version_Folder}
-- **Analysis_Test_Code_Folder**: {Analysis_Test_Code_Folder} (tests, runner, test-subset script)
-- **Analysis_Test_Subset_Folder**: {Analysis_Test_Subset_Folder}
-- **Analysis_Test_Run_Folder**: {Analysis_Test_Run_Folder} (`subset` mode outputs)
+- **Analysis_Test_Code_Folder**: {Analysis_Test_Code_Folder} (tests, execution runner, reference
+  subset script, synthetic data generator, input checks, and image checks)
+- **Analysis_Test_Inputs_Folder**: {Analysis_Test_Inputs_Folder} (reference subsets and synthetic
+  data)
+- **Analysis_Test_Run_Folder**: {Analysis_Test_Run_Folder} (`synthetic` mode outputs)
 - **Analysis_Test_Rerun_Folder**: {Analysis_Test_Rerun_Folder} (reproducibility rerun outputs)
 - **Analysis_Provenance_file**: {Analysis_Provenance_file} (one per computation script, at the
   root of `RESULTS_DIR`)
+
+### Container execution rules
+
+Every analysis command runs in a container image, the `{Analysis_Images_file}` entry named by its
+ID.
+
+- **Engine**: {Container_Engine}
+- **Run a command**: {Container_Run_Rule}
+- **Image available**: {Container_Image_Availability}
+- **Image build**: {Container_Build_Permissions}
 
 ## Environment
 - **OS dev**: {Development_OS}

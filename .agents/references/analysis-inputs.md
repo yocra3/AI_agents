@@ -58,7 +58,7 @@ inputs.
 | --- | --- |
 | Key | `INPUT_<NAME>` for the user's data, `REF_<NAME>` for a reference resource such as a genome, an annotation, or a public database. `<NAME>` uses upper-case letters, digits, and underscores, and is unique in the document. |
 | Content | One sentence that states what the data are, with their biological meaning. |
-| Location | The exact path of one file or one folder, never a list. Absolute paths and paths relative to the project folder are accepted; agents prefer relative paths when they write one. A small fixed set of distinct files is one input per file. For a folder, give the relative pattern of the files read, for example `<sample>/quant.sf`, and what is ignored. |
+| Location | The exact path of one file or one folder, never a list. Absolute paths and paths relative to the repository root, where scripts run, are accepted; agents prefer relative paths when they write one. A small fixed set of distinct files is one input per file. For a folder, give the relative pattern of the files read, for example `<sample>/quant.sf`, and what is ignored. |
 | Format | One format from the list below, with its compression, for example `TSV, gzip`, `VCF, bgzip`, or `BAM`. |
 | Structure | The items of the format's family, below. |
 | Constraints | Constraints from the vocabulary below for each used column or field. Missing values are always declared. |
@@ -106,7 +106,7 @@ A manifest is a table whose column holds paths to other files, such as a samples
 FASTQ files. Describe it as a table. Each path column is a used column of type `string`, with the
 format and compression of the files it points to and the structure items of that format's family,
 and its ID pattern as a constraint. Paths are values: record the pattern, never the paths. As in
-Location, the paths may be absolute or relative to the project folder. Input tests check that
+Location, the paths may be absolute or relative to the repository root. Input tests check that
 every listed path exists and that every listed file meets its declared format.
 
 ```markdown

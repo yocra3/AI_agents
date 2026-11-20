@@ -4,36 +4,55 @@ Agent definitions for programming with AI, usable from Codex and Claude Code.
 
 ## Contents
 
-- `.agents/`: shared skills (`skills/`), the workflow catalog (`CODEX.md`), the `AGENTS.md` template
-  and reference sources.
-- `.codex/`: Codex configuration and the 13 custom agents (`agents/*.toml`), which are the source
+- `.agents/`: shared skills (`skills/`), the workflow catalog (`CODEX.md`), templates
+  (`templates/`), references (`references/`), and the version marker (`VERSION`) with its
+  `CHANGELOG.md`. The `AGENTS.md` template lives in the `project-bootstrap` skill.
+- `.codex/`: Codex configuration and the 12 custom agents (`agents/*.toml`), which are the source
   of truth.
 - `.claude/`: Claude Code settings, the agents generated from `.codex/agents`, and
   `scripts/generate_agents.py`. `.claude/skills` is a symbolic link to `.agents/skills`.
 
-This first version is kept in one piece. It includes Nextflow, Groovy and nf-core profiles and
+The definitions are kept in one piece. They include Nextflow, Groovy and nf-core profiles and
 skills (`coding-spec`, `linting`, `planning-specs`, `generating-specs`, `testing-unit`,
-`nfcore-component-reuse`, `importing-nf-core`), and the analysis workflow (`data_analyst`,
-`analysis_coordinator`, the analysis plan template and the `analysis.md` profiles), plus general R,
-R Markdown, Python and Bash coding guidelines usable by any workflow. Language and framework
-profiles live in each skill's `references/` folder; remove the ones a target project does not
-need.
+`nfcore-component-reuse`, `importing-nf-core`), and the analysis workflow (`data_analyst`, the
+analysis methods template, the input data reference `.agents/references/analysis-inputs.md`, the
+`defining-analysis-inputs`, `planning-analysis`, `selecting-container-images` and
+`building-container-images` skills, and the `analysis.md` profiles), plus general R, R Markdown,
+Python and Bash coding guidelines usable by any workflow. Language and framework profiles live in
+each skill's `references/` folder; remove the ones a target project does not need.
 
 ## Workflows
 
-The agents support two workflows: one for programming and one for data analysis. They share the
-implementation agents (`tester`, `coder`, `cleaner`, `reviewer`, `dev_ops`) and the same rules:
+The agents support two workflows: one for programming and one for data analysis. In both, a
+person approves a contract, a specification or an analysis methods document, and
+`implementation_coordinator` executes it with the same agents (`engineer`, `tester`, `coder`,
+`cleaner`, `reviewer`, `dev_ops`) and the same rules:
 
-- A person approves the exact document, a specification or an analysis plan, before any code is
-  written. Agents never infer approval.
-- A coordinator runs as the main session, owns one task branch and commits only green work. It
+- A person approves the exact contract before any code is written. Agents never infer approval.
+- After the user's authorization, `reviewer` validates the contract read-only. Only a contract
+  without blocking findings receives the approval commit; otherwise it stays at `Draft` and the
+  findings go back to the user.
+- `engineer` turns the approved contract into one implementation plan, which declares every
+  phase to run, including the final ones.
+- The coordinator runs as the main session, owns one task branch and commits only green work. It
   never pushes, merges or tags unless asked.
 - Work advances in small increments, each with a failing test first (RED), then the code that
   makes it pass (GREEN).
 - Every document has one file that is revised in place, and its status records where the work
-  stands.
+  stands: `Draft` → `Approved` → `Planned` → `Coded` → `Verified` → `Released`.
 - When a delegate finds an ambiguity, missing data or a blocking review finding, the coordinator
   stops and reports it instead of guessing.
+
+Validating the contract yourself before authorizing it is recommended, because it shows the
+findings while the document is still being written. Run `reviewer` as the main session with the
+contract's path:
+
+```bash
+claude --agent reviewer <path to the specification or methods document>
+```
+
+It explains each finding in plain language, with the affected section, and ends with a verdict.
+Validation does not approve the contract; your authorization to `implementation_coordinator` does.
 
 ### Programming workflow
 
@@ -41,16 +60,22 @@ implementation agents (`tester`, `coder`, `cleaner`, `reviewer`, `dev_ops`) and 
 flowchart TD
     AN["analyst: PRD"] -. optional .-> PO
     AR["architect: ADD"] -. optional .-> PO
-    PO["product_owner<br/>specification: Draft"] --> HA{{"Human authorization<br/>to execute the named specification"}}
-    HA --> BU["builder<br/>task branch, specification: Approved"]
-    BU --> EN["engineer<br/>implementation plan and ER model<br/>specification: Planned"]
+    PO["product_owner<br/>specification: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
+    MV -.-> HA
+    PO --> HA{{"Human authorization<br/>to execute the named specification"}}
+    HA --> IC["implementation_coordinator<br/>task branch"]
+    IC --> RV["reviewer<br/>contract validation"]
+    RV -- "blocking findings:<br/>stays Draft" --> PO
+    RV -- "no blocking findings" --> AP["approval commit<br/>specification: Approved"]
+    AP --> EN["engineer<br/>implementation plan and ER model<br/>specification: Planned"]
     EN --> INC
-    subgraph INC ["For each plan increment"]
+    subgraph INC ["For each implementation plan step"]
         direction LR
         T["tester<br/>RED"] --> C["coder<br/>GREEN"] --> CL["cleaner<br/>REFACTOR"] --> CM["commit"]
     end
-    INC --> VA["specification: Coded<br/>full validation, fixes committed, reviewer"]
-    VA --> HR{{"Human implementation review"}}
+    INC --> CO["specification: Coded"]
+    CO --> FI["Finalization<br/>full validation, fixes committed, implementation review"]
+    FI --> HR{{"Human implementation review"}}
     HR --> VE["specification: Verified"]
     VE -. on request .-> DO["dev_ops<br/>documentation, release: Released"]
 ```
@@ -58,60 +83,91 @@ flowchart TD
 - **Documents in layers**:
   - The PRD (product) and the ADD (architecture) are optional and describe the whole project.
   - Each work item has one specification with testable acceptance criteria in EARS format.
-  - `engineer` turns it into one implementation plan of ordered increments, each with the
-    phases and agents that execute it, plus an ER model when persistent data change.
-- **Status flow**: `Draft` → `Approved` → `Planned` → `Coded` → `Verified` → `Released`. Each
-  transition belongs to one agent, and none can be skipped. `builder` records `Approved` in an
-  approval commit, and later commits must leave the specification otherwise unchanged.
-- **Increments**: `builder` runs the phases the plan declares, one after another, and commits
-  each increment only when its tests pass. In Nextflow projects, existing nf-core modules are
-  imported with nf-core tools instead of being rewritten.
-- **Closing**: at `Coded`, a full validation, with any fixes committed, and an independent
-  read-only review against the specification and the plan. A blocking finding stops the cycle
-  until a person decides. `Verified` is set only when the user approves the implementation
-  review.
+  - `engineer` turns it into one implementation plan of ordered steps, each with the phases and
+    agents that execute it, plus an ER model when persistent data change.
+- **Status flow**: each transition belongs to one agent, and none can be skipped.
+  `implementation_coordinator` records `Approved` in an approval commit, and later commits must
+  leave the specification otherwise unchanged.
+- **Increments**: the coordinator runs the phases the implementation plan declares, one after
+  another, and commits each step only when its tests pass. In Nextflow projects, existing nf-core
+  modules are imported with nf-core tools instead of being rewritten.
+- **Closing**: at `Coded`, the Finalization phases run a full validation, with any fixes
+  committed, and an independent read-only review against the specification and the
+  implementation plan. A blocking finding stops the cycle until a person decides. `Verified` is
+  set only when the user approves the implementation review.
 
 ### Analysis workflow
 
 ```mermaid
 flowchart TD
-    DA["data_analyst<br/>analysis plan: Draft"] --> HA{{"Human authorization<br/>to execute the named plan"}}
-    HA --> AC["analysis_coordinator<br/>task branch, plan: Approved"]
-    AC --> SE["Setup<br/>renumber, test subset and runner, real configuration"]
+    DA["data_analyst<br/>methods document: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
+    MV -.-> HA
+    DA --> HA{{"Human authorization<br/>to execute the named methods document"}}
+    HA --> IC["implementation_coordinator<br/>task branch"]
+    IC --> RV["reviewer<br/>contract validation"]
+    RV -- "blocking findings:<br/>stays Draft" --> DA
+    RV -- "no blocking findings" --> AP["approval commit<br/>methods document: Approved"]
+    AP --> EN["engineer<br/>implementation plan, images, test data rules<br/>methods document: Planned"]
+    EN --> SE["Setup<br/>tier-4 images, synthetic data and input checks,<br/>real configuration, input checks on the real data"]
     SE --> INC
     subgraph INC ["For each increment, in NN order"]
         direction LR
-        T["tester<br/>formal checks: RED"] --> C["coder<br/>script on the test subset: GREEN"] --> CM["commit"]
+        T["tester<br/>formal checks: RED"] --> C["coder<br/>script on synthetic data: GREEN"] --> CM["commit"]
     end
-    INC --> CO["plan: Coded"]
-    CO --> FI["cleaner, coder, coder, reviewer, dev_ops<br/>refactor, run script, full validation, plan fidelity, comments"]
-    FI --> VE["plan: Verified"]
-    VE --> US["User<br/>full run on real data, post-run checks, interpretation"]
+    INC --> CO["methods document: Coded"]
+    CO --> FI["Finalization<br/>refactor, run script, full validation,<br/>implementation review, comments"]
+    FI --> US{{"User<br/>implementation review, full run on real data,<br/>post-run checks"}}
+    US --> VE["methods document: Verified"]
+    VE -. on request .-> DO["dev_ops<br/>release: Released"]
 ```
 
-- **The plan is the single source of analytical decisions**: it holds the inputs, methodology,
-  expected outputs, formal acceptance criteria, test subset rule and the image of each
-  increment, by its ID in the project's container image registry. Paths come from the Analysis
-  layout in the project's `AGENTS.md`. The coding and testing conventions come from the
-  `analysis.md` profiles.
-- **Methodology**: `data_analyst` can search the
-  [ToolUniverse](https://github.com/mims-harvard/ToolUniverse) catalog to improve the definition
-  of the methodology, when the project declares `ToolUniverse_CLI` in `AGENTS.md`; see its
-  repository for installation.
-- **Agents never touch real data**:
-  - They run every script on a deterministic test subset, inside its increment's container
-    image.
+- **Two documents**:
+  - The methods document holds the scientific decisions and reads like the methods section of a
+    paper: the scientific question, the design, one short paragraph per methods step with its
+    tool as `package::function` and every non-default value, the results to report, the input
+    data, the global parameters, the references and a version control table. `data_analyst`
+    writes it with the user, proposing each decision and explaining it in plain language.
+  - The implementation plan, written by `engineer`, holds the engineering decisions: increments,
+    container images, seeds, expected outputs, formal acceptance criteria, the synthetic data
+    rules, and a Software and effective parameters table with the resolved versions. `engineer`
+    stops and reports a scientific gap in the methods document instead of filling it.
+  - Paths come from the Analysis layout in the project's `AGENTS.md`, and the coding and testing
+    conventions from the `analysis.md` profiles.
+- **Input data** is defined with fixed fields and a closed vocabulary, from
+  `.agents/references/analysis-inputs.md`. The user writes it, or `defining-analysis-inputs`
+  helps by interview or, with explicit authorization for each path, by exploring the structure of
+  the data. Only summaries of that structure reach the agent's context, never data values.
+- **Methods**: `data_analyst` can search the
+  [ToolUniverse](https://github.com/mims-harvard/ToolUniverse) catalog to support its proposals,
+  when the project declares `ToolUniverse_CLI` in `AGENTS.md`; see its repository for
+  installation.
+- **Container images** come, in this order, from the project registry, BioContainers, Seqera
+  Containers or a recipe. `engineer` selects the first three while planning; `coder` builds a
+  recipe image in Setup, after `tester` writes its permanent image check. Recipes are versioned;
+  built images are not.
+- **Agents never compute on real data**:
+  - They run every script on synthetic data with the format of the real data, made by a
+    versioned generator, and on deterministic subsets of the real reference resources, inside
+    each increment's container image.
+  - On the real data they run only the input checks, which report failures without values.
+    `run-analysis.sh` runs them again, with the image checks, at the start of every run.
   - The same code runs on the test and real data, through two configuration files.
-  - The user runs the full analysis. Its outputs go to folders versioned by plan version
-    (`vN`).
-- **Tests check form, not results**: they check the files, formats, columns, row counts
+  - The user runs the full analysis. Its outputs go to folders versioned by the methods
+    document's version (`vN`).
+- **Tests check form, not results**: output checks cover the files, formats, columns, row counts
   relative to an input, provenance files, report sections and reproducibility. They never check
   statistics or other values.
-- **Steps that cannot run on a subset** are `post-run` increments. They are checked only after
-  the user's full run.
-- **Revisions**:
-  - A change reopens the plan at `Draft`, with change markers, and needs a new approval.
-  - A new version renumbers the increments and reruns everything into empty folders.
+- **Steps that cannot run on synthetic data** are `post-run` increments. They are checked only
+  after the user's full run, which `Verified` requires.
+- **Revisions**: a change after an approval reopens the methods document at `Draft` and needs a
+  new approval. Each content change adds a row to the document's version control table, which is
+  cumulative and whose approved rows never change. The user sets `Version`; agents only suggest a
+  new one. A change to how results are computed needs a new version: removing or modifying a
+  methods step, changing a global parameter that a step uses, changing the design or the input
+  data, or adding a step whose output an existing step uses. Within a version fit only new steps
+  at the end that no existing step uses, changes to the results to report or the references, and
+  wording corrections. A new version renumbers the increments and reruns everything into empty
+  folders.
 - **Agents never interpret results or draft conclusions**; reports state only what each table
   or figure shows.
 
@@ -156,12 +212,22 @@ Then, in the target repository:
 2. Add a `CLAUDE.md` that imports it with `@AGENTS.md`, plus the Claude Code notes: agent names use
    hyphens (`product_owner` is `product-owner`), skills are shared through `.claude/skills`, and the
    model equivalence between Codex and Claude Code. Run user-facing roles as the main session
-   with `claude --agent <name>`; this includes `data-analyst` and `analysis-coordinator`.
-3. Create `agents_data/specs/` and `agents_data/plans/`, where the lifecycle artifacts are stored.
-   For the analysis workflow, also define the `Analysis_*` folders (tests go in their own
-   `Analysis_Tests_Folder`), the Analysis layout keys and the container execution rules in
-   `AGENTS.md`, and ignore the rendered reports, results, figures, test subsets and test run
-   outputs (`<Analysis_Tests_Folder>/*/results/` with the default layout).
+   with `claude --agent <name>`; this includes `product-owner`, `data-analyst`,
+   `implementation-coordinator`, and `reviewer` for the manual contract validation.
+3. Create `agents_data/specs/` and `agents_data/plans/`, where the lifecycle artifacts are stored;
+   the implementation plans of both workflows go in `agents_data/plans/`. For the analysis
+   workflow, also define in `AGENTS.md` the `Analysis_*` folders, among them
+   `Analysis_Methods_Folder` for the methods documents, `Analysis_Tests_Folder` for the tests,
+   `Analysis_Recipes_Folder` for the versioned image recipes and `Analysis_Images_Folder` for the
+   built images; the Analysis layout keys, such as `Analysis_Methods_file` and
+   `Analysis_Test_Inputs_Folder`; and the container execution rules: the engine that runs and
+   builds images, Apptainer or Docker, how to run a command in an image, when an image is
+   available, and the build permissions. Ignore the rendered reports, results, figures, test
+   inputs, built images and test run outputs (`<Analysis_Tests_Folder>/*/results/` with the
+   default layout).
+4. For the analysis workflow, deny Claude Code's `Read` tool on the folders that hold the real
+   data and reference resources in the project's `.claude/settings.json`, for example
+   `"deny": ["Read(/data/**)"]`, so that file contents do not reach the model by accident.
 
 ## Update
 

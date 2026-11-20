@@ -1,6 +1,6 @@
 ---
 name: defining-analysis-inputs
-description: Write or revise the Input data section of an analysis methods document, by interview or, with explicit authorization for each path, by exploring the structure of the data. Never creates the methods document.
+description: Write or revise the Input data section of an analysis methods document, by interview or, with explicit authorization for each path, by exploring the structure of the data; authorizing a manifest also covers the header and format of the files it lists. Never creates the methods document.
 ---
 
 # Purpose
@@ -57,9 +57,9 @@ their pattern, not the names. A variable whose levels identify people is an iden
 its pattern and its number of levels. Paths in a manifest are values: record the path column and
 the pattern of its paths, never the paths.
 
-Locations and the paths in a manifest may be absolute or relative to the project folder. Write
-a location relative to the project folder when you can, and you may tell the user that relative
-paths are preferred.
+Locations and the paths in a manifest may be absolute or relative to the repository root, where
+scripts run. Write a location relative to the repository root when you can, and you may tell the
+user that relative paths are preferred.
 
 Read binary formats with, in this order:
 

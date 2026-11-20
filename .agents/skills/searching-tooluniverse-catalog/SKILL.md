@@ -1,13 +1,13 @@
 ---
 name: searching-tooluniverse-catalog
-description: Search the local ToolUniverse catalog for candidate methods. Use once, at the start, before designing the methodology of an analysis plan, when `{Agents_file}` declares `ToolUniverse_CLI`. Read-only catalog queries; never run tools.
+description: Search the local ToolUniverse catalog for candidate methods. Use once, at the start, before designing the methods of an analysis methods document, when `{Agents_file}` declares `ToolUniverse_CLI`. Read-only catalog queries; never run tools.
 ---
 
 # Purpose
 
 Find candidate methods for an analysis in the ToolUniverse catalog and translate them to the
-original methods an analysis plan can cite. The catalog is advisory: the plan never depends on
-ToolUniverse and never mentions it.
+original methods a methods document can cite. The catalog is advisory: the methods document never
+depends on ToolUniverse and never mentions it.
 
 # Workflow
 
@@ -20,7 +20,7 @@ without it. Never install or configure anything.
 ## 2. List the operations
 
 From the scientific question and the inputs, list the main analysis operations, for example
-differential expression or colocalization. Do not define methodology steps yet. A method the user
+differential expression or colocalization. Do not define methods steps yet. A method the user
 explicitly requests is fixed.
 
 ## 3. Search the catalog
@@ -43,12 +43,12 @@ For each useful candidate, record the original method as `package::function` and
 Some tools reimplement a method, for example a pure-Python port of an R function: cite the
 original package, and verify its parameters and defaults in that package's documentation, since
 the port may differ. A method available only as a ToolUniverse tool, such as a remote model or a
-web API, may be mentioned to the user as an option, but it never enters the plan.
+web API, may be mentioned to the user as an option, but it never enters the methods document.
 
 # Output
 
 Return a short YAML in the conversation; do not save it to a file. `data_analyst` uses it to
-propose the methodology to the user. The plan cites only the method and its reference.
+propose the methods to the user. The methods document cites only the method and its reference.
 
 ```yaml
 - operation: <analysis operation>
