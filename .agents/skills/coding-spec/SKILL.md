@@ -28,8 +28,8 @@ and polyglot changes may provide more than one.
   which selects the files in `nextflow_guidelines/`.
 - Preparatory reference implementation of a Nextflow contract: also
   [Nextflow reference implementation](nextflow-reference.md).
-- Scripts, reports, and configurations of an analysis plan: additionally the
-  [analysis guidelines](analysis.md).
+- Scripts, reports, configurations, image recipes, and `run-analysis.sh` of the implementation
+  plan of an analysis methods document: additionally the [analysis guidelines](analysis.md).
 
 ## General guidance
 

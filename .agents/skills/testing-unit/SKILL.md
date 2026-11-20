@@ -17,8 +17,9 @@ Load supplied Markdown language or framework profiles before choosing syntax or 
   [Nextflow component testing](references/nextflow.md); for nf-core module or subworkflow
   nf-tests, also [module testing](references/nf-core/testing_modules.md) or
   [subworkflow testing](references/nf-core/testing_subworkflows.md).
-- Analysis plans: additionally the [analysis testing rules](analysis.md), which take precedence
-  over the language profiles and this skill's general guidance where they differ.
+- Implementation plans of analysis methods documents: additionally the
+  [analysis testing rules](analysis.md), which take precedence over the language profiles and
+  this skill's general guidance where they differ.
 
 ## TDD evidence
 

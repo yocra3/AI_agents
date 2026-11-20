@@ -42,5 +42,6 @@ files, and the file of every failure.
 
 ## Profiles
 
-- Analysis plans in `{Analysis_Plans_Folder}`: also load the
-  [analysis validation rules](analysis.md), which take precedence where they are more specific.
+- Implementation plans of analysis methods documents in `{Analysis_Methods_Folder}`: also load
+  the [analysis validation rules](analysis.md), which take precedence where they are more
+  specific.

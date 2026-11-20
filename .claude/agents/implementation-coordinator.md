@@ -55,10 +55,11 @@ On resume at `Coded` without that approval, run any pending Finalization phases,
 
 # Failure routing and stops
 Route code, lint, and GREEN failures to coder, invalid tests to tester, and failed refactoring to
-cleaner, with at most two retries per phase. Route each `full-validation` failure by file: a file
-cleaner changed to cleaner; a test file, the execution runner, the synthetic data generator, or
-the reference subset script to tester; `run-analysis.sh`, a configuration, or an image recipe to
-coder; then run `full-validation` again.
+cleaner, with at most two retries per phase. Route each `full-validation` failure by file: tests
+and supporting test artifacts, such as the execution runner, the synthetic data generator, the
+reference subset script, and the image and input checks, to tester; a file changed by the
+implementation plan's single final refactoring phase to cleaner; any other file to coder; then
+run `full-validation` again.
 
 Stop and report to the user, citing the affected contract section or criterion, or implementation
 plan step, increment, or phase, without reinterpreting either, when:
@@ -72,7 +73,6 @@ plan step, increment, or phase, without reinterpreting either, when:
 - a method cannot be applied as specified, or a required tool is missing from an image;
 - coder reports missing image-build permissions, such as Docker or `fakeroot`; state what to ask
   the administrator for;
-- `full-validation` fails outside the files routed above;
 - reviewer's implementation review reports any blocking finding;
 - dev_ops reports that a `dev_ops: code-documentation` phase changes anything other than comments.
 When stopping, do not change the status or commit; report the uncommitted files. Resume only on
