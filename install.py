@@ -5,7 +5,9 @@ The script copies the committed `.agents`, `.claude` and `.codex` files into the
 records each one with its SHA-256 in `.agents/.install-manifest.json`. On the next run it compares
 three versions of each file (this repository, the manifest, and the target) to decide whether to
 add, update, delete or keep it. Files that are not in the manifest belong to the target project
-and are never touched.
+and are never touched. `.agents/VERSION` is the exception: it is always overwritten, so the
+target always reports the version that was installed. The manifest also records that version and
+the commit it came from, and installing a lower version shows a warning.
 
 Both repositories must have no uncommitted changes in those folders, so every change the script
 makes in the target can be reviewed with `git diff` and reverted with `git checkout`.
@@ -17,6 +19,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -26,6 +29,9 @@ SKILLS_LINK = ".claude/skills"
 SKILLS_LINK_TARGET = "../.agents/skills"
 LOCAL_CONFIG = (".claude/settings.json", ".codex/config.toml")  # installed only when absent
 MANIFEST = ".agents/.install-manifest.json"
+VERSION_FILE = ".agents/VERSION"  # always overwritten, so the marker never lies
+SEMVER = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+                    r"(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z.-]+)?$")
 # Folders listed as unmanaged leftovers when a target has no manifest yet.
 LEGACY_SCAN_DIRS = (".agents/skills", ".agents/templates", ".codex/agents", ".claude/agents",
                     ".claude/scripts")
@@ -98,6 +104,8 @@ def plan(target, source_files, old_files, legacy):
         local = file_hash(os.path.join(target, rel))
         if rel in LOCAL_CONFIG:
             action = "add" if local is None else "config-differs" if local != src else None
+        elif rel == VERSION_FILE and src is not None and local != src:
+            action = "add" if local is None else "update"
         elif src is None:
             action = None if local is None else "delete" if local == old else "kept-removed"
         elif local is None:
@@ -118,10 +126,28 @@ def plan(target, source_files, old_files, legacy):
     return actions
 
 
-def summarize(actions, old_version, new_version):
+def semver_key(version):
+    """Return a key that sorts by semantic versioning precedence, or None for invalid versions."""
+    match = SEMVER.match(version or "")
+    if not match:
+        return None
+    core = tuple(int(part) for part in match.group(1, 2, 3))
+    if match.group(4) is None:
+        return core, (1,)  # a release sorts after its pre-releases
+    # Numeric identifiers sort numerically and before alphanumeric ones.
+    return core, (0,) + tuple((0, int(part), "") if part.isdigit() else (1, 0, part)
+                              for part in match.group(4).split("."))
+
+
+def describe(version, commit):
+    """Return a version for display, such as `0.9.0 (68f6dfc)`."""
+    return "%s (%s)" % (version or "unknown", commit)
+
+
+def summarize(actions, old_label, new_label):
     """Print the planned actions and return the number of files that will change."""
-    print("Source version: %s" % new_version)
-    print("Installed version: %s" % (old_version or "none (no manifest)"))
+    print("Source version: %s" % new_label)
+    print("Installed version: %s" % (old_label or "none (no manifest)"))
     for key, label in LABELS:
         rels = [rel for action, rel in actions if action == key]
         if rels:
@@ -181,6 +207,19 @@ def link_skills(target):
             print("Removed the link %s/%s of a skill that no longer exists" % (SKILLS_LINK, name))
 
 
+def read_version():
+    """Return the semantic version in this repository's `.agents/VERSION`, or stop."""
+    try:
+        with open(os.path.join(SOURCE, VERSION_FILE)) as fh:
+            version = fh.read().strip()
+    except OSError:
+        version = None
+    if semver_key(version) is None:
+        sys.exit("install: %s in this repository is missing or not a semantic version"
+                 % VERSION_FILE)
+    return version
+
+
 def main():
     parser = argparse.ArgumentParser(description="Install or update the agent definitions.")
     parser.add_argument("target", help="path to the target Git repository")
@@ -202,11 +241,20 @@ def main():
         with open(manifest_path) as fh:
             manifest = json.load(fh)
 
+    new_version = read_version()
+    new_commit = git(SOURCE, "rev-parse", "--short", "HEAD")
+    new_label = describe(new_version, new_commit)
+    old_version = manifest.get("version") if manifest else None
+    old_label = describe(old_version, manifest["source_version"]) if manifest else None
+
     old_files = manifest["files"] if manifest else {}
-    new_version = git(SOURCE, "rev-parse", "--short", "HEAD")
     source_files = tracked_files(SOURCE, MANAGED_DIRS)
     actions = plan(target, source_files, old_files, manifest is None)
-    changes = summarize(actions, manifest and manifest["source_version"], new_version)
+    changes = summarize(actions, old_label, new_label)
+    old_key = semver_key(old_version)
+    if old_key is not None and semver_key(new_version) < old_key:
+        print("\nwarning: the source version %s is lower than the installed version %s; "
+              "installing it downgrades the project." % (new_label, old_label))
 
     if args.dry_run:
         return
@@ -224,13 +272,13 @@ def main():
     apply(target, actions)
     link_skills(target)
     with open(manifest_path, "w") as fh:
-        json.dump({"source_version": new_version,
+        json.dump({"source_version": new_commit, "version": new_version,
                    "files": {rel: digest for rel, digest in source_files.items()
                              if rel not in LOCAL_CONFIG}},
                   fh, indent=2, sort_keys=True)
         fh.write("\n")
 
-    print("\nInstalled %s." % new_version)
+    print("\nInstalled %s." % new_label)
     if any(action == "conflict" for action, _ in actions):
         print("Overwritten files changed in the target: review them with `git diff` and restore "
               "your version with `git checkout -- <file>`.")

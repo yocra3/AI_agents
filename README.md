@@ -138,6 +138,12 @@ file and its hash in `.agents/.install-manifest.json`, so running it again updat
   are kept as they are.
 - Files the manifest does not list, such as the project's own skills, are never touched.
   `.claude/settings.json` and `.codex/config.toml` are installed only when absent.
+- `.agents/VERSION` holds the semantic version of these definitions and is always overwritten,
+  even when the target changed it. The summary shows the source and installed versions with
+  their commit hashes, for example `Source version: 0.9.0 (68f6dfc)`, and warns when the version
+  being installed is lower than the installed one. `.agents/CHANGELOG.md` lists the changes of
+  each version and the upgrade notes for installed projects; it is not the project's own
+  changelog.
 - It shows a summary and asks before changing anything; `--yes` skips that confirmation.
 - A project installed by an older version of the script has no manifest. Every file that differs
   is then overwritten as a conflict, and old files no longer in this repository are listed but
