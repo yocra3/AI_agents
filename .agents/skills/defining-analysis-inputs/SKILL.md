@@ -52,7 +52,8 @@ of a design variable reaches the minimum number of replicates without recording 
 Never record counts, per-record values, measurements, sample or patient identifiers, or free
 text. When column names are identifiers, such as the sample columns of a count matrix, record
 their pattern, not the names. A variable whose levels identify people is an identifier: record
-its pattern and its number of levels.
+its pattern and its number of levels. Paths in a manifest are values: record the path column and
+the pattern of its paths, never the paths.
 
 Read binary formats with, in this order:
 

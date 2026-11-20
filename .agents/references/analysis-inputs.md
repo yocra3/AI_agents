@@ -82,7 +82,8 @@ inputs.
 - **Range**: minimum and maximum with their comparison, for example `>= 0`; only when a method
   requires it.
 - **Unique**: no value repeats in the column or field.
-- **ID pattern**: a regular expression, for example `^ENSG[0-9]{11}$`.
+- **ID pattern**: a regular expression, for example `^ENSG[0-9]{11}$`; for a path column of a
+  manifest, the pattern of its paths.
 - **Missing values**: always declared, as `not allowed` or `allowed as <notation>`, where the
   notation is `NA`, empty, or `.`.
 
@@ -98,6 +99,29 @@ Mark each column the model uses as a design variable, with its levels, its refer
 the minimum number of replicates per level. A variable whose levels identify people, such as a
 patient column in a paired design, is an identifier: record its ID pattern and its number of
 levels instead of its levels.
+
+## Manifests
+
+A manifest is a table whose column holds paths to other files, such as a samplesheet with paths to
+FASTQ files. Describe it as a table. Each path column is a used column of type `string`, with the
+format and compression of the files it points to and the structure items of that format's family,
+and its ID pattern as a constraint. Paths are values: record the pattern, never the paths. Input
+tests check that every listed path exists and that every listed file meets its declared format.
+
+```markdown
+### `INPUT_SAMPLESHEET`
+
+- **Content**: Raw RNA-seq reads of each sample.
+- **Location**: `/data/rnaseq/samplesheet.csv`
+- **Format**: CSV, uncompressed
+- **Structure**: Table with a header; one row per sample; key column `sample`.
+  - `sample`: `string`, sample identifier.
+  - `fastq_1`, `fastq_2`: `string`, paths to the read 1 and read 2 files of the sample. Files:
+    FASTQ, gzip; paired-end.
+- **Constraints**: `sample` unique, ID pattern `^S[0-9]{3}$`, missing values not allowed.
+  `fastq_1`, `fastq_2` unique, ID pattern `^/data/rnaseq/fastq/S[0-9]{3}_R[12]\.fastq\.gz$`,
+  missing values not allowed.
+```
 
 ## Example
 
@@ -159,3 +183,5 @@ The section is complete when all of these hold:
 9. Every pair of inputs whose identifiers the analysis matches has a relation from the vocabulary.
 10. The section records nothing the principles above forbid and has no pending values, such as
     `TBD`, `?`, or unfilled placeholders.
+11. Every path column of a manifest states the format and compression of the files it points to,
+    the structure items of that format's family, and its ID pattern.

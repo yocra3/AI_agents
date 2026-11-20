@@ -131,8 +131,10 @@ revision after an approval sets `Status` back to `Draft`.
 ## Versions and revisions
 
 - The user sets `Version`. Agents never change it on their own; they may only suggest a new one.
-- The version control table is cumulative: never delete its rows. `Change` is `added`,
-  `modified`, or `removed`; `Section or step` names the section, the step ID, or the input key.
+- The version control table is cumulative: never delete its rows, and never change a row once it
+  has been approved. Rows added since the last approval may be edited until the next approval.
+  `Change` is `added`, `modified`, or `removed`; `Section or step` names the section, the step
+  ID, or the input key.
 - Before the first authorization, `data_analyst` writes the initial row
   `| v1 | Document | added | Initial document | First approval |`. Until the first approval
   commit, the draft is edited freely and the table holds only that row.
@@ -154,4 +156,4 @@ Before the user authorizes the document, check that:
 - the Input data section meets the completeness criteria of
   `{Agents_Folder}/references/analysis-inputs.md`;
 - the version control table has the initial row and, after an approval, one row per content
-  change.
+  change, with every approved row unchanged.

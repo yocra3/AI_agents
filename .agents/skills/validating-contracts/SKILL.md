@@ -100,10 +100,12 @@ With an approval commit, check the diff against the table:
 - Blocking: a step that did not exist at the approval and whose output an existing step uses,
   explicitly or by the omission rule, while `Version` is still the approved one. Say that it
   needs a new `Version`, which only the user sets.
-- Non-blocking: an imprecise row, such as a wrong section, change type, version, or
-  description; a content change to another section with no row; a row of the approved table
-  that was changed or deleted; and, within a version, a new step that is not last in execution
-  order or a step ID that was reused or renumbered.
+- Blocking: a row of the table at the approval commit that was deleted or changed. Approved rows
+  are immutable; rows added since that commit may still be edited.
+- Non-blocking: an imprecise row added since the approval, such as a wrong section, change type,
+  version, or description; a content change to another section with no row; and, within a
+  version, a new step that is not last in execution order or a step ID that was reused or
+  renumbered.
 - Wording corrections that do not change content need no row and are not findings.
 
 ## Template conformance
