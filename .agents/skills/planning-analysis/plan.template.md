@@ -62,7 +62,7 @@ Write acceptance criteria with the EARS guide in
 
 ## Removed
 
-<!-- One entry per removed increment; leave this section empty in a new plan. -->
+<!-- One entry per increment removed at a new version; leave this section empty in a new plan. -->
 
 ### Removed: `<old file>`, `<old file>`
 
@@ -205,7 +205,8 @@ done; this table gives its meaning.
   keep their registry ID. Tier-2 and tier-3 images have a registry entry, with their digest, when
   the plan is written. A tier-4 image's Image is its recipe path in `{Analysis_Recipes_Folder}`,
   its Contents give the base image and every package with its version, and it has one
-  `tester: image-check` and `coder: image-build` pair in Setup.
+  `tester: image-check` and `coder: image-build` pair in Setup. When a missing Wave CLI sent the
+  image to tier 4, its Tier is `4 recipe, Wave CLI missing`.
 
 ## Configuration
 
@@ -318,7 +319,8 @@ done; this table gives its meaning.
   `coder: real-config`; `tester: real-input-check`. Omit the image pairs when there is no tier-4
   image. The `coder: renumber` marker is complete except at a new version in which some increment
   number changes.
-- The Removed section holds one entry per removed increment, with the phases
+- Within a version, increments are only appended, never removed or renumbered. The Removed
+  section holds one entry per increment removed at a new version, with the phases
   `tester: remove-tests` then `coder: remove-code`, and is empty when no increment has been
   removed. An entry lists all the increment's old files, for example
   `Removed: 04-report.Rmd, 04-report.sh`, and takes no number in the increment sequence.

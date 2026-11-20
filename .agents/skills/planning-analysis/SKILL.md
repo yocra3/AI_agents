@@ -52,9 +52,9 @@ result to report, and input for the stop conditions below before planning.
 
 Use selecting-container-images for every increment and for the input checks, with the version
 that the document fixes for each package, if any. Record the registry entries it adds, fill the
-Images table, and add one `tester: image-check` and `coder: image-build` pair to Setup for each
-tier-4 image. Fill Software and effective parameters from the resolved versions and their
-documentation.
+Images table, marking the images that a missing Wave CLI sent to tier 4, and add one
+`tester: image-check` and `coder: image-build` pair to Setup for each tier-4 image. Fill Software
+and effective parameters from the resolved versions and their documentation.
 
 ## 4. Define inputs and test data
 
@@ -95,9 +95,10 @@ implementation evidence, with no document change, follows the same rules.
   propagate the change, directly or transitively through `Depends on`, to every increment whose
   methods, inputs, images, outputs, or criteria must change. Unchanged increments keep their
   markers, also when renumbered.
-- Keep the resolved versions and images of unchanged steps. A revision never updates a version;
-  only a version that the user fixes in the document does, which may need a new image with a new
-  ID.
+- Keep the resolved versions and the chosen images. A revision never updates a version; only a
+  version that the user fixes in the document does, which may need a new image with a new ID.
+- Re-resolve a chosen image only when the user asks or a methods change requires it, so an image
+  that a missing Wave CLI sent to tier 4 stays at tier 4.
 - Reset to pending:
   - the Execution markers of every modified increment;
   - every Finalization marker;
@@ -106,16 +107,18 @@ implementation evidence, with no document change, follows the same rules.
     change;
   - `coder: renumber` when a new version changes some increment number.
   New tier-4 images add new, pending image pairs.
-- Move a removed increment from Increments to Removed, as one entry with all its old files and
-  pending removal markers. Delete Removed entries whose markers are complete.
-- Within a version, never renumber: new increments go at the end, with the next `NN`. When a
-  change needs an increment before an existing one, such as a new step whose output an existing
-  step uses, or a new dependency of an increment on a later one, stop and suggest a new version.
-- At a new version, renumber the increments consecutively from `01` in execution order, and update
-  the headings, `Depends on`, the `Increment` columns, Seeds, Reports, and each increment's
-  `Files`. Renumbering alone does not modify an increment; `coder: renumber` renames its files.
-  Every increment then runs from the start into empty version folders; no output of another
-  version is reused.
+- Within a version, only append: new increments go at the end, with the next `NN`, and no
+  increment is removed or renumbered. Stop and suggest a new version when the diff contains a
+  change that requires one under the methods template's revision rules, such as a removed or
+  modified step, or when a change needs an increment before an existing one, such as a new
+  dependency of an increment on a later one.
+- At a new version, move each removed increment from Increments to Removed, as one entry with all
+  its old files and pending removal markers. Then renumber the increments consecutively from `01`
+  in execution order, and update the headings, `Depends on`, the `Increment` columns, Seeds,
+  Reports, and each increment's `Files`. Renumbering alone does not modify an increment;
+  `coder: renumber` renames its files. Every increment then runs from the start into empty
+  version folders; no output of another version is reused.
+- Delete Removed entries whose markers are complete.
 
 # Stop conditions
 
@@ -127,8 +130,9 @@ the document or choosing for it, when:
   step that produces p-values without its correction method and scope;
 - implementing a step needs a choice that the text does not state and that is not a default
   value, such as which annotation field maps identifiers or how replicates are aggregated;
-- within the same `Version`, a change needs an increment inserted before an existing one; suggest
-  a new version, which only the user sets;
+- within the same `Version`, the diff contains a change that requires a new `Version` under the
+  methods template's revision rules, or a change needs an increment inserted before an existing
+  one; suggest a new version, which only the user sets;
 - the document has no approval commit or differs from it, several plans match, or a package
   version cannot be provided by any image tier.
 
@@ -138,5 +142,6 @@ choose.
 # Output
 
 Return the plan path, whether it was created or updated, the mode, `Version` and approval commit,
-the registry entries added, the tier-4 images and their Setup phases, the markers reset, the
-Software and effective parameters table, and any stop with its cited section.
+the registry entries added, the tier-4 images and their Setup phases, whether the Wave CLI was
+missing and which images it sent to tier 4, the markers reset, the Software and effective
+parameters table, and any stop with its cited section.

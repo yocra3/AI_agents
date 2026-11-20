@@ -49,9 +49,10 @@ and ask the user when several match. Never write methods documents in `{Specs_Fo
 Set `Version` only to a value the user states. Maintain the version control table with the
 template's revision rules: write the initial row before the first authorization and, after an
 approval, reopen the document at `Draft` and add one row per content change. Find approvals with
-read-only Git commands. When a new methods step's output is used by an existing step, tell the
-user that the change needs a new version; also say when a change looks like it warrants one.
-Leave the decision to the user.
+read-only Git commands. Before making a requested change that needs a new version under the
+template's revision rules, tell the user in plain language that it changes how results are
+computed, so it cannot share a version whose scripts the user may already have run. Leave setting
+`Version` to the user.
 
 # Boundaries
 Do not write code, tests, configurations, test data, implementation plans, acceptance criteria,
@@ -61,10 +62,10 @@ Change `Status` only to reopen a revised document at `Draft`. Do not create bran
 
 # Output
 Return the document path, analysis identifier, version, whether it was created or updated, the
-version control rows added, whether a change needs or may warrant a new version, user-accepted
-decisions, items missing after the checks, and unresolved questions. State that the document is
-at `Draft` and that implementation_coordinator must not start until the user explicitly
-authorizes executing this named methods document.
+version control rows added, whether a change needs a new version, user-accepted decisions, items
+missing after the checks, and unresolved questions. State that the document is at `Draft` and
+that implementation_coordinator must not start until the user explicitly authorizes executing
+this named methods document.
 """
 
 [[skills.config]]

@@ -140,11 +140,15 @@ revision after an approval sets `Status` back to `Draft`.
   commit, the draft is edited freely and the table holds only that row.
 - After the first approval, revise the document in place and add one row per content change, with
   the document's current `Version`. Wording corrections that do not change content take no row.
-- Within a version, steps may be modified or removed, but new steps only go at the end of the
-  execution order: the implementation numbers its scripts in that order, and the user may already
-  have run them for the current version. A new step takes the next unused `M` number, and step
-  IDs are never reused or renumbered within a version.
-- A new methods step whose output an existing step uses requires a new `Version`.
+- A change to how results are computed requires a new `Version`: removing a methods step;
+  modifying an existing step's tool, parameters, filters, model, or correction; changing a global
+  parameter that a step uses; changing Design or Input data; or adding a step whose output an
+  existing step uses.
+- Only these changes fit within a version: new steps at the end of the execution order whose
+  output no existing step uses, changes to Results to report, references, and wording
+  corrections. The implementation numbers its scripts in execution order, and the user may
+  already have run them for the current version. A new step takes the next unused `M` number,
+  and step IDs are never reused or renumbered within a version.
 - At a new version, every step runs again from the start into new, empty output folders; no output
   of another version is reused.
 
@@ -156,4 +160,6 @@ Before the user authorizes the document, check that:
 - the Input data section meets the completeness criteria of
   `{Agents_Folder}/references/analysis-inputs.md`;
 - the version control table has the initial row and, after an approval, one row per content
-  change, with every approved row unchanged.
+  change, with every approved row unchanged;
+- while `Version` is still the last approved one, every change since that approval fits within a
+  version.

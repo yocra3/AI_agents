@@ -35,10 +35,11 @@ requires replanning.
 
 # Scientific gaps
 Never complete a scientific gap in a methods document. Stop and report, citing the section or
-step, when the document leaves open a decision that affects the results, when implementing a step
-needs a choice that the text does not state and that is not a default value, or when a change
-within the same `Version` needs an increment before an existing one; then suggest a new version,
-which only the user sets.
+step, when the document leaves open a decision that affects the results, or when implementing a
+step needs a choice that the text does not state and that is not a default value. Also stop when
+a change within the same `Version` requires a new version under the methods template's revision
+rules or needs an increment before an existing one; then suggest a new version, which only the
+user sets.
 
 # Status
 After the initial implementation plan is complete, advance an `Approved` contract to `Planned`.
@@ -54,8 +55,8 @@ Return the contract type, identifier, and status, the implementation plan path a
 created or updated, environment decisions, the ER-model path or its non-applicability or
 unavailability reason for a specification, and blockers for implementation_coordinator. For a
 methods document, also return `Version` and the approval commit planned from, the registry entries
-added, the tier-4 images to build, the markers reset, the Software and effective parameters table,
-and any stop with its cited section.
+added, the tier-4 images to build and those that a missing Wave CLI sent there, the markers
+reset, the Software and effective parameters table, and any stop with its cited section.
 """
 
 [[skills.config]]

@@ -97,9 +97,13 @@ With an approval commit, check the diff against the table:
 
 - Blocking: a content change to Methods, to a global parameter that a step uses, to Input data,
   or to Results to report that no row records.
-- Blocking: a step that did not exist at the approval and whose output an existing step uses,
-  explicitly or by the omission rule, while `Version` is still the approved one. Say that it
-  needs a new `Version`, which only the user sets.
+- Blocking: while `Version` is still the approved one, a change that requires a new `Version`
+  under the template's revision rules: a removed methods step; a changed tool, parameter, filter,
+  model, or correction of an existing step; a changed global parameter that a step uses; a change
+  to Design or Input data; or a new step whose output an existing step uses, explicitly or by the
+  omission rule. Explain that the change alters how results are computed, while the user may
+  already have run the approved version's scripts into its output folders, so it needs a new
+  `Version`, which only the user sets.
 - Blocking: a row of the table at the approval commit that was deleted or changed. Approved rows
   are immutable; rows added since that commit may still be edited.
 - Non-blocking: an imprecise row added since the approval, such as a wrong section, change type,
