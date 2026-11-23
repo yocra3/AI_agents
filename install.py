@@ -220,6 +220,36 @@ def read_version():
     return version
 
 
+def tooluniverse_cli(target):
+    """Return the ToolUniverse_CLI path that the target's AGENTS.md declares, or None."""
+    path = os.path.join(target, "AGENTS.md")
+    if not os.path.isfile(path):
+        return None
+    with open(path) as fh:
+        match = re.search(r"\*\*ToolUniverse_CLI\*\*:\s*`?([^\s`]+)", fh.read())
+    if not match or match.group(1).startswith("{"):
+        return None
+    cli = os.path.expanduser(match.group(1))
+    return cli if os.path.isabs(cli) else os.path.join(target, cli)
+
+
+def check_tools(target):
+    """Warn about optional external tools that the agents use and that are not available."""
+    if shutil.which("wave") is None:
+        print("\nwarning: the Wave CLI (`wave`) is not on PATH; selecting-container-images "
+              "cannot request Seqera Containers images and sends them to a recipe (tier 4). "
+              "Install it from https://github.com/seqeralabs/wave-cli.")
+    cli = tooluniverse_cli(target)
+    if cli is not None:
+        if not (os.path.isfile(cli) and os.access(cli, os.X_OK)):
+            print("\nwarning: ToolUniverse_CLI in AGENTS.md is %s, which is not an executable "
+                  "file; searching-tooluniverse-catalog will skip the catalog." % cli)
+    elif shutil.which("tu") is None:
+        print("\nwarning: the ToolUniverse CLI (`tu`) is not on PATH and AGENTS.md does not "
+              "declare ToolUniverse_CLI; data_analyst will design methods without the "
+              "ToolUniverse catalog. See https://github.com/mims-harvard/ToolUniverse.")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Install or update the agent definitions.")
     parser.add_argument("target", help="path to the target Git repository")
@@ -255,6 +285,7 @@ def main():
     if old_key is not None and semver_key(new_version) < old_key:
         print("\nwarning: the source version %s is lower than the installed version %s; "
               "installing it downgrades the project." % (new_label, old_label))
+    check_tools(target)
 
     if args.dry_run:
         return
