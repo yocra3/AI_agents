@@ -1,10 +1,6 @@
 # Analysis inputs reference
 
-Rules for the Input data section of an analysis methods document. The same text feeds the
-synthetic data generator, the input checks, and the data section of the manuscript, so it
-uses fixed fields and a closed vocabulary. The methods document template refers to this file,
-`defining-analysis-inputs` helps write the section, and contract validation checks it against the
-completeness criteria below.
+Rules for the Input data section of an analysis methods document. 
 
 ## Principles
 
