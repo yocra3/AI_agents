@@ -36,12 +36,6 @@ Resolve the layout keys from `{Agents_file}` for the analysis.
 For a report, add one HTML comment `<!-- ... -->` after the YAML front matter with its purpose,
 render script, and files read.
 
-## Python
-
-Write the script header and function documentation as `#` comment blocks instead of docstrings,
-so the diff stays comments-only. Place a function's block immediately above `def`, with the
-`Args:` and `Returns:` sections of a Google-style docstring.
-
 ## Validation
 
 - Every added or removed line in the diff is blank, a full-line comment starting with `#` after
