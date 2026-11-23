@@ -1,9 +1,8 @@
 # Analysis documentation guidelines
 
 These guidelines apply to the scripts, shared functions, and report sources of the
-implementation plan of an analysis methods document, in its `dev_ops: code-documentation` phase
-after review. Where they are stricter than a language profile, they take precedence. The phase
-changes comments only.
+implementation plan of an analysis methods document. Where they are stricter than a language
+profile, they take precedence. Documenting analysis code changes comments only.
 
 ## Rules
 
@@ -36,10 +35,3 @@ Resolve the layout keys from `{Agents_file}` for the analysis.
 For a report, add one HTML comment `<!-- ... -->` after the YAML front matter with its purpose,
 render script, and files read.
 
-## Validation
-
-- Every added or removed line in the diff is blank, a full-line comment starting with `#` after
-  indentation, or part of an HTML comment in a `.Rmd` file. The shebang is unchanged.
-- Under the execution rules in `{Agents_file}`, lint each changed file in the image of its
-  increment, or of any increment of its language for a shared functions file, and
-  `run-analysis.sh` on the host or in any image that provides the Bash lint checks.

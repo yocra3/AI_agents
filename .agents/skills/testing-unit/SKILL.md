@@ -23,14 +23,10 @@ Load supplied Markdown language or framework profiles before choosing syntax or 
 
 ## TDD evidence
 
-- **RED:** run the relevant existing tests and record the baseline; if none exist, report that
-  instead of claiming a green baseline. Create or extend the smallest focused test and run it.
-  The failure must demonstrate missing behavior. A missing production symbol may be valid RED; invalid
-  syntax, fixtures, or setup are not.
-- **GREEN:** implement the minimum behavior and run the targeted test plus the relevant fast
-  suite.
-- **REFACTOR:** change structure without behavior changes and keep the targeted and relevant
-  suites green after each step.
+Run the relevant existing tests and record the baseline; if none exist, report that instead of
+claiming a green baseline. Create or extend the smallest focused test and run it. RED is valid
+only when the failure demonstrates missing behavior: a missing required production symbol may be
+valid RED; invalid syntax, fixtures, environment, or setup are not.
 
 Keep tests deterministic, independent, and focused on observable behavior. For ordinary unit
 tests, isolate network, database, filesystem, time, and process boundaries with suitable test
@@ -38,10 +34,3 @@ doubles unless the framework profile requires real execution to verify the compo
 Choose reference outputs, property assertions, or both according to
 the contract; expected behavior must be independent of the implementation under test.
 Report the command, result, covered behavior, and any unresolved failure.
-
-## Removal
-
-In a `remove-tests` phase, remove only the tests of the removed step or acceptance criterion
-that the implementation plan's Removed entry names, and the supporting test artifacts that only
-they use, from the files that the entry lists. Then run the remaining relevant suite and confirm
-GREEN; the phase has no RED.

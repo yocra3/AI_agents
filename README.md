@@ -5,8 +5,9 @@ Agent definitions for programming with AI, usable from Codex and Claude Code.
 ## Contents
 
 - `.agents/`: shared skills (`skills/`), the workflow catalog (`CODEX.md`), templates
-  (`templates/`), references (`references/`), and the version marker (`VERSION`) with its
-  `CHANGELOG.md`. The `AGENTS.md` template lives in the `project-bootstrap` skill.
+  (`templates/`), references (`references/`, including the phase reference `phases/`), and the
+  version marker (`VERSION`) with its `CHANGELOG.md`. The `AGENTS.md` template lives in the
+  `project-bootstrap` skill.
 - `.codex/`: Codex configuration and the 12 custom agents (`agents/*.toml`), which are the source
   of truth.
 - `.claude/`: Claude Code settings, the agents generated from `.codex/agents`, and
@@ -34,6 +35,9 @@ person approves a contract, a specification or an analysis methods document, and
   `Draft`, no branch is created, and the findings go back to the user.
 - `engineer` turns the approved contract into one implementation plan, which declares every
   phase to run, including the final ones. The coordinator commits the plan before running it.
+- Each phase is defined once, in `.agents/references/phases/`, with its steps, the skill it uses,
+  the evidence it returns and its stops. The coordinator passes that definition unchanged to the
+  agent that runs the phase.
 - The coordinator runs as the main session, owns one task branch and commits only green work. It
   never pushes, merges or tags; those are separate requests.
 - Work advances in small steps or increments, each with a failing test first (RED), then the
@@ -123,7 +127,7 @@ flowchart TD
     SE --> INC
     subgraph INC ["For each increment, in NN order"]
         direction LR
-        T["tester<br/>formal checks: RED"] --> C["coder<br/>script on synthetic data: GREEN"] --> CM["commit"]
+        T["tester: test<br/>formal checks: RED"] --> C["coder: implementation<br/>script on synthetic data: GREEN"] --> CM["commit"]
     end
     INC --> CO["methods document: Coded"]
     CO --> FI["Finalization<br/>refactor, run script, full validation,<br/>implementation review, comments"]
@@ -159,7 +163,9 @@ flowchart TD
 - **Agents never compute on real data**:
   - They run every script on synthetic data with the format of the real data, made by a
     versioned generator, and on deterministic subsets of the real reference resources, inside
-    each increment's container image.
+    each increment's container image. `tester` first writes the tests of the generator, the
+    subset script and the input checks, and `coder` then writes them; once they pass, they
+    change only through a new Setup phase.
   - On the real data they run only the input checks, which report failures without values.
     `run-analysis.sh` runs them again, with the image checks, at the start of every run.
   - The same code runs on the test and real data, through two configuration files.

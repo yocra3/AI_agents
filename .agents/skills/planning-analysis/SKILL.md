@@ -17,8 +17,10 @@ Resolve global placeholders from `{Agents_file}`. Read:
 - `{Agents_Folder}/templates/analysis-methods.template.md` and
   `{Agents_Folder}/references/analysis-inputs.md`, which define how the document is written and
   read, including the omission rules of methods steps;
-- the [implementation plan template](plan.template.md), which defines its format, phases,
-  and content rules;
+- the [implementation plan template](plan.template.md), which defines its format and content
+  rules;
+- the phase reference, `{Agents_Folder}/references/phases/common.md` and `analysis.md`, which
+  defines the phases that the markers name;
 - `{Analysis_Images_file}`.
 
 Plan only an approved document. Find its last approval commit with read-only Git commands, and
@@ -99,9 +101,12 @@ Replanning for implementation evidence, with no document change, follows the sam
 - Reset to pending:
   - the Execution markers of every modified increment;
   - every Finalization marker;
-  - `tester: test-setup`, `coder: real-config`, and `tester: real-input-check` when Input data,
-    the global parameters, Configuration, the input checks, the test data rules, or `Version`
-    change;
+  - `tester: test-setup`, `coder: test-setup`, `coder: real-config`, and
+    `tester: real-input-check` when Input data, the global parameters, Configuration, the input
+    checks, the test data rules, or `Version` change;
+  - `tester: test-setup` and `coder: test-setup` when implementation evidence shows that the
+    frozen test support code must change or fails functionally, and also
+    `tester: real-input-check` when the change affects the input checks;
   - `coder: renumber` when a new version changes some increment number.
   New tier-4 images add new, pending image pairs.
 - Within a version, only append: new increments go at the end, with the next `NN`, and no

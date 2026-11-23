@@ -100,15 +100,12 @@ For a new component requiring reference outputs, declare the phases in this orde
 
 1. `tester: reference-validation`
 2. `coder: reference-generation`
-3. `tester: production-test`
-4. `coder: production-implementation`
-5. `cleaner: production-refactor`
+3. `tester: test`
+4. `coder: implementation`
+5. `cleaner: refactor`
 
-The reference-validation phase defines executable expectations before reference generation.
-The reference-generation phase materializes required test prerequisites and reference outputs
-until those validations are GREEN. The production-test phase then freezes expectations and
-establishes RED against the not-yet-implemented production behavior. Cleaner is planned only
-after production GREEN.
+The phase reference defines each of these phases, with the Nextflow rules that the last three
+follow in such a step.
 
 Generated reference data belongs under
 `{Project_Folder}/reference-data/<spec-slug-id>/` and remains untracked. Version any required

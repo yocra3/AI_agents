@@ -1,9 +1,12 @@
 # Analysis implementation guidelines
 
 These guidelines apply to the computation scripts, report documents, render scripts, shared
-functions, real configuration, image recipes, and `run-analysis.sh` of the implementation plan of
-an analysis methods document, `{Plans_Folder}/<analysis-id>.plan.md` for
-`{Analysis_Methods_file}`. Take every path and file name from the Analysis layout keys in
+functions, real configuration, test support code, image recipes, and `run-analysis.sh` of the
+implementation plan of an analysis methods document, `{Plans_Folder}/<analysis-id>.plan.md` for
+`{Analysis_Methods_file}`. The test support code is the test configuration,
+`{Analysis_Test_Config_file}`, and the execution runner `run-tests.sh`, the reference subset
+script, the synthetic data generator, and the input checks, which live with the tests in
+`{Analysis_Test_Code_Folder}`. Take every path and file name from the Analysis layout keys in
 `{Agents_file}`, resolved for the analysis; the implementation plan never redefines them.
 
 The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as described in
@@ -12,7 +15,7 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
 ## Configuration
 
 - Computation and render scripts run from the repository root and take no command-line
-  parameters; the `run-analysis.sh` wrapper of the `run-script` phase is the only exception.
+  parameters; the `run-analysis.sh` wrapper is the only exception.
   Each loads exactly one configuration file at its top, from the path in the `ANALYSIS_CONFIG`
   environment variable, defaulting to the resolved `{Analysis_Real_Config_file}`.
 - The configuration is a `KEY=value` file with optional double quotes, `#` comment lines, and
@@ -25,8 +28,8 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
   `{Analysis_Reports_Version_Folder}`. The test configuration, `{Analysis_Test_Config_file}`,
   points to the test inputs in `{Analysis_Test_Inputs_Folder}` and sets `RESULTS_DIR`,
   `FIGURES_DIR`, and `REPORTS_DIR` to `${ANALYSIS_OUTPUT_ROOT}/results`,
-  `${ANALYSIS_OUTPUT_ROOT}/figures`, and `${ANALYSIS_OUTPUT_ROOT}/reports`. The test runner sets
-  `ANALYSIS_OUTPUT_ROOT`.
+  `${ANALYSIS_OUTPUT_ROOT}/figures`, and `${ANALYSIS_OUTPUT_ROOT}/reports`. The execution runner
+  sets `ANALYSIS_OUTPUT_ROOT`.
 - Input paths may be absolute or relative to the repository root, also inside a manifest. When
   writing a path, prefer a relative one; keep a path outside the repository absolute.
 - Code MUST be identical for both configurations: no mode flags, test-specific branches, or
@@ -71,54 +74,85 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
   Its render script is a `{Analysis_Script_file}` with the same `NN` and slug; it loads the
   configuration and renders into `REPORTS_DIR`.
 
-## Phases
+## Input checks
 
-Read the increment, its files, its image, and its methods steps from the implementation plan. Run
-every command of an increment phase in the increment's image, the `{Analysis_Images_file}` entry
-named by its `Image` ID, under the execution rules in `{Agents_file}`; `renumber`, `real-config`,
-and `remove-code` only move, write, or delete files.
-Lint each script in its increment's image, each test file in the image of the increment it tests,
-each `{Analysis_Shared_Functions_file}` in the image of any increment of its language, and
-`run-analysis.sh` with the Bash lint checks in any image that provides them or on the host.
-`image-build` and `synthetic-implementation` follow tester's RED; every other phase is a direct
-phase.
+The input checks are written in the language of the implementation plan's Input checks section
+and run in its image. They read the configuration in `ANALYSIS_CONFIG`, defaulting to the
+resolved `{Analysis_Real_Config_file}`, and check every `INPUT_<NAME>` and `REF_<NAME>` key it
+sets, with the same code for synthetic and real inputs. They check:
 
-- `renumber`: in one pass, rename the computation scripts, render scripts, and `.Rmd` sources of
-  renumbered increments to their new `NN` with plain `mv`, in a collision-free order such as
-  highest number first or through temporary names. Update every hardcoded reference to the old
-  names, such as the `.Rmd` path in render scripts, the provenance file name and `script` row,
-  header `Usage:` paths, and calls or sources between scripts, so provenance file names follow
-  the script's `NN`. Change nothing else, and use no git commands.
-- `image-build`: use building-container-images for the tier-4 image that the marker names.
-- `real-config`: write `{Analysis_Real_Config_file}` with `ANALYSIS_ID`, `ANALYSIS_VERSION` set to
-  the implementation plan's `Version`, the output folders set to the version folders of the
-  Analysis layout, and every `INPUT_<NAME>`, `REF_<NAME>`, and global parameter key of
-  Configuration with its Real value. Verify that every required key is set. Do not read the
-  inputs.
-- `synthetic-implementation`: implement exactly the increment's methods steps, which the formal
-  checks do not bound. When tester reports, instead of RED, that the existing checks still apply
-  to a modified increment, proceed without RED. Reach GREEN as the testing profile defines it, run
-  the linting skill on the changed files, and return both pieces of evidence.
-- `post-run-implementation`: implement exactly the increment's methods steps. Validate it only
-  with lint and syntax checks; never run the script.
-- `remove-code`: delete the removed increment's code, the files its Removed entry lists.
-- `run-script`: write or rewrite `run-analysis.sh`, as defined below. Validate it only with lint;
-  never execute it.
+- the Input data section of the methods document, as `{Agents_Folder}/references/analysis-inputs.md`
+  defines it: that each Location exists, with the files of a folder's pattern; the format and its
+  compression; the structure of the format's family; every constraint of each used column or
+  field, missing values included; each design variable's levels, reference level, and minimum
+  replicates per level, or its ID pattern and number of levels when its levels identify people;
+  the relations between inputs; and, for each reference resource, its version and assembly when
+  its format's headers carry them;
+- manifests: every listed path exists and every listed file meets its declared format;
+- every technical requirement in the implementation plan's Input checks section.
 
-## Final refactoring
+Rules:
 
-In `cleaner: analysis-refactor`, the single final refactoring phase of an analysis, refactor once
-the computation scripts, render scripts, report sources, and shared functions of every increment
-of the implementation plan, as its `Files` list them.
+- Accept absolute paths and paths relative to the repository root, also inside a manifest.
+- Accept columns, fields, and files that no methods step uses.
+- In large formats, such as BAM, CRAM, FASTQ, VCF, and BCF, check the header, or the first
+  records of a FASTQ file, and the relations with other inputs. Check the full content only of
+  tables and matrices.
+- Run every check and report every failure before exiting with a failing status. Each failure
+  message states which check failed, the key and the column or field, and how many times. Never
+  print a value read from the inputs, such as a cell, an identifier, a path, or a header line;
+  names that the methods document declares, such as columns and design levels, are allowed.
+- Never modify or copy the inputs, and write no files.
 
-- Preserve behavior: the same outputs, file names, provenance, seeds, and configuration keys, and
-  every script still runnable line by line.
-- Shared functions may move to `{Analysis_Shared_Functions_file}`.
-- Do not modify the test or real configurations, the tests or their supporting test artifacts,
-  such as the runner, the input checks, the image checks, the synthetic data generator, and the
-  reference subset script, the test inputs, the image recipes, or `run-analysis.sh`.
-- Reach GREEN as the testing profile defines it, and validate `post-run` increments with lint and
-  syntax checks only.
+## Test data
+
+Tests use real reference resources reduced to a subset and synthetic data instead of the user's
+data. The reference subset script and the synthetic data generator are tracked deterministic
+scripts, in the language of the Input checks section and run in its image, that create them in
+`{Analysis_Test_Inputs_Folder}` by applying the implementation plan's Test data rules exactly.
+They never read the user's `INPUT_<NAME>` data.
+
+- **Reference subset script**: derives each `REF_<NAME>` subset from the real resource at its
+  Real value in the implementation plan's Configuration, read-only, or from the nf-core
+  test-datasets that its Source names, and keeps the resource's headers.
+- **Synthetic data generator**: writes each `INPUT_<NAME>` with the format, compression, and
+  structure of Input data, the generation rule and planted signal of the implementation plan,
+  identifiers taken from the reference subsets, every design level with at least its minimum
+  replicates, and every relation between inputs. A synthetic manifest lists synthetic files in
+  `{Analysis_Test_Inputs_Folder}`. It sets the Generator seed once at its start and writes
+  compressed files without timestamps, so that every run writes the same bytes.
+
+## Execution runner
+
+The execution runner is `run-tests.sh` in `{Analysis_Test_Code_Folder}`, run as
+`run-tests.sh <mode> [NN]`. It runs on the host, because scripts run in different images, and may
+therefore drive several frameworks. For analysis, it replaces the session-level setup of the
+testing frameworks. It sets `ANALYSIS_TEST_MODE` for the checks to `synthetic` in the `increment`
+and `synthetic` modes and to `post-run` in the `post-run` mode, passes the environment variables
+of this section into each container, and makes the configured input paths visible in it, as the
+execution rules require.
+
+In the `increment` and `synthetic` modes, it sets `ANALYSIS_CONFIG` to the test configuration
+and `ANALYSIS_OUTPUT_ROOT` to `{Analysis_Test_Run_Folder}`. It runs each script and render
+script in its increment's image, recording each exit status and stopping at the first failure,
+then each increment's checks in that increment's image with its framework. The checks read the
+folders defined by the test configuration. Nothing is written to the versioned folders or to
+tracked files.
+
+- `increment <NN>`: run only the scripts and render scripts of increment `NN`, then its checks,
+  reusing the earlier increments' outputs already in `{Analysis_Test_Run_Folder}`, which it does
+  not empty. For a `post-run` increment, it runs no script, and its checks skip.
+- `synthetic [NN]` (default): the full run from scratch. Run every image check, then the setup
+  tests in the image of the input checks, then the input checks, and stop at the first failure.
+  Then empty `{Analysis_Test_Run_Folder}` and run the scripts and render scripts of the
+  `synthetic` increments in implementation plan order, up to increment `NN` when given, then
+  their checks.
+- `setup`: run only the setup tests, in the image of the input checks.
+- `post-run`: no script is executed; the runner runs only the output checks, each increment's in
+  its image. They load the real configuration and read the version folders written by the user's
+  full run, read-only.
+- `input-check`: run only the input checks, with `ANALYSIS_CONFIG` set to the resolved
+  `{Analysis_Real_Config_file}`.
 
 ## run-analysis.sh
 

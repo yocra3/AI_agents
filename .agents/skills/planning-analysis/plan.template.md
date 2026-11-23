@@ -73,7 +73,9 @@ Write acceptance criteria with the EARS guide in
 - [x] `coder: renumber`
 - [ ] `tester: image-check` (`<tier-4 image ID>`)
 - [ ] `coder: image-build` (`<tier-4 image ID>`)
+- [ ] `engineer: software-versions`
 - [ ] `tester: test-setup`
+- [ ] `coder: test-setup`
 - [ ] `coder: real-config`
 - [ ] `tester: real-input-check`
 
@@ -91,8 +93,8 @@ Write acceptance criteria with the EARS guide in
 - **Depends on**: `<increment numbers or none>`
 - **Acceptance criteria**: `<AC1, AC2>`
 - **Execution**:
-  - [ ] `tester: synthetic-test`
-  - [ ] `coder: synthetic-implementation`
+  - [ ] `tester: test`
+  - [ ] `coder: implementation`
 
 ## Finalization
 
@@ -128,28 +130,9 @@ None.
 
 ## Phases
 
-Every marker names its phase as `<agent>: <phase>`. The agents' skills and profiles define how
-each phase is done; this table gives its meaning.
-
-| Section | Phase | Meaning |
-| --- | --- | --- |
-| Removed | `tester: remove-tests` | Remove the tests of the removed increment. |
-| Removed | `coder: remove-code` | Delete the files that the Removed entry lists. |
-| Setup | `coder: renumber` | Rename the files of renumbered increments to their new `NN`. |
-| Setup | `tester: image-check` | Write the permanent check of one tier-4 image, in RED. |
-| Setup | `coder: image-build` | Write the image's recipe, build it, and add its registry entry (GREEN). |
-| Setup | `tester: test-setup` | Write the reference subsets, the synthetic data generator, the input checks, the test configuration, and the runner. |
-| Setup | `coder: real-config` | Write the real configuration from Configuration. |
-| Setup | `tester: real-input-check` | Run the input checks on the real inputs. |
-| Increments | `tester: synthetic-test` | Write the increment's checks and confirm RED on synthetic data. |
-| Increments | `coder: synthetic-implementation` | Implement the increment and reach GREEN on synthetic data. |
-| Increments | `tester: post-run-checks` | Write checks that run only after the user's full run. |
-| Increments | `coder: post-run-implementation` | Implement the increment, validated with lint and syntax checks only. |
-| Finalization | `cleaner: analysis-refactor` | Refactor all analysis code once. |
-| Finalization | `coder: run-script` | Write `run-analysis.sh`. |
-| Finalization | `coder: full-validation` | Run the complete test suite and lint every changed file. |
-| Finalization | `reviewer: implementation-review` | Review the implementation against the methods document and this implementation plan. |
-| Finalization | `dev_ops: code-documentation` | Add comments to the analysis code. |
+Every marker names its phase as `<agent>: <phase>`, one of the phases that
+`{Agents_Folder}/references/phases/` defines for analysis plans: `common.md` for Removed, the
+`synthetic` increments, and the shared Finalization phases, and `analysis.md` for the others.
 
 ## Content rules
 
@@ -244,7 +227,7 @@ each phase is done; this table gives its meaning.
   example an external tool that needs full references or large resources. A `synthetic`
   increment must not depend on a `post-run` increment; declare such an increment `post-run` too.
 - Execution per increment:
-  - `synthetic`: `tester: synthetic-test`, then `coder: synthetic-implementation`.
+  - `synthetic`: `tester: test`, then `coder: implementation`.
   - `post-run`: `tester: post-run-checks`, then `coder: post-run-implementation`.
 
 ## Reports
@@ -279,10 +262,11 @@ each phase is done; this table gives its meaning.
 
 - The section order Removed, Setup, Increments, Finalization is the execution order.
 - Setup phases, in order: `coder: renumber`; one `tester: image-check` and `coder: image-build`
-  pair per tier-4 image, in the order of the Images table; `tester: test-setup`;
-  `coder: real-config`; `tester: real-input-check`. Omit the image pairs when there is no tier-4
-  image. The `coder: renumber` marker is complete except at a new version in which some increment
-  number changes.
+  pair per tier-4 image, in the order of the Images table; `engineer: software-versions`;
+  `tester: test-setup`; `coder: test-setup`; `coder: real-config`; `tester: real-input-check`.
+  Omit the image pairs and `engineer: software-versions` when there is no tier-4 image. The
+  `coder: renumber` marker is complete except at a new version in which some increment number
+  changes.
 - The Removed section holds one entry per increment removed at a new version, with the phases
   `tester: remove-tests` then `coder: remove-code`, and is empty when no increment has been
   removed. An entry lists all the increment's old files, for example

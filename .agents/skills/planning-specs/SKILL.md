@@ -10,13 +10,16 @@ executes: ordered steps, each with the phases and agents that run it.
 
 # Contract
 
-Resolve `{Specs_Folder}` and `{Plans_Folder}` from global instructions. Read:
+Resolve `{Agents_Folder}`, `{Specs_Folder}`, and `{Plans_Folder}` from global instructions.
+Read:
 
 - the specification, `{Specs_Folder}/<spec-slug-id>.spec.md`;
-- the [implementation plan template](plan.template.md), which defines its format, phases, and
-  content rules;
-- for Nextflow work, also [Nextflow planning](references/nextflow.md) and
-  [test-data discovery](test_data.md).
+- the [implementation plan template](plan.template.md), which defines its format and content
+  rules;
+- the phase reference, `{Agents_Folder}/references/phases/common.md` and `specs.md`, which
+  defines the phases that the markers name;
+- for Nextflow work, also [Nextflow planning](references/nextflow.md),
+  [test-data discovery](test_data.md), and `{Agents_Folder}/references/phases/nextflow.md`.
 
 Plan only an approved specification. Find its last approval commit with read-only Git commands,
 and stop when there is none or when the specification differs from it in anything other than

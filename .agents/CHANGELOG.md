@@ -43,6 +43,15 @@ and one implementation workflow executes specifications and methods documents al
   `implementation_coordinator`, which records each stop there and clears resolved entries on
   resume.
 - A Programming workflow section in the `AGENTS.md` template.
+- The phase reference, `.agents/references/phases/` (`common.md`, `specs.md`, `nextflow.md` and
+  `analysis.md`): one entry per phase of the implementation plans and per delegation that is not
+  a plan marker, with its meaning, skill, steps, evidence and stops.
+  `planning-specs` and `planning-analysis` read it, and delegates receive their entry verbatim.
+- Skill `agent-delegation` for `implementation_coordinator`: what each delegate's brief holds,
+  the evidence required back, retries and failure routing, with `full-validation` failures fixed
+  as `<agent>: validation-fix`.
+- Analysis Setup phases `coder: test-setup`, after `tester: test-setup`, and
+  `engineer: software-versions`, after the last tier-4 image pair.
 
 ### Changed
 
@@ -72,6 +81,34 @@ and one implementation workflow executes specifications and methods documents al
   `{Analysis_Methods_Folder}` or `{Specs_Folder}`, instead of its file name.
 - The Nextflow reference implementation profile applies to the `coder: reference-generation`
   phase.
+- Skill profiles keep only conventions: the phase procedures of `coding-spec`, `testing-unit` and
+  `documenting-code`, with their Phases, Final refactoring and Removal sections, move to the phase
+  reference. The implementation plan templates lose their Phases tables and keep their ordering
+  and structure rules. `testing-unit` holds the only general definition of valid RED, and phase
+  entries add only their own cases.
+- Test support code moves from `tester` to `coder`. `tester` writes only tests and their static
+  data; in Setup, `tester: test-setup` writes the setup tests of the reference subset script, the
+  synthetic data generator, the input checks and the test configuration in RED, and
+  `coder: test-setup` writes them and the execution runner, and creates the test inputs, to GREEN.
+  Once GREEN, they are frozen: only a Setup phase changes them, and a `full-validation` failure
+  in them is fixed only when it is a lint finding, without changing behavior; a functional
+  failure goes to replanning, which resets `tester: test-setup` and `coder: test-setup`, and
+  also `tester: real-input-check` when the change affects the input checks.
+- The analysis execution runner is `run-tests.sh` in `{Analysis_Test_Code_Folder}`, with the
+  modes `increment <NN>` (one increment's scripts and checks, reusing the earlier increments'
+  outputs), `synthetic [NN]` (the full run from scratch, with the image checks, the setup tests
+  and the input checks), `setup` (the setup tests only), `post-run` and `input-check`. An
+  increment's RED and GREEN use `increment <NN>`, and `synthetic <NN>` locates a failure; only
+  `cleaner: analysis-refactor` and `coder: full-validation` use the full run.
+- Unified phase names: analysis `synthetic` increments use `tester: test` and
+  `coder: implementation`, and the Nextflow steps with reference outputs use `tester: test`,
+  `coder: implementation` and `cleaner: refactor`, with Nextflow rules added to their entries.
+  They replace `tester: synthetic-test`, `coder: synthetic-implementation`,
+  `tester: production-test`, `coder: production-implementation` and `cleaner: production-refactor`.
+- `full-validation` becomes the `coder: full-validation` phase instead of a skill. Criterion: a
+  skill holds substantial knowledge of its own, is used by several phases or agents, or makes
+  sense outside a plan; a procedure that only chains other skills inside the coordinator's flow is
+  a phase.
 - Renamed project keys: `Analysis_Plans_Folder` to `Analysis_Methods_Folder`,
   `Analysis_Plan_file` to `Analysis_Methods_file` (`<analysis-id>.methods.md`) and
   `Analysis_Test_Subset_Folder` to `Analysis_Test_Inputs_Folder`. The `subset` verification mode
@@ -83,6 +120,7 @@ and one implementation workflow executes specifications and methods documents al
 - `analysis_coordinator`; its work moves to `implementation_coordinator` and the phases of the
   implementation plan.
 - The analysis plan template, `analysis-plan.template.md`.
+- Skill `validating-changes`; its rules are the `coder: full-validation` phase.
 
 ### Upgrade notes
 
@@ -101,6 +139,16 @@ and one implementation workflow executes specifications and methods documents al
   specification's last approval commit, turn each step's Execution into checkbox markers with the
   phase names of the catalog, marking `[x]` the phases already done, turn its task checkboxes into
   plain bullets, and add an empty Removed section and a Blockers section with `None.`.
+- Existing analysis implementation plans: add `coder: test-setup` after `tester: test-setup` in
+  Setup, marked `[x]` when `tester: test-setup` is complete, and, when the plan has tier-4 images,
+  `engineer: software-versions` after the last image pair, marked `[x]`.
+- Existing implementation plans with the old marker names: rename `tester: synthetic-test` and
+  `coder: synthetic-implementation` to `tester: test` and `coder: implementation` in analysis
+  plans, and `tester: production-test`, `coder: production-implementation` and
+  `cleaner: production-refactor` to `tester: test`, `coder: implementation` and
+  `cleaner: refactor` in specification plans, keeping each checkbox as it is.
+- An analysis whose test support code has no `run-tests.sh` with the new modes: before resuming
+  it, reset `tester: test-setup` and `coder: test-setup` to pending in its implementation plan.
 - The installer deletes the files of the removed agents, `builder` and `analysis_coordinator`,
   and of the analysis plan template, unless the project modified them; it then keeps them, and
   you can delete them yourself. A project installed without a manifest only gets them listed.

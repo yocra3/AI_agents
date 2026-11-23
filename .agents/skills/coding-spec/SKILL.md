@@ -28,8 +28,9 @@ and polyglot changes may provide more than one.
   which selects the files in `nextflow_guidelines/`.
 - Preparatory reference implementation of a Nextflow contract: also
   [Nextflow reference implementation](nextflow-reference.md).
-- Scripts, reports, configurations, image recipes, and `run-analysis.sh` of the implementation
-  plan of an analysis methods document: additionally the [analysis guidelines](analysis.md).
+- Scripts, reports, configurations, test support code, image recipes, and `run-analysis.sh` of
+  the implementation plan of an analysis methods document: additionally the
+  [analysis guidelines](analysis.md).
 
 ## General guidance
 
@@ -42,9 +43,3 @@ and polyglot changes may provide more than one.
 
 If a required global placeholder or profile path cannot be resolved, stop and report it rather
 than inventing a project layout or toolchain.
-
-## Removal
-
-In a `remove-code` phase, remove only the code of the removed step or acceptance criterion from
-the files that the implementation plan's Removed entry lists, deleting a file that holds nothing
-else, and the references to that code that would no longer resolve. Change no other behavior.

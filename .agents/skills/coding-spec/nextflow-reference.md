@@ -1,9 +1,8 @@
 # Nextflow reference implementation
 
-Use this profile only for the `coder: reference-generation` phase of an approved Nextflow
-implementation plan.
-The result is an independent reference implementation and concrete review data, not production
-Nextflow code.
+Use this profile for the independent reference implementation of a Nextflow component: the
+scripts that generate its test prerequisites and reference outputs. The result is an independent
+reference implementation and concrete review data, not production Nextflow code.
 
 ## Location and languages
 
@@ -41,10 +40,3 @@ Nextflow code.
   when a subworkflow's tools do not share a container.
 - Implement the specified behavior independently with the underlying tools. Do not invoke, copy or
   translate the module or subworkflow being developed.
-
-Check Bash with `bash -n`, Python with the repository's configured checks, and execute the reference
-tests. The test harness may run on the host, but every command that exercises the reference
-behavior must use the same `apptainer exec --cleanenv` image and bind mounts used for RED. Produce
-every concrete input and output required by the plan, including companion files. Report paths,
-checksums, commands and validation results to the caller.
-This phase does not satisfy the Nextflow implementation or advance the specification to `Coded`.

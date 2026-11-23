@@ -67,25 +67,10 @@ None.
 
 ## Phases
 
-Every marker names its phase as `<agent>: <phase>`. The agents' skills and profiles define how
-each phase is done; this table gives its meaning.
-
-| Section | Phase | Meaning |
-| --- | --- | --- |
-| Removed | `tester: remove-tests` | Remove the tests of the removed step or acceptance criterion. |
-| Removed | `coder: remove-code` | Remove the code of the removed step or acceptance criterion from the files that the Removed entry lists. |
-| Steps | `tester: test` | Write the step's failing tests and confirm RED. |
-| Steps | `coder: implementation` | Make the minimum change that turns the step's tests GREEN. |
-| Steps | `cleaner: refactor` | Refactor the step's code without changing its behavior. |
-| Steps | `coder: direct-implementation` | Make the step's planned change without RED, because no test can observe it. |
-| Steps, Nextflow only | `coder: import-nf-core` | Import the step's nf-core component with nf-core tools. |
-| Steps, Nextflow only | `tester: reference-validation` | Write the validations of the reference outputs before they exist, in RED. |
-| Steps, Nextflow only | `coder: reference-generation` | Generate the test prerequisites and reference outputs until their validations are GREEN. |
-| Steps, Nextflow only | `tester: production-test` | Write the production nf-tests from the verified reference outputs and confirm RED. |
-| Steps, Nextflow only | `coder: production-implementation` | Implement the production component and reach GREEN. |
-| Steps, Nextflow only | `cleaner: production-refactor` | Refactor the production component without changing its behavior. |
-| Finalization | `coder: full-validation` | Run the complete test suite and lint every changed file. |
-| Finalization | `reviewer: implementation-review` | Review the implementation against the specification and this implementation plan. |
+Every marker names its phase as `<agent>: <phase>`, one of the phases that
+`{Agents_Folder}/references/phases/` defines for specification plans: `common.md` for Removed,
+Finalization, `tester: test`, and `coder: implementation`, `specs.md` for the other Steps phases,
+and `nextflow.md` for the Nextflow-only phases.
 
 ## Content rules
 
@@ -115,9 +100,10 @@ each phase is done; this table gives its meaning.
   - `coder: direct-implementation` alone, only when the step has no behavior that a test can
     observe, such as configuration or scaffolding. The step's description states why.
   - Nextflow, as [Nextflow planning](references/nextflow.md) assigns them:
-    `coder: import-nf-core` alone for an imported nf-core component, and the five reference
-    phases, in their table order, for a new component that requires reference outputs. Other
-    Nextflow steps use the default.
+    `coder: import-nf-core` alone for an imported nf-core component, and
+    `tester: reference-validation` and `coder: reference-generation` before the default phases,
+    in the order that Nextflow planning gives, for a new component that requires reference
+    outputs. Other Nextflow steps use the default.
 
 ## Removed, Finalization, and Blockers
 

@@ -98,9 +98,9 @@ Both contracts follow `Draft` -> `Approved` -> `Planned` -> `Coded` -> `Verified
 | `$coding-spec` | Apply repository and language coding conventions. |
 | `$linting` | Run repository lint checks and fix requested findings. |
 | `$testing-unit` | Write and run isolated tests. |
-| `$validating-changes` | Run the full test suite and lint a task branch's changes read-only. |
 | `$reviewing-implementation` | Review completed work read-only against its contract and implementation plan for `reviewer`. |
 | `$documenting-code` | Document source APIs and generate documentation artifacts. |
+| `$agent-delegation` | Brief each delegate of `implementation_coordinator` with its phase instructions and route its failures. |
 | `$start-task` | Prepare a local task branch. |
 | `$commit-changes` | Create reviewed local commits. |
 | `$push-changes` | Explicitly publish existing commits. |
@@ -119,5 +119,6 @@ Both contracts follow `Draft` -> `Approved` -> `Planned` -> `Coded` -> `Verified
 
 | Reference | Responsibility |
 | --- | --- |
-| [`analysis-inputs.md`](references/analysis-inputs.md) | Fields, formats, vocabulary, and completeness criteria of a methods document's Input data, used by `data_analyst`, defining-analysis-inputs, validating-contracts, planning-analysis, and the testing profile. |
+| [`analysis-inputs.md`](references/analysis-inputs.md) | Fields, formats, vocabulary, and completeness criteria of a methods document's Input data, used by `data_analyst`, defining-analysis-inputs, validating-contracts, planning-analysis, and the analysis coding and testing profiles. |
+| [`phases/`](references/phases/) | One entry per phase of the implementation plans and per delegation that is not a plan marker, with its skill, steps, evidence, and stops. Read by planning-specs, planning-analysis, and agent-delegation, which pastes each entry verbatim into the delegate's brief. |
 | [`craftsman-sources.md`](references/craftsman-sources.md) | External workflow sources that `craftsman` verifies before proposing adoption. |

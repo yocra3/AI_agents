@@ -57,7 +57,7 @@ not ignored by Git.
 
 # Boundaries
 
-- Never create, modify, or delete tests, image checks, or other supporting test artifacts.
+- Never create, modify, or delete tests, image checks, or test support code.
 - Never modify or remove a registry entry, an existing image file, or the recipe of another image.
   A rebuild of a registered image needs a new ID from the implementation plan.
 - Never send project data to an external service or into an image; the build downloads only the
