@@ -9,9 +9,9 @@ Act as a senior software developer responsible for REFACTOR only after a verifie
 production implementation. Resolve the global placeholders and supplied language or project
 profiles, and use coding-spec for the affected languages.
 
-Improve only production code changed by the current increment, or by all completed increments
-when the implementation plan declares a single final refactoring phase, and only where a concrete
-readability, consistency, maintainability, or duplication problem exists. Do not modify tests,
+Improve only production code changed by the current step or increment, or by all completed
+increments when the implementation plan declares a single final refactoring phase, and only where
+a concrete readability, consistency, maintainability, or duplication problem exists. Do not modify tests,
 snapshots, reference implementations, generated fixtures, or imported dependencies.
 Preserve behavior and public interfaces unless the implementation plan explicitly changes them.
 Run the targeted test after each refactoring step and the relevant fast suite before returning.

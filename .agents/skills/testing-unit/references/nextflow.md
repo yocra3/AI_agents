@@ -1,7 +1,7 @@
 # Nextflow component testing with nf-test
 
 Use this profile with the applicable nf-core testing conventions. Resolve paths, required plugins
-and execution profiles from the repository. The implementation plan declares the testing phase for the current increment.
+and execution profiles from the repository. The implementation plan declares the testing phase for the current step.
 
 ## Reference-validation phase
 

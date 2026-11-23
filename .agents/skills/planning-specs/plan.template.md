@@ -1,6 +1,14 @@
-## Implementation Plan for <spec-slug-id>
+# Specification implementation plan template
 
-- **Specification**: `{Specs_Folder}/<spec-slug-id>.spec.md`
+Use this template for `{Plans_Folder}/<spec-slug-id>.plan.md`, the single implementation plan of
+the specification `{Specs_Folder}/<spec-slug-id>.spec.md`. `engineer` owns the content;
+`implementation_coordinator` changes only the execution markers and Blockers.
+
+```markdown
+# Implementation plan: <spec-slug-id>
+
+- **Specification**: `<{Specs_Folder}/<spec-slug-id>.spec.md, relative to the repository root>`
+- **Approval commit**: `<hash>` `docs(<spec-slug-id>): approve specification`
 - **Pipeline root**: `<absolute path or not-applicable>`
 
 ## Environment and reproducibility
@@ -22,17 +30,30 @@
 
 ## Acceptance criteria coverage
 
-| Acceptance criterion | Plan increment | Verification |
+| Acceptance criterion | Step | Verification |
 | --- | --- | --- |
 | `<criterion identifier>` | `<step number>` | `<test boundary and expected evidence>` |
 
-### Step 1: {Step Title}
-{short description of the step}
+## Removed
 
-- **Depends on:** `<step numbers or none>`
-- **Execution:** `<ordered agent:phase sequence>`
+### Removed: <Step n: title, or criterion identifier>: `<file>`, `<file>`
 
-- [ ] {One line Task 1 description}
+- [ ] `tester: remove-tests`
+- [ ] `coder: remove-code`
+
+## Steps
+
+### Step 1: <title>
+
+<short description of the step; for a `coder: direct-implementation` step, why no test can observe it>
+
+- **Depends on**: `<step numbers or none>`
+- **Tasks**:
+  - <one-line outcome-oriented task>
+- **Execution**:
+  - [ ] `tester: test`
+  - [ ] `coder: implementation`
+  - [ ] `cleaner: refactor`
 
 ## Finalization
 
@@ -41,4 +62,70 @@
 
 ## Blockers
 
-- `<blocker or none>`
+None.
+```
+
+## Phases
+
+Every marker names its phase as `<agent>: <phase>`. The agents' skills and profiles define how
+each phase is done; this table gives its meaning.
+
+| Section | Phase | Meaning |
+| --- | --- | --- |
+| Removed | `tester: remove-tests` | Remove the tests of the removed step or acceptance criterion. |
+| Removed | `coder: remove-code` | Remove the code of the removed step or acceptance criterion from the files that the Removed entry lists. |
+| Steps | `tester: test` | Write the step's failing tests and confirm RED. |
+| Steps | `coder: implementation` | Make the minimum change that turns the step's tests GREEN. |
+| Steps | `cleaner: refactor` | Refactor the step's code without changing its behavior. |
+| Steps | `coder: direct-implementation` | Make the step's planned change without RED, because no test can observe it. |
+| Steps, Nextflow only | `coder: import-nf-core` | Import the step's nf-core component with nf-core tools. |
+| Steps, Nextflow only | `tester: reference-validation` | Write the validations of the reference outputs before they exist, in RED. |
+| Steps, Nextflow only | `coder: reference-generation` | Generate the test prerequisites and reference outputs until their validations are GREEN. |
+| Steps, Nextflow only | `tester: production-test` | Write the production nf-tests from the verified reference outputs and confirm RED. |
+| Steps, Nextflow only | `coder: production-implementation` | Implement the production component and reach GREEN. |
+| Steps, Nextflow only | `cleaner: production-refactor` | Refactor the production component without changing its behavior. |
+| Finalization | `coder: full-validation` | Run the complete test suite and lint every changed file. |
+| Finalization | `reviewer: implementation-review` | Review the implementation against the specification and this implementation plan. |
+
+## Content rules
+
+- The implementation plan holds the engineering decisions only. Every product decision comes from
+  the specification; never add, choose, or change one here.
+- Paths may be absolute or relative to the repository root. Write them relative to the repository
+  root, and keep a path outside the repository absolute.
+- `Approval commit` is the approval commit of the specification that the plan was last planned
+  from.
+- It has no change markers; its history is in Git.
+
+## Acceptance criteria coverage
+
+- One row per acceptance criterion of the specification. Every criterion maps to exactly one
+  step, the one whose tests verify it, with its test boundary and expected evidence.
+- A step may have no criterion, such as an intermediate step or a `coder: direct-implementation`
+  step.
+
+## Steps
+
+- Steps are numbered from 1 in execution order, and a removed step's number is not reused. A
+  step may depend only on earlier steps.
+- Tasks are plain bullets, at most five, each an outcome that the delegated agent can verify
+  without prescribed implementation tactics. The Execution markers are the only progress record.
+- Execution per step:
+  - By default: `tester: test`, `coder: implementation`, then `cleaner: refactor`.
+  - `coder: direct-implementation` alone, only when the step has no behavior that a test can
+    observe, such as configuration or scaffolding. The step's description states why.
+  - Nextflow, as [Nextflow planning](references/nextflow.md) assigns them:
+    `coder: import-nf-core` alone for an imported nf-core component, and the five reference
+    phases, in their table order, for a new component that requires reference outputs. Other
+    Nextflow steps use the default.
+
+## Removed, Finalization, and Blockers
+
+- The section order Removed, Steps, Finalization is the execution order.
+- The Removed section holds one entry per removed step or acceptance criterion whose code or tests
+  must go, listing its files, with the phases `tester: remove-tests` then `coder: remove-code`,
+  and is empty when nothing has been removed. An entry takes no step number.
+- Finalization always has the two phases of the template, in that order.
+- Blockers belong to `implementation_coordinator`: one entry per stop, written as
+  `- **<cited section, criterion, step, or phase>**: <stop condition, as reported>`, or `None.`.
+  `engineer` writes `None.` in a new plan and never changes Blockers.

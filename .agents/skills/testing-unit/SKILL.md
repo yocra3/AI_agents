@@ -38,3 +38,10 @@ doubles unless the framework profile requires real execution to verify the compo
 Choose reference outputs, property assertions, or both according to
 the contract; expected behavior must be independent of the implementation under test.
 Report the command, result, covered behavior, and any unresolved failure.
+
+## Removal
+
+In a `remove-tests` phase, remove only the tests of the removed step or acceptance criterion
+that the implementation plan's Removed entry names, and the supporting test artifacts that only
+they use, from the files that the entry lists. Then run the remaining relevant suite and confirm
+GREEN; the phase has no RED.

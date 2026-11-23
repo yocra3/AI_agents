@@ -1,6 +1,7 @@
 # Nextflow reference implementation
 
-Use this profile only when an approved Nextflow implementation plan has round `reference`.
+Use this profile only for the `coder: reference-generation` phase of an approved Nextflow
+implementation plan.
 The result is an independent reference implementation and concrete review data, not production
 Nextflow code.
 
@@ -45,6 +46,5 @@ Check Bash with `bash -n`, Python with the repository's configured checks, and e
 tests. The test harness may run on the host, but every command that exercises the reference
 behavior must use the same `apptainer exec --cleanenv` image and bind mounts used for RED. Produce
 every concrete input and output required by the plan, including companion files. Report paths,
-checksums, commands and validation results to implementation_coordinator so it can commit the
-round and continue automatically.
-This round does not satisfy the Nextflow implementation or advance the specification to `Coded`.
+checksums, commands and validation results to the caller.
+This phase does not satisfy the Nextflow implementation or advance the specification to `Coded`.

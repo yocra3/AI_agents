@@ -30,6 +30,19 @@ and one implementation workflow executes specifications and methods documents al
   recipe that `coder` builds in Setup.
 - Project keys `Analysis_Recipes_Folder`, `Analysis_Images_Folder` and the container execution
   rules in the `AGENTS.md` template.
+- Specification implementation plans get a phase catalog, as analysis plans have:
+  `tester: test`, `coder: implementation` and `cleaner: refactor` by default,
+  `coder: direct-implementation` for a step that no test can observe, and the Nextflow phases,
+  with `coder: import-nf-core` for imports. `testing-unit` and `coding-spec` define the
+  `remove-tests` and `remove-code` phases for specifications.
+- `planning-specs` records the specification's approval commit in the plan header, stops when the
+  specification has none or differs from it in anything other than `Status`, and replans from the
+  diff since that commit: it resets the markers of affected steps and of Finalization, appends new
+  steps, and adds Removed entries for removed steps or criteria.
+- A Blockers section in both implementation plan templates, owned by
+  `implementation_coordinator`, which records each stop there and clears resolved entries on
+  resume.
+- A Programming workflow section in the `AGENTS.md` template.
 
 ### Changed
 
@@ -45,6 +58,20 @@ and one implementation workflow executes specifications and methods documents al
   `Released`. An analysis reaches `Verified` after the user's implementation review, full run
   and `post-run` checks, and `releasing-version` also releases methods documents.
 - `selecting-container-images` moves from `data_analyst` to `engineer`.
+- `implementation_coordinator` validates a `Draft` contract on the current branch and creates the
+  task branch only when validation reports no blocking findings, just before the approval commit.
+- `implementation_coordinator` commits the implementation plan after planning, with the
+  `Planned` status and any ER model, as `docs(<spec-slug-id>): plan specification` or
+  `docs(<analysis-id>): plan methods vN`, and commits Setup after `coder: renumber`, each image
+  pair, `tester: test-setup`, `coder: real-config` and `tester: real-input-check` instead of once
+  for the whole section.
+- In specification plans, each step's Execution is a checkbox list of phase markers, the only
+  progress record, and its tasks are plain bullets. The specification flow says "step" throughout,
+  and each acceptance criterion maps to exactly one step, the one whose tests verify it.
+- `validating-contracts` and `engineer` identify a contract by its folder,
+  `{Analysis_Methods_Folder}` or `{Specs_Folder}`, instead of its file name.
+- The Nextflow reference implementation profile applies to the `coder: reference-generation`
+  phase.
 - Renamed project keys: `Analysis_Plans_Folder` to `Analysis_Methods_Folder`,
   `Analysis_Plan_file` to `Analysis_Methods_file` (`<analysis-id>.methods.md`) and
   `Analysis_Test_Subset_Folder` to `Analysis_Test_Inputs_Folder`. The `subset` verification mode
@@ -65,9 +92,15 @@ and one implementation workflow executes specifications and methods documents al
 - Write new analyses as methods documents with `data_analyst`; `engineer` derives their
   implementation plans. No existing analysis plan is migrated.
 - Rerun `project-bootstrap` to refresh `AGENTS.md`, and update `CLAUDE.md` by hand: their
-  analysis keys and agent names changed, and `AGENTS.md` now needs the recipes and images folders
-  and the container execution rules. Ignore the built images folder in Git, and consider denying
-  Claude Code's `Read` tool on the data folders in `.claude/settings.json`.
+  analysis keys and agent names changed, and `AGENTS.md` now needs the recipes and images folders,
+  the container execution rules and the Programming workflow section. Ignore the built images
+  folder in Git, and consider denying Claude Code's `Read` tool on the data folders in
+  `.claude/settings.json`.
+- Existing specification plans do not follow the new format. Before resuming one with
+  `implementation_coordinator`, update it by hand: add the `Approval commit` header with the
+  specification's last approval commit, turn each step's Execution into checkbox markers with the
+  phase names of the catalog, marking `[x]` the phases already done, turn its task checkboxes into
+  plain bullets, and add an empty Removed section and a Blockers section with `None.`.
 - The installer deletes the files of the removed agents, `builder` and `analysis_coordinator`,
   and of the analysis plan template, unless the project modified them; it then keeps them, and
   you can delete them yourself. A project installed without a manifest only gets them listed.

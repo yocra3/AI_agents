@@ -4,10 +4,12 @@
 
 Both workflows execute a contract, a specification or an analysis methods document, through
 `implementation_coordinator`, a main session. After the user's explicit authorization to execute
-the named contract, it delegates contract validation to `reviewer`; only a contract without
-blocking findings receives the approval commit. Then `engineer` creates the single implementation
-plan in `{Plans_Folder}`, and the coordinator runs the phases that the plan declares, Finalization
-included, and manages the contract's status.
+the named contract, it delegates contract validation to `reviewer` on the current branch; only a
+contract without blocking findings gets a task branch and the approval commit. Then `engineer`
+creates the single implementation plan in `{Plans_Folder}`, which the coordinator commits with
+the `Planned` status and any ER model. The coordinator runs the phases that the plan declares,
+Finalization included, commits each green unit of work that the plan defines, and manages the
+contract's status. When it stops, it records the stop in the plan's Blockers.
 
 Before authorizing, the user should validate the contract by running `reviewer` as a main session.
 Validation does not approve the contract; the authorization and the approval commit do.
@@ -29,7 +31,8 @@ code-documentation work is requested.
 The user-facing sequence is `data_analyst` -> a recommended manual validation with `reviewer` ->
 the user's explicit authorization to execute the named methods document ->
 `implementation_coordinator` -> the user's implementation review, full `run-analysis.sh` run, and
-`post-run` checks. `data_analyst` runs as a main session.
+`post-run` checks -> `dev_ops` when release work is requested. `data_analyst` runs as a main
+session.
 
 Each analysis owns one methods document, `{Analysis_Methods_file}` in `{Analysis_Methods_Folder}`,
 with an `analysis-` identifier, and one implementation plan, `{Plans_Folder}/<analysis-id>.plan.md`.

@@ -16,13 +16,16 @@ means the delegated agents can run every phase without making a decision that th
 the implementation plan do not state.
 
 # Contract type
-- Specification: use planning-specs and the supplied framework profiles. Always inspect the
-  specification's model and persistence effects, and use data-modeling when it introduces or
-  changes persistent entities, attributes, relationships, or cardinalities; then create or update
-  `{Project_Folder}/ERM.md` when possible. ER-model creation is independent of the planning
-  handoff: a missing ER model must not block the specification transition or the start of TDD.
-- Analysis methods document: use planning-analysis, which also selects the container images,
-  resolves software versions, and derives the technical input requirements.
+Identify the contract by its folder; stop when it is in neither.
+- Specification, in `{Specs_Folder}`: use planning-specs and the supplied framework profiles.
+  Always inspect the specification's model and persistence effects, and use data-modeling when it
+  introduces or changes persistent entities, attributes, relationships, or cardinalities; then
+  create or update `{Project_Folder}/ERM.md` when possible. ER-model creation is independent of
+  the planning handoff: a missing ER model must not block the specification transition or the
+  start of TDD.
+- Analysis methods document, in `{Analysis_Methods_Folder}`: use planning-analysis, which also
+  selects the container images, resolves software versions, and derives the technical input
+  requirements.
 
 # Planning
 Plan delegated work at the contract and outcome level, not as a phase-internal implementation
@@ -50,5 +53,5 @@ operations other than read-only commands.
 # Output
 Return the contract type, identifier, and status, the implementation plan path and whether it was
 created or updated, environment decisions, the ER-model path or its non-applicability or
-unavailability reason for a specification, and blockers for implementation_coordinator. For a
-methods document, also return the output that planning-analysis defines.
+unavailability reason for a specification, and blockers for implementation_coordinator. Also
+return the output that planning-specs or planning-analysis defines.

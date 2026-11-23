@@ -2,7 +2,8 @@
 
 Use this template for `{Plans_Folder}/<analysis-id>.plan.md`, the single implementation plan of
 the methods document `{Analysis_Methods_file}` with the same `<analysis-id>`, `analysis-<slug>`.
-`engineer` owns the content; `implementation_coordinator` changes only the execution markers.
+`engineer` owns the content; `implementation_coordinator` changes only the execution markers
+and Blockers.
 Write acceptance criteria with the EARS guide in
 `{Agents_Folder}/skills/generating-specs/EARS.md`.
 
@@ -119,6 +120,10 @@ Write acceptance criteria with the EARS guide in
 | ID | Criterion | Increment |
 | --- | --- | --- |
 | AC1 | `<EARS criterion>` | `<n>` |
+
+## Blockers
+
+None.
 ```
 
 ## Phases
@@ -283,3 +288,9 @@ each phase is done; this table gives its meaning.
   removed. An entry lists all the increment's old files, for example
   `Removed: 04-report.Rmd, 04-report.sh`, and takes no number in the increment sequence.
 - Finalization always has the five phases of the template, in that order.
+
+## Blockers
+
+- Blockers belong to `implementation_coordinator`: one entry per stop, written as
+  `- **<cited section, step, increment, or phase>**: <stop condition, as reported>`, or `None.`.
+  `engineer` writes `None.` in a new implementation plan and never changes Blockers.

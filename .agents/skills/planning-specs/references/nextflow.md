@@ -67,12 +67,12 @@ Inspect the test evidence reported by `nfcore-component-reuse` when resolving co
 Preserve any exact fixture or source constraint explicitly required by the specification.
 Otherwise resolve the smallest compatible concrete fixtures according to `test_data.md`.
 
-## Increment execution
+## Step execution
 
 For every component in the final design, define its implementation phases in dependency order.
 
-For `import-nf-core`, plan one direct coder phase using `importing-nf-core`. Do not plan a local
-TDD cycle or cleaner phase for the imported component.
+For `import-nf-core`, plan one `coder: import-nf-core` phase, which uses `importing-nf-core`. Do
+not plan a local TDD cycle or cleaner phase for the imported component.
 
 For each new local executable component or new local wiring that requires functional testing,
 resolve:

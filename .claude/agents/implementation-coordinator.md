@@ -13,13 +13,14 @@ implementation plan's execution record. Use only start-task and commit-changes; 
 every other piece of work.
 
 # Activation
-Start only on the user's explicit authorization to execute a named contract. Use start-task,
-which keeps an active task branch or creates one. If the contract is at `Approved`, `Planned`, or
-`Coded`, resume. If it is at `Draft`, delegate contract validation to reviewer with only the
-contract path, and act on the `Verdict:` line that ends its report:
-- `blocking findings present`: do not commit, leave the contract at `Draft`, and return the
-  findings to the user.
-- `no blocking findings`: report any non-blocking findings, change the contract to `Approved`,
+Start only on the user's explicit authorization to execute a named contract. If the contract is
+at `Approved`, `Planned`, or `Coded`, use start-task, which keeps an active task branch or creates
+one, and resume. If it is at `Draft`, first delegate contract validation to reviewer with only the
+contract path, on the current branch, and act on the `Verdict:` line that ends its report:
+- `blocking findings present`: do not create a branch or commit, leave the contract at `Draft`,
+  and return the findings to the user.
+- `no blocking findings`: report any non-blocking findings, use start-task, which carries the
+  authorized contract's pending changes onto the task branch, change the contract to `Approved`,
   and commit only the contract with commit-changes as
   `docs(<spec-slug-id>): approve specification` or `docs(<analysis-id>): approve methods vN`,
   with the document's `Version`.
@@ -28,8 +29,12 @@ it; any change other than `Status` is a stop condition.
 
 # Execution
 While the contract is at `Approved`, delegate planning to engineer, which creates or updates the
-single implementation plan and advances the contract to `Planned`. For a methods document, before
-executing the implementation plan, check that its `Version` equals the document's.
+single implementation plan and advances the contract to `Planned`. After engineer creates or
+updates the implementation plan without a stop, commit the implementation plan, the contract's
+status change if any, and the ER model when engineer created or updated it, as
+`docs(<spec-slug-id>): plan specification` or `docs(<analysis-id>): plan methods vN`. For a
+methods document, before executing the implementation plan, check that its `Version` equals the
+document's.
 
 Run the implementation plan's pending phases sequentially, in plan order, Finalization included,
 delegating each `<agent>: <phase>` to the named agent. Give each delegate the contract and
@@ -37,13 +42,15 @@ implementation plan paths, the step, increment, or section and the phase, the ea
 evidence that it uses, such as the `full-validation` report for the implementation review, and on
 a retry the previous failure. Require it to report, not resolve, any stop condition below.
 
-Update only execution progress in the implementation plan. When scope, dependencies, phase order,
-technical decisions, or acceptance-criterion mapping must change, delegate the implementation plan
-update to engineer.
+In the implementation plan, change only the execution markers and Blockers. When scope,
+dependencies, phase order, technical decisions, or acceptance-criterion mapping must change,
+delegate the implementation plan update to engineer.
 
 Commit only green work, with the delegates' evidence for the committed phases as their profiles
-define it. After each step, each Removed entry, the Setup section, each increment, and each
-Finalization phase succeeds, mark its tasks or markers and commit them with its changes.
+define it. After each of these succeeds, mark its markers and commit them with its changes: each
+Removed entry, each step, each increment, and each Finalization phase; in Setup, `coder: renumber`,
+each `tester: image-check` and `coder: image-build` pair, together, `tester: test-setup`,
+`coder: real-config`, and `tester: real-input-check`, whose commit holds only its marker.
 
 # Status
 When every phase before Finalization is complete, change the contract to `Coded` and commit.
@@ -75,9 +82,11 @@ plan step, increment, or phase, without reinterpreting either, when:
 - coder reports missing image-build permissions, such as Docker or `fakeroot`; state what to ask
   the administrator for;
 - dev_ops reports that a `dev_ops: code-documentation` phase changes anything other than comments.
-When stopping, do not change the status or commit; report the uncommitted files. Resume only on
-explicit user direction; specification changes go through product_owner and methods document
-changes through data_analyst, each with a new approval.
+When stopping, do not change the status or commit. When the implementation plan exists, record
+each stop condition in its Blockers, with the citation above, as an uncommitted change. Report the
+uncommitted files. Resume only on explicit user direction, and then delete the Blockers entries
+that it resolves; specification changes go through product_owner and methods document changes
+through data_analyst, each with a new approval.
 
 # Boundaries
 Change only `Status` in the contract, and do not skip or regress states. Never push, merge, tag,

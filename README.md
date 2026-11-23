@@ -30,18 +30,18 @@ person approves a contract, a specification or an analysis methods document, and
 
 - A person approves the exact contract before any code is written. Agents never infer approval.
 - After the user's authorization, `reviewer` validates the contract read-only. Only a contract
-  without blocking findings receives the approval commit; otherwise it stays at `Draft` and the
-  findings go back to the user.
+  without blocking findings receives a task branch and the approval commit; otherwise it stays at
+  `Draft`, no branch is created, and the findings go back to the user.
 - `engineer` turns the approved contract into one implementation plan, which declares every
-  phase to run, including the final ones.
+  phase to run, including the final ones. The coordinator commits the plan before running it.
 - The coordinator runs as the main session, owns one task branch and commits only green work. It
   never pushes, merges or tags; those are separate requests.
-- Work advances in small increments, each with a failing test first (RED), then the code that
-  makes it pass (GREEN).
+- Work advances in small steps or increments, each with a failing test first (RED), then the
+  code that makes it pass (GREEN).
 - Every document has one file that is revised in place, and its status records where the work
   stands: `Draft` → `Approved` → `Planned` → `Coded` → `Verified` → `Released`.
 - When a delegate finds an ambiguity, missing data or a blocking review finding, the coordinator
-  stops and reports it instead of guessing.
+  stops, records it in the implementation plan's Blockers and reports it instead of guessing.
 
 Validating the contract yourself before authorizing it is recommended, because it shows the
 findings while the document is still being written. Run `reviewer` as the main session with the
@@ -63,15 +63,16 @@ flowchart TD
     PO["product_owner<br/>specification: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
     MV -.-> HA
     PO --> HA{{"Human authorization<br/>to execute the named specification"}}
-    HA --> IC["implementation_coordinator<br/>task branch"]
+    HA --> IC["implementation_coordinator"]
     IC --> RV["reviewer<br/>contract validation"]
-    RV -- "blocking findings:<br/>stays Draft" --> PO
-    RV -- "no blocking findings" --> AP["approval commit<br/>specification: Approved"]
+    RV -- "blocking findings:<br/>stays Draft, no branch" --> PO
+    RV -- "no blocking findings" --> AP["task branch and approval commit<br/>specification: Approved"]
     AP --> EN["engineer<br/>implementation plan and ER model<br/>specification: Planned"]
-    EN --> INC
+    EN --> PC["plan commit"]
+    PC --> INC
     subgraph INC ["For each implementation plan step"]
         direction LR
-        T["tester<br/>RED"] --> C["coder<br/>GREEN"] --> CL["cleaner<br/>REFACTOR"] --> CM["commit"]
+        T["tester: test<br/>RED"] --> C["coder: implementation<br/>GREEN"] --> CL["cleaner: refactor<br/>REFACTOR"] --> CM["commit"]
     end
     INC --> CO["specification: Coded"]
     CO --> FI["Finalization<br/>full validation, fixes committed, implementation review"]
@@ -88,9 +89,18 @@ flowchart TD
 - **Status flow**: each transition belongs to one agent, and none can be skipped.
   `implementation_coordinator` records `Approved` in an approval commit, and later commits must
   leave the specification otherwise unchanged.
-- **Increments**: the coordinator runs the phases the implementation plan declares, one after
-  another, and commits each step only when its tests pass. In Nextflow projects, existing nf-core
-  modules are imported with nf-core tools instead of being rewritten.
+- **Steps**: the coordinator runs the phases the implementation plan declares, one after
+  another, and commits each step only when its tests pass. A step runs `tester: test`,
+  `coder: implementation` and `cleaner: refactor`; a step that no test can observe, such as
+  configuration or scaffolding, runs only `coder: direct-implementation`, and the plan says why.
+  In Nextflow projects, existing nf-core modules are imported with nf-core tools
+  (`coder: import-nf-core`) instead of being rewritten, and new components are tested against
+  independently generated reference outputs.
+- **Revisions**: a change after an approval reopens the specification at `Draft` and needs a new
+  approval. `engineer` then replans from the diff since the approval commit recorded in the
+  plan: it resets the markers of the affected steps and of Finalization, appends new steps, and
+  adds Removed entries that remove the tests and code of removed steps or criteria before the
+  steps run.
 - **Closing**: at `Coded`, the Finalization phases run a full validation, with any fixes
   committed, and an independent read-only review against the specification and the
   implementation plan. A blocking finding stops the cycle until a person decides. `Verified` is
@@ -103,12 +113,13 @@ flowchart TD
     DA["data_analyst<br/>methods document: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
     MV -.-> HA
     DA --> HA{{"Human authorization<br/>to execute the named methods document"}}
-    HA --> IC["implementation_coordinator<br/>task branch"]
+    HA --> IC["implementation_coordinator"]
     IC --> RV["reviewer<br/>contract validation"]
-    RV -- "blocking findings:<br/>stays Draft" --> DA
-    RV -- "no blocking findings" --> AP["approval commit<br/>methods document: Approved"]
+    RV -- "blocking findings:<br/>stays Draft, no branch" --> DA
+    RV -- "no blocking findings" --> AP["task branch and approval commit<br/>methods document: Approved"]
     AP --> EN["engineer<br/>implementation plan, images, test data rules<br/>methods document: Planned"]
-    EN --> SE["Setup<br/>tier-4 images, synthetic data and input checks,<br/>real configuration, input checks on the real data"]
+    EN --> PC["plan commit"]
+    PC --> SE["Setup, committed after each phase or image pair<br/>tier-4 images, synthetic data and input checks,<br/>real configuration, input checks on the real data"]
     SE --> INC
     subgraph INC ["For each increment, in NN order"]
         direction LR
