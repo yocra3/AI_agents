@@ -16,32 +16,21 @@ repository does not provide enough evidence for a proposal.
 
 - Edit only the neutral source `{Agents_Folder}/agents/<name>.md`. Never edit
   `.claude/agents/*.md` or `.codex/agents/*.toml`: they are generated, and a hand edit is lost.
-- A source has this frontmatter, and its body is the agent's instructions, the same in every
-  environment:
-
-  ```yaml
-  ---
-  name: <hyphenated-name, equal to the file name>
-  description: <responsibility and activation boundary, one line>
-  profile: <high | medium | low>
-  effort: <low | medium | high | xhigh>
-  skills:                   # the framework skills the agent may use
-    - <skill-name>
-  codex:
-    sandbox_mode: <read-only | workspace-write>
-  claude:
-    tools: Read, Grep, Glob, Skill, <other tools>
-  ---
-  ```
-
-- `profile` gives the model of each environment from the table in
-  `{Agents_Folder}/config/model-profiles.md`; change a model there, not in a source. `effort`
-  is written as Codex `model_reasoning_effort` and Claude Code `effort`.
-- `skills` lists exactly the framework skills that the body's `# Skills` section names, also those
-  the agent uses through another skill. The generator disables in Codex every other skill of
-  `{Agents_Folder}/skills/`, so a new skill is disabled for every agent until a source lists it.
-  Claude Code subagents cannot restrict skills in their frontmatter, so there the restriction
-  lives only in the Skills section.
+- A source's frontmatter follows the skeleton of
+  `{Agents_Folder}/references/templates/agents.template.md`, with these field rules; its body is
+  the agent's instructions, the same in every environment.
+  - `name` is hyphenated and equal to the file name; `description` states the agent's
+    responsibility and activation boundary in one line.
+  - `profile` gives the model of each environment from the table in
+    `{Agents_Folder}/config/model-profiles.md`; change a model there, not in a source. `effort`
+    is written as Codex `model_reasoning_effort` and Claude Code `effort`.
+  - `skills` lists exactly the framework skills that the body's `# Skills` section names, also
+    those the agent uses through another skill. The generator disables in Codex every other skill
+    of `{Agents_Folder}/skills/`, so a new skill is disabled for every agent until a source lists
+    it. Claude Code subagents cannot restrict skills in their frontmatter, so there the
+    restriction lives only in the Skills section.
+  - `codex.sandbox_mode` is `workspace-write` only when the agent edits files, otherwise
+    `read-only`. `claude.tools` lists the agent's tools (principle 5).
 - Create or reformat an agent with `{Agents_Folder}/references/templates/agents.template.md`,
   whose skeleton gives the frontmatter and the sections of principle 5 and whose writing rules
   apply to every agent. In the body, say when to use a tool in the section where it is used, and
@@ -105,11 +94,13 @@ entry to the delegate, complete on its own, in this format:
 
 - After moving, renaming, or removing content, search the repository for its old names, paths,
   and section titles, and fix every dangling reference.
-- Update, where they describe what changed: the Unreleased section of
-  `{Agents_Folder}/CHANGELOG.md`, rewriting any entry that the change supersedes so that it
-  states the net change from the last released version; `README.md`, whose Programming workflow
-  and Analysis workflow subsections hold the only figure of each flow; and
-  `docs/programming-workflow.md` and `docs/analysis-workflow.md`.
+- In the AI_agents repository only, where the framework is developed, update, where they
+  describe what changed: the Unreleased section of `{Agents_Folder}/CHANGELOG.md`, rewriting any
+  entry that the change supersedes so that it states the net change from the last released
+  version; `README.md`, whose Programming workflow and Analysis workflow subsections hold the only
+  figure of each flow; and `docs/programming-workflow.md` and `docs/analysis-workflow.md`. In a
+  project that installs the framework, skip this step: these documents describe the framework
+  and change only upstream.
 - Regenerate the agents, which also regenerates `docs/catalog.md` from the agent and skill
   descriptions and the first sentence of each template and reference; keep that sentence a
   description of the file.

@@ -45,16 +45,17 @@ assigns them, and the Nextflow rules of some other phases. The rules for every p
      the same image, `apptainer exec --cleanenv` invocation, and bind mounts as the RED run; the
      harness may run on the host.
   4. Lint the generation scripts with the linting skill and fix findings in them.
-  This phase does not implement the production component or advance the specification to
-  `Coded`.
+  This phase does not implement the production component.
 - **Evidence**: the paths and checksums of the generated files, the commands, the validation
   results, and the lint results.
-- **Stops**: a validation is invalid or contradicts the specification; never change it.
+- **Stops**: a validation is invalid or contradicts the specification: report why, and never
+  change it.
 
 ## Nextflow rules of other phases
 
 Each of these rules follows the entry of its phase, in a step that has
-`tester: reference-validation`.
+`tester: reference-validation`, and for `<agent>: validation-fix`, in a specification plan that
+has such a step.
 
 ### `tester: test`
 
@@ -79,3 +80,11 @@ Each of these rules follows the entry of its phase, in a step that has
 - Refactor only the production component. Never change tests, snapshots, reference
   implementations, or generated fixtures.
 - Run the nf-tests with `--ci`, never with `--update-snapshot`.
+
+### `<agent>: validation-fix`
+
+- Run the nf-tests with `--ci`, never with `--update-snapshot`.
+- Never change a reference output, a test prerequisite, or a generated fixture. In a reference
+  implementation, fix only lint findings, without changing what it generates.
+- Only `tester` changes a snapshot, and only to match the verified reference outputs; stop when
+  the fix needs a snapshot that they do not support.

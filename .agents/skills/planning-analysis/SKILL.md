@@ -164,5 +164,5 @@ choose.
 
 Return the implementation plan path, whether it was created or updated, the mode, `Version` and
 approval commit, the registry entries added, the tier-4 images and their Setup phases, whether
-the Wave CLI was missing and which images it sent to tier 4, the markers reset, the Software and
-effective parameters table, and any stop with its cited section.
+the Wave CLI was missing and which images it sent to tier 4, the markers reset, the Removed
+entries added, the Software and effective parameters table, and any stop with its cited section.

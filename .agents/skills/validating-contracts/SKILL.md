@@ -128,7 +128,7 @@ Blocking:
 Non-blocking:
 
 - Implementation details.
-- More than 3 user stories or more than 9 acceptance criteria.
+- More user stories or acceptance criteria than the template's limits.
 - Ambiguous wording that still allows writing the tests.
 - Any other departure from the template's header and sections.
 

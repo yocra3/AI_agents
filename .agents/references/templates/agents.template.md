@@ -8,22 +8,15 @@ materially change the agent's behavior.
 
 ```markdown
 ---
-# Hyphenated, equal to the file name.
 name: {agent-name}
-# Responsibility and activation boundary, one line.
 description: {Specific responsibility and activation boundary.}
-# Model profile of {Agents_Folder}/config/model-profiles.md.
 profile: {high|medium|low}
-# Reasoning effort.
 effort: {low|medium|high|xhigh}
-# The framework skills that the Skills section names.
 skills:
   - {skill}
 codex:
-  # workspace-write only when the agent edits files.
   sandbox_mode: {read-only|workspace-write}
 claude:
-  # The only place where the agent's tools are declared.
   tools: Read, Grep, Glob, Skill, {other tools the agent needs}
 ---
 # Role
@@ -55,5 +48,4 @@ implementation plan phases: the evidence that the phase instructions request.}
 - State the outcome first; prescribe steps only when their order is a real invariant.
 - Give the agent one owner responsibility.
 - Say when the agent asks, proceeds, stops, and reports evidence.
-- Use `workspace-write` only when the agent edits files.
 - Put project paths and commands behind global placeholders.

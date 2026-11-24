@@ -42,4 +42,4 @@ documentation generator to a project that has none; docstrings need no generatio
 
 ## Validation
 
-- Run the repository's documentation build and tests, including doctests when configured.
+- Run the repository's documentation build, and its doctests when configured.

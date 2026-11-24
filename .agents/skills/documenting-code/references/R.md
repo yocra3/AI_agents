@@ -30,5 +30,5 @@ Do not hand-edit generated `NAMESPACE` or `man/*.Rd` files unless the project ex
 ## Validation
 
 - Review changes to `NAMESPACE` and `man/*.Rd` against the source annotations.
-- Run the package's configured checks and tests.
-- If none are configured, use `R CMD check` on the package or the closest repository-approved equivalent.
+- Run the package's configured documentation check; if none is configured, run
+  `R CMD check --no-tests` on the package and address its documentation findings.

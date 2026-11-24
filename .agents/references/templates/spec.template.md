@@ -12,6 +12,8 @@ revision of the same work reopens this file at Draft.
 
 ### User Stories
 
+{At most 3 user stories, from the user's perspective, in this form:}
+
 - As {...}, I want to **{...}** so that {...}
 
 ## Solution Overview
@@ -29,5 +31,7 @@ revision of the same work reopens this file at Draft.
 {Database, file storage, remote service, etc.}
 
 ## Acceptance Criteria
+
+{At most 9 criteria, in EARS format, that define when the specification is complete:}
 
 - [ ] EARS format

@@ -39,7 +39,8 @@ Send the delegate, in this order:
      "Rules for every phase" section of `specs.md` or `analysis.md`, by the plan type, then the
      entry, then the phase's rules for its plan type when they exist: its analysis rules in
      `analysis.md` for an analysis plan, or its Nextflow rules in `nextflow.md` for a step that
-     has `tester: reference-validation`;
+     has `tester: reference-validation` and for an `<agent>: validation-fix` in a specification
+     plan that has such a step;
    - for a phase of `engineer`, `reviewer`, or `dev-ops`, including contract validation, planning,
      and replanning, the entry only.
 4. The earlier evidence that the entry uses, such as tester's exact command and RED result for
@@ -60,24 +61,32 @@ resolved.
 
 - A result without the entry's evidence, or with changes outside the phase's scope, is a failure
   of the phase.
-- A reported stop is never retried; return it to the coordinator's stop handling. The exception is
-  a stop that only needs a change of the implementation plan, including a change or a functional
-  failure of the frozen test support code of an analysis: delegate `engineer: replanning` with
-  that evidence, then run the phases that the replanning leaves pending.
+- A reported stop is never retried; return it to the coordinator's stop handling, except the
+  two stops that Failure routing routes: coder's report of an invalid test, and a stop that only
+  needs a change of the implementation plan.
 
 # Failure routing
 
 - Retry each phase at most twice. When the retries are exhausted, return the stop to the
   coordinator.
-- Route code, lint, and GREEN failures to coder, invalid tests to tester, and failed refactoring
-  to cleaner, as a retry of that agent's phase for the same step, increment, or section, with the
-  failure.
-- Route each `full-validation` failure by file, as `<agent>: validation-fix`: tests, image checks,
-  and their static data to tester; a file changed by the analysis plan's `cleaner:
-  analysis-refactor` to cleaner; any other file to coder, including a lint finding in the frozen
-  test support code of an analysis. A functional failure in that frozen code goes instead to
-  `engineer: replanning`, which resets `tester: test-setup` and `coder: test-setup`, and also
-  `tester: real-input-check` when the change affects the input checks; run the
-  phases that it leaves pending. Then run `coder: full-validation` again.
+- Route code, lint, and GREEN failures to coder, and failed refactoring to cleaner, as a retry of
+  that agent's phase for the same step, increment, or section, with the failure.
+- When coder stops because a test, check, validation, or snapshot that tester wrote is invalid or
+  contradicts the contract or the implementation plan, retry the tester phase that wrote it, for
+  the same step, increment, or section, with coder's report as the failure. tester either
+  corrects it and returns that phase's evidence, and coder's phase then runs again, or confirms
+  it valid with its reasons, which makes it a stop that you return to the coordinator with both
+  reports.
+- A stop that only needs a change of the implementation plan, including a change or a functional
+  failure of the frozen test support code of an analysis, goes to `engineer: replanning` with
+  that evidence; then run the phases that the replanning leaves pending.
+- Route each `full-validation` failure by file, as `<agent>: validation-fix`, by the phase that
+  changed the file: tests, image checks, and their static data to tester; a file that a cleaner
+  phase changed after coder's last change to it, `cleaner: refactor` in a specification plan or
+  `cleaner: analysis-refactor` in an analysis plan, to cleaner; any other file to coder,
+  including a lint finding in the frozen test support code of an analysis. A functional failure
+  in that frozen code goes instead to `engineer: replanning`, which resets `tester: test-setup`
+  and `coder: test-setup`, and also `tester: real-input-check` when the change affects the input
+  checks; run the phases that it leaves pending. Then run `coder: full-validation` again.
 - Never route a failure in an imported nf-core component to an agent: return it to the
   coordinator as a stop, for the user to decide how to resolve it.

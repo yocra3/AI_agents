@@ -8,7 +8,7 @@ Apply to Python scripts in any project. Repository conventions take precedence.
 
 ## Conventions
 
-- Follow PEP 8 as enforced by `ruff`. Use `pathlib.Path` for paths and type hints on functions.
+- Follow PEP 8. Use `pathlib.Path` for paths and type hints on functions.
 - Fail with an exception and an informative message on invalid input; do not catch broad
   exceptions.
 - Write tables with `pandas.DataFrame.to_csv(path, sep="\t", index=False)` or the `csv` module,

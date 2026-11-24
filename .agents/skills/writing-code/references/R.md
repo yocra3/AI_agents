@@ -12,7 +12,7 @@ constants such as seeds, function definitions, then top-level steps in execution
 ## Conventions
 
 - Follow the tidyverse style guide: `snake_case`, `<-` for assignment, two-space indentation, and
-  lines of at most 80 characters. `lintr` and `styler` enforce it.
+  lines of at most 80 characters.
 - Do not call `install.packages()`, `BiocManager::install()`, `require()`, `setwd()`, or
   `rm(list = ls())` in scripts.
 - Build paths with `file.path()`.

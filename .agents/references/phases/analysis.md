@@ -8,10 +8,10 @@ analysis rules of the phases of [common.md](common.md) that analysis plans use.
 These rules apply to every phase of `tester`, `coder`, and `cleaner` in an analysis
 implementation plan, including `<agent>: validation-fix`.
 
-- Read the increment, its `Files`, `Image`, `Language`, methods steps, and acceptance criteria,
-  and the language and image of the Input checks section, from the implementation plan. Take
-  every path and file name from the Analysis layout keys in `{Agents_file}`, resolved for the
-  analysis.
+- Read the language and image of the Input checks section from the implementation plan and,
+  when the phase acts on an increment, the increment, its `Files`, `Image`, `Language`, methods
+  steps, and acceptance criteria. Take every path and file name from the Analysis layout keys in
+  `{Agents_file}`, resolved for the analysis.
 - Run every command under the execution rules in `{Agents_file}`: an increment's scripts and
   checks in its image, the `{Analysis_Images_file}` entry named by its `Image` ID; the reference
   subset script, the synthetic data generator, the input checks, and the setup tests in the image
@@ -19,13 +19,12 @@ implementation plan, including `<agent>: validation-fix`.
   the image checks on the host.
 - An increment is GREEN when `run-tests.sh increment <NN>` passes: the increment's scripts run
   and its checks pass, reusing the earlier increments' outputs in `{Analysis_Test_Run_Folder}`.
-  When it fails, run `run-tests.sh synthetic <NN>` to locate the error; handle missing or stale
-  earlier outputs in no other way.
-- The full run, `run-tests.sh synthetic` without `NN`, empties `{Analysis_Test_Run_Folder}` and
-  runs the image checks, the setup tests, the input checks, and every `synthetic` increment with
-  its checks. Only `cleaner: analysis-refactor` and `coder: full-validation` use it; otherwise
-  the image checks, the setup tests, and the input checks run only in their Setup phases and
-  when `run-tests.sh synthetic <NN>` locates an error.
+  When it fails, locate the error with `run-tests.sh synthetic <NN>`, which also empties
+  `{Analysis_Test_Run_Folder}` and reruns from scratch up to increment `NN`; handle missing or
+  stale earlier outputs in no other way.
+- Only `cleaner: analysis-refactor` and `coder: full-validation` use the full run,
+  `run-tests.sh synthetic` without `NN`. Otherwise the image checks, the setup tests, and the
+  input checks run only in their Setup phases and within `run-tests.sh synthetic <NN>`.
 - The test support code is the test configuration, `run-tests.sh`, the reference subset script,
   the synthetic data generator, and the input checks. Once `coder: test-setup` is GREEN, it is
   frozen: only a Setup phase changes it, and an `<agent>: validation-fix` may fix lint findings
@@ -125,8 +124,8 @@ implementation plan, including `<agent>: validation-fix`.
 - **Evidence**: the files written, the test inputs created, the exact commands and results, and
   the lint results.
 - **Stops**: a Test data rule cannot be applied; a reference resource is not at its Location,
-  naming the missing file; or a setup test is invalid or contradicts the implementation plan;
-  never change the test.
+  naming the missing file; or a setup test is invalid or contradicts the implementation plan:
+  report why, and never change the test.
 
 ## `coder: real-config`
 

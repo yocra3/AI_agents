@@ -120,11 +120,13 @@ flowchart TD
     RV -- "no blocking findings" --> AP["task branch and approval commit<br/>methods document: Approved"]
     AP --> EN["engineer: planning<br/>implementation plan, images, test data rules<br/>methods document: Planned"]
     EN --> PC["plan commit"]
-    PC --> SE["Setup, committed after each phase or RED and GREEN pair<br/>tier-4 images, software versions, test support code,<br/>real configuration, input checks on the real data"]
+    PC --> RM["Removed entries<br/>tester: remove-tests, coder: remove-code"]
+    RM --> SE["Setup, committed after each phase or RED and GREEN pair<br/>coder: renumber, tier-4 images, software versions,<br/>test support code, real configuration, input checks on the real data"]
     SE --> INC
     subgraph INC ["For each increment, in NN order"]
         direction LR
-        T["tester: test<br/>formal checks: RED"] --> C["coder: implementation<br/>script on synthetic data: GREEN"] --> CM["commit"]
+        T["synthetic: tester: test<br/>formal checks: RED"] --> C["coder: implementation<br/>script on synthetic data: GREEN"] --> CM["commit"]
+        PT["post-run: tester: post-run-checks<br/>checks that run after the user's full run"] --> PI["coder: post-run-implementation<br/>lint and syntax checks only"] --> CM
     end
     INC --> CO["methods document: Coded"]
     CO --> FI["Finalization<br/>refactor, run script, full validation,<br/>implementation review, comments"]
@@ -140,7 +142,7 @@ The external tools that the framework itself needs:
 | Tool | Used by | When needed | If missing |
 | --- | --- | --- | --- |
 | Python 3.6 or later | `install.py` and the agent generator | Always | Required |
-| Git | `install.py`, which installs only into a Git repository; task branches and commits | Always | Required |
+| Git | `install.py`; task branches and commits | Always | Required |
 | Codex or Claude Code | Running the agents and skills | Always | Required |
 | Apptainer or Docker | Analysis: every script, test and check runs in a container image, and `building-container-images` builds the tier-4 images. Nextflow: reference implementations run their tools with Apptainer | Analysis projects; Nextflow projects with reference implementations, Apptainer only | Required: no analysis or Nextflow reference implementation can run, and `coder: image-build` stops when the build tool or the build permissions are missing |
 | Wave CLI `wave` | `selecting-container-images`, for Seqera Containers images (tier 3) | Optional, in analysis projects | The images that tier 3 would provide fall back to a recipe built in Setup (tier 4) |
@@ -151,8 +153,6 @@ The external tools that the framework itself needs:
 Each language's test framework and linter, such as testthat and lintr or pytest and ruff, are not
 dependencies of the framework: the project's Tech Stack in `AGENTS.md` declares them, and they are
 installed in the images of an analysis project and in the project's own environment otherwise.
-`install.py` warns when the Wave CLI or the ToolUniverse CLI is missing, and in a Nextflow project,
-one with a `nextflow.config` or a declared `Nextflow_Reference_Folder`, when nf-core tools is.
 
 ## Install in a project
 
@@ -161,16 +161,16 @@ one with a `nextflow.config` or a declared `Nextflow_Reference_Folder`, when nf-
 ./install.sh --dry-run /path/to/target-repository  # only show what would change
 ```
 
-The script installs only committed files: it stops if `.agents`, `.claude` or `.codex` have
-uncommitted changes in this repository. It copies the three folders as they are, including the
-generated agents, the agent sources and the generator, but not `docs/`, and links
+This repository and the target must be Git repositories with no uncommitted changes in `.agents`,
+`.claude` or `.codex`; otherwise the script stops, except that `--dry-run` accepts changes in the
+target. It thus installs only committed files, and every change it makes in the target can be
+reviewed with `git diff` and reverted with `git checkout`. It copies the three folders as they are,
+including the generated agents, the agent sources and the generator, but not `docs/`, and links
 `.claude/skills` to `.agents/skills`. When the project already has a `.claude/skills` folder, it
-links each missing skill inside it instead, leaves the project's own skills alone, and removes
-the links of skills that no longer exist. It records every installed file and its hash in
+links each missing skill inside it instead, leaves the project's own skills alone, and removes the
+links of skills that no longer exist. It records every installed file and its hash in
 `.agents/.install-manifest.json`, so running it again updates the project:
 
-- The target must be a Git repository with no uncommitted changes in `.agents`, `.claude` or
-  `.codex`, so every change can be reviewed with `git diff` and reverted with `git checkout`.
 - Files changed here and untouched in the target are updated. Files removed here, for example
   after a skill reorganization, are deleted.
 - Files changed in both places are overwritten and listed as conflicts; restore the project's
@@ -201,16 +201,16 @@ Then, in the target repository:
    shared through `.claude/skills`. Run user-facing roles as the main session with
    `claude --agent <name>`; this includes `product-owner`, `data-analyst`,
    `implementation-coordinator`, and `reviewer` for the manual contract validation.
-3. Create `agents_data/specs/` and `agents_data/plans/`, where the lifecycle artifacts are stored;
-   the implementation plans of both workflows go in `agents_data/plans/`. For the analysis
-   workflow, also define in `AGENTS.md` the Analysis layout keys, among them
-   `Analysis_Methods_Folder` for the methods documents, `Analysis_Recipes_Folder` for the
-   versioned image recipes, `Analysis_Images_Folder` for the built images, `Analysis_Methods_file`
-   and `Analysis_Test_Inputs_Folder`; and the container execution rules: the engine that runs and
-   builds images, Apptainer or Docker, how to run a command in an image, when an image is
-   available, and the build permissions. Ignore the rendered reports, results, figures, test
-   inputs, built images and test run outputs (the `results/` folder of each analysis's tests with
-   the default layout). For a Nextflow project, define `Nextflow_Reference_Folder`, by default
+3. Create the folders that `AGENTS.md` declares as `Specs_Folder` and `Plans_Folder`, where the
+   lifecycle artifacts are stored; the implementation plans of both workflows go in `Plans_Folder`.
+   For the analysis workflow, also define in `AGENTS.md` the Analysis layout keys, among them
+   `Analysis_Methods_Folder` for the methods documents, `Analysis_Recipes_Folder` for the versioned
+   image recipes, `Analysis_Images_Folder` for the built images, `Analysis_Methods_file` and
+   `Analysis_Test_Inputs_Folder`; and the container execution rules: the engine that runs and builds
+   images, Apptainer or Docker, how to run a command in an image, when an image is available, and
+   the build permissions. Ignore the rendered reports, results, figures, test inputs, built images
+   and test run outputs (the `results/` folder of each analysis's tests with the default layout).
+   For a Nextflow project, define `Nextflow_Reference_Folder`, by default
    `<Project_Folder>/reference-data/<spec-slug-id>/`, and ignore its `results/` folders.
 4. For the analysis workflow, deny Claude Code's `Read` tool on the folders that hold the real
    data and reference resources in the project's `.claude/settings.json`, for example
@@ -218,22 +218,20 @@ Then, in the target repository:
 
 ## Update
 
-Each agent has one neutral source, `.agents/agents/<name>.md`. Its frontmatter holds the name,
-the description, the model `profile` (`high`, `medium` or `low`, which sets the model of each
-environment), the reasoning `effort`, the `skills` the agent may use, which must match the skills
-its `# Skills` section names, and the settings of each environment: the Codex sandbox and the
-Claude Code tools. Its body holds the instructions. Edit the source, never the generated files,
-then regenerate the Codex and Claude Code agents and the catalog:
+Each agent has one neutral source, `.agents/agents/<name>.md`, whose frontmatter declares the
+`name`, `description`, model `profile`, reasoning `effort`, the `skills` it may use, the Codex
+`sandbox_mode`, and the Claude Code `tools`, as the
+[agent template](.agents/references/templates/agents.template.md) shows; its body holds the
+instructions. Edit the source, never the generated files, then regenerate the Codex and Claude
+Code agents and the catalog:
 
 ```bash
 python3 .agents/scripts/generate_agents.py          # write the generated files
 python3 .agents/scripts/generate_agents.py --check  # only list the files that are out of date
 ```
 
-The generated Codex agents disable every skill that the source does not list; Claude Code
-subagents cannot restrict skills, so there the Skills section is the only restriction. Agent names
-use hyphens everywhere; only the generated Codex agents keep the underscore form in their `name`
-field (`implementation_coordinator`), as Codex's own examples do.
+Agent names use hyphens everywhere; only the generated Codex agents keep the underscore form in
+their `name` field (`implementation_coordinator`), as Codex's own examples do.
 
 `craftsman` makes these changes with the `maintaining-framework` skill, following
 `.agents/references/framework-principles.md`. Record each change in the Unreleased section of

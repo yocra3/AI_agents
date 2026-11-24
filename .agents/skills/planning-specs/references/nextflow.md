@@ -65,7 +65,7 @@ software version, Apptainer invocation, and required bind mounts.
 
 Inspect the test evidence reported by `nfcore-component-reuse` when resolving concrete fixtures.
 Preserve any exact fixture or source constraint explicitly required by the specification.
-Otherwise resolve the smallest compatible concrete fixtures according to `test_data.md`.
+Otherwise resolve the smallest compatible concrete fixtures according to [test-data discovery](../test-data.md).
 
 ## Step execution
 

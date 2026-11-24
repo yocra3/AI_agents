@@ -32,8 +32,8 @@ The type of what the commit changes:
 Optional and lowercase with hyphens; there is no closed list.
 
 - Commits of a contract run by implementation-coordinator: the contract identifier,
-  `<spec-slug-id>` or `<analysis-id>`, for every commit of that contract, from approval and plan
-  through Removed entries, steps, increments, Setup, Finalization, and status.
+  `<spec-slug-id>` or `<analysis-id>`, for every commit of that contract, from approval, plan,
+  and replanning through Removed entries, steps, increments, Setup, Finalization, and status.
 - Other commits: the area that changes, such as a module, a component, or a top-level folder of
   the project; omit it when the change spans the project or has no clear area.
 

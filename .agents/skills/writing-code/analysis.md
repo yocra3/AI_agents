@@ -1,8 +1,8 @@
 # Analysis implementation guidelines
 
 These guidelines apply to the computation scripts, report documents, render scripts, shared
-functions, real configuration, test support code, image recipes, and `run-analysis.sh` of the
-implementation plan of an analysis methods document, `{Plans_Folder}/<analysis-id>.plan.md` for
+functions, real configuration, test support code, and `run-analysis.sh` of the implementation
+plan of an analysis methods document, `{Plans_Folder}/<analysis-id>.plan.md` for
 `{Analysis_Methods_file}`. The test support code is the test configuration,
 `{Analysis_Test_Config_file}`, and the execution runner `run-tests.sh`, the reference subset
 script, the synthetic data generator, and the input checks, which live with the tests in
@@ -58,8 +58,8 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
 
 ## Randomness
 
-- Set the seed declared by the implementation plan immediately before each random step, as a
-  constant in the code, so both configurations use the same seed.
+- Write the seed declared by the implementation plan as a constant in the code, so both
+  configurations use the same seed.
 
 ## Reports
 

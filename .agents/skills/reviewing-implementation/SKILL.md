@@ -17,8 +17,7 @@ Resolve global placeholders from `{Agents_file}`. Read:
 - its implementation plan, which scopes the review: the steps or increments, their files and
   acceptance criteria, and the software and environment they use;
 - the files changed on the task branch, listed with read-only Git commands, and their tests;
-- the `full-validation` report, which is the evidence of the test suite and lint results;
-- the project and framework profiles that the caller supplies.
+- the `full-validation` report, which is the evidence of the test suite and lint results.
 
 Review only after complete validation: when the `full-validation` report is missing or shows a
 failure, report it as a blocking finding. Stop and report when the contract or the implementation

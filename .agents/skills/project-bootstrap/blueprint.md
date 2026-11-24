@@ -6,7 +6,8 @@ compose the defaults of the Analysis layout keys and are not written to `{Agents
 ## Required
 
 - `{Root_Folder}`: repository root containing product and agent files.
-- `{Agents_Folder}`: folder containing reusable project skills and workflow resources.
+- `{Agents_Folder}`: the agent framework folder: agent sources, skills, references,
+  configuration, scripts, and its changelog.
 - `{Agents_file}`: global project instructions file.
 - `{Project_Folder}`: product requirements and architecture documentation folder.
 - `{Briefing_file}`: short product briefing file.

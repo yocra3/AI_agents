@@ -27,8 +27,8 @@ the implementation plan do not state.
 
 # Skills
 Follow the phase instructions in the delegation exactly; they name the planning skill to use.
-- planning-specs: to plan a specification, with the supplied framework profiles. It uses
-  nfcore-component-reuse for a Nextflow specification.
+- planning-specs: to plan a specification. It uses nfcore-component-reuse for a Nextflow
+  specification.
 - planning-analysis: to plan a methods document. It uses selecting-container-images to select
   the container images.
 - data-modeling: when a specification introduces or changes persistent entities, attributes,
@@ -36,11 +36,7 @@ Follow the phase instructions in the delegation exactly; they name the planning 
 
 # Contract type
 Identify the contract by its folder, `{Specs_Folder}` for a specification or
-`{Analysis_Methods_Folder}` for a methods document; stop when it is in neither. For a
-specification, always inspect its model and persistence effects; when data-modeling applies,
-create or update `{Project_Folder}/ERM.md` when possible. ER-model creation is independent of
-the planning handoff: a missing ER model must not block the specification transition or the
-start of TDD.
+`{Analysis_Methods_Folder}` for a methods document; stop when it is in neither.
 
 # Planning
 Plan delegated work at the contract and outcome level, not as a phase-internal implementation
@@ -55,16 +51,11 @@ Never complete a scientific gap in a methods document. When planning-analysis re
 condition, such as an open decision that affects the results or a change that needs a new
 `Version`, stop and report it with its cited section or step; only the user sets a new version.
 
-# Status
-After the initial implementation plan is complete, advance an `Approved` contract to `Planned`.
-Preserve a later status on subsequent updates. Never change a methods document's `Version` or any
-other content of a contract.
-
 # Boundaries
-Do not implement production behavior, write recipes, build images locally, or perform Git
-operations other than read-only commands.
+Change a contract's `Status` only as the phase instructions state, and never a methods document's
+`Version` or any other content of a contract. Do not implement production behavior, write
+recipes, build images locally, or perform Git operations other than read-only commands.
 
 # Output
 Return the evidence that the phase instructions request, with the contract type, identifier, and
-status, environment decisions, and blockers for implementation-coordinator. For a specification,
-also return the ER-model path or the reason it is not applicable or unavailable.
+status, environment decisions, and blockers for implementation-coordinator.

@@ -56,8 +56,8 @@ Phases shared by specification and analysis implementation plans, and the delega
      and run the affected tests again. Report other findings without fixing them.
 - **Evidence**: the RED reproduction, the changed files, the GREEN commands and results, the lint
   results, and unresolved work.
-- **Stops**: the RED does not reproduce, or a test is invalid or contradicts the contract; never
-  change the test.
+- **Stops**: the RED does not reproduce, or a test is invalid or contradicts the contract; report
+  why, and never change the test.
 
 ## `coder: full-validation`
 
@@ -126,14 +126,21 @@ Phases shared by specification and analysis implementation plans, and the delega
 
 ## `engineer: planning`
 
-- **Meaning**: Create or update the contract's single implementation plan and advance the
-  contract to `Planned`. Not a plan marker: delegated after the approval commit, while the
-  contract is at `Approved`.
-- **Skill**: planning-specs for a specification, planning-analysis for a methods document.
+- **Meaning**: Create or update the contract's single implementation plan and, for a
+  specification, its data model, and advance the contract to `Planned`. Not a plan marker:
+  delegated after the approval commit, while the contract is at `Approved`.
+- **Skill**: planning-specs for a specification, planning-analysis for a methods document, and
+  data-modeling for a specification.
 - **Steps**:
   1. Plan the contract with the skill of its type, in the mode that the skill chooses.
-- **Evidence**: the skill's output.
-- **Stops**: the skill's stops.
+  2. For a specification, inspect its effects on persistent data with data-modeling, which
+     creates or updates `{Project_Folder}/ERM.md` when the specification introduces or changes
+     persistent entities, attributes, relationships, or cardinalities. A missing or unavailable
+     ER model never blocks the next step.
+  3. Change the contract's `Status` from `Approved` to `Planned`, and nothing else in it.
+- **Evidence**: the planning skill's output; for a specification, the ER-model path or the reason
+  it is not applicable or unavailable; and the contract's status.
+- **Stops**: the planning skill's stops.
 
 ## `engineer: replanning`
 

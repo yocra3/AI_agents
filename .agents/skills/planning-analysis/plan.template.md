@@ -24,7 +24,7 @@ Write acceptance criteria with the EARS guide in
 
 | ID | Tier | Image | Contents | Used by |
 | --- | --- | --- | --- | --- |
-| `<ID>` | `<1 registry, 2 BioContainers, 3 Seqera Containers, or 4 recipe>` | `<URI, or recipe path for tier 4>` | `<packages with versions, or for tier 4 without versions except those that the document fixes>; tests: <framework>; lint: <linter>; <rmarkdown and Pandoc, if present>` | `<increment numbers, input checks>` |
+| `<ID>` | `<1 registry, 2 BioContainers, 3 Seqera Containers, 4 recipe, or 4 recipe, Wave CLI missing>` | `<URI, or recipe path for tier 4>` | `<packages with versions, or for tier 4 without versions except those that the document fixes>; tests: <framework>; lint: <linter>; <rmarkdown and Pandoc, if present>` | `<increment numbers, input checks>` |
 
 ## Configuration
 

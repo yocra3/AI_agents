@@ -9,8 +9,9 @@ Phases of the Steps of a specification implementation plan that only specificati
 These rules apply to every phase of `tester`, `coder`, and `cleaner` in a specification
 implementation plan, including `<agent>: validation-fix`.
 
-- Read the step, its tasks, `Depends on`, and the acceptance criteria mapped to it from the
-  implementation plan, and their requirements from the specification.
+- When the phase acts on a step, read the step, its tasks, `Depends on`, and the acceptance
+  criteria mapped to it from the implementation plan, and their requirements from the
+  specification.
 - Use the test data of the implementation plan's Test data and artifacts, and run tests and
   tools in the environment and containers of its Environment and reproducibility section.
 - Never edit an imported nf-core component. When an error is traced to one, such as a test that

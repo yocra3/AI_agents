@@ -14,7 +14,9 @@ profile, they take precedence. Documenting analysis code changes comments only.
 - Take purposes, inputs, and outputs from the methods document, the implementation plan, and the
   code. Describe what the code does and produces, never results, expectations, or
   interpretations.
-- Document every shared function with its language's function comment block.
+- Document every shared function with a comment block immediately above it: its language's
+  function comment block in R and Bash, and in Python a `#` comment block, never a docstring,
+  with the `Args:` and `Returns:` sections of a Google-style docstring.
 
 ## Script headers
 

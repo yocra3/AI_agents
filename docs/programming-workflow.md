@@ -51,7 +51,8 @@ The implementation plan names each phase as a checkbox marker, `<agent>: <phase>
 are the only progress record. For every delegation, the coordinator uses agent-delegation: it
 sends the contract and plan paths, what the phase acts on, the phase's entry pasted verbatim from
 the phase reference, with the rules for every phase of specification plans and, for a step with
-reference outputs, the Nextflow rules of that phase, and the earlier evidence the entry uses. It
+reference outputs or a validation fix in such a plan, the Nextflow rules of that phase, and the
+earlier evidence the entry uses. It
 requires back the evidence that the entry lists.
 
 | Section | Phases | Purpose |
@@ -69,17 +70,20 @@ Delegations that are not plan markers:
 - `engineer: planning`, after the approval commit, and `engineer: replanning`, when
   implementation evidence shows that the plan must change;
 - `<agent>: validation-fix`, when the `full-validation` report shows a failure in a file that
-  the agent owns: tests and their static data to `tester`, other files to `coder`. Then
+  the agent owns: tests and their static data to `tester`, a file that `cleaner: refactor`
+  changed after `coder`'s last change to it to `cleaner`, other files to `coder`. Then
   `coder: full-validation` runs again.
 
 A failed phase is retried at most twice, with the failure: code, lint, and GREEN failures go to
-`coder`, invalid tests to `tester`, failed refactoring to `cleaner`. A stop reported by a delegate
-is never retried: the coordinator records it in the plan's Blockers, as an uncommitted change,
-and reports it to the user, unless it only needs a plan change, which goes to
-`engineer: replanning`.
+`coder`, failed refactoring to `cleaner`. When `coder` reports a test as invalid, `tester`'s phase
+is retried with that report; `tester` corrects the test, and `coder`'s phase runs again, or
+confirms it valid, which is a stop. Any other stop reported by a delegate is never retried: the
+coordinator records it in the plan's Blockers, as an uncommitted change, and reports it to the
+user, unless it only needs a plan change, which goes to `engineer: replanning`.
 
 The coordinator commits each Removed entry, each step, and each Finalization phase with its
-markers. It never pushes, merges, or tags.
+markers, and the plan after each replanning, `docs(<spec-slug-id>): replan specification`. It
+never pushes, merges, or tags.
 
 ## Status ownership
 
@@ -95,8 +99,8 @@ markers. It never pushes, merges, or tags.
 
 `reviewer` never changes a status. No transition can be skipped, and every commit after the
 approval must leave the specification unchanged except for `Status`. At `Coded` without the
-user's approval, a resumed coordinator runs any pending Finalization phases, then
-`coder: full-validation` and `reviewer: implementation-review` again.
+user's approval, a resumed coordinator runs the pending Finalization phases. A coordinator
+authorized on a `Verified` or `Released` specification does nothing and reports its status.
 
 ## Revisions
 

@@ -74,11 +74,15 @@ The delegations that are not plan markers, the retries, and the stops follow the
 `<agent>: validation-fix`, to `tester` for tests and image checks, to `cleaner` for a file that
 `cleaner: analysis-refactor` changed, and to `coder` for any other file.
 
-The coordinator commits each Removed entry, each increment, and each Finalization phase. In Setup
-it commits `coder: renumber`, `engineer: software-versions`, `coder: real-config`, and
+The coordinator commits each Removed entry, each increment, each Finalization phase, and the plan
+after each replanning, `docs(<analysis-id>): replan methods vN`. In Setup it commits
+`coder: renumber`, `engineer: software-versions`, `coder: real-config`, and
 `tester: real-input-check` each on its own, and each RED and GREEN pair together: each
 `tester: image-check` with its `coder: image-build`, and `tester: test-setup` with
-`coder: test-setup`, so a phase that ends in RED is never committed alone.
+`coder: test-setup`, so a phase that ends in RED is never committed alone. At `Coded` without
+the user's approval, a resumed coordinator runs the pending Finalization phases, and repeats
+`coder: full-validation` and `reviewer: implementation-review` only when a phase before them was
+pending.
 
 ## Test data and test support code
 

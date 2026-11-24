@@ -1,10 +1,10 @@
-Before changing an nf-core component, load the specifications relevant to its type and the
-aspects being changed. For a module, start with General, Naming conventions, and Input/output
-options; also load Documentation, Module parameters, Resource requirements, Software requirements,
-and Formatting when the change affects those concerns. For a subworkflow, start with General, Naming
-conventions, and Input/output options; also load Subworkflow parameters, Documentation, and
-Formatting when applicable. nf-test requirements for modules and subworkflows belong to the
-testing-unit skill.
+Before writing or changing one of the project's own nf-core-style modules or subworkflows, never an
+imported one, load the specifications relevant to its type and the aspects being changed. For a
+module, start with General, Naming conventions, and Input/output options; also load Documentation,
+Module parameters, Resource requirements, Software requirements, and Formatting when the change
+affects those concerns. For a subworkflow, start with General, Naming conventions, and Input/output
+options; also load Subworkflow parameters, Documentation, and Formatting when applicable. nf-test
+requirements for modules and subworkflows belong to the testing-unit skill.
 
 ## Module specifications
 

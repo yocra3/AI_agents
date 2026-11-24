@@ -27,9 +27,9 @@ reported instead of resolved by assumption.
 
 # Activation
 Start only on the user's explicit authorization to execute a named contract. If the contract is
-at `Approved`, `Planned`, or `Coded`, use start-task and resume. If it is at `Draft`, first
-delegate contract validation to reviewer on the current branch, and act on the `Verdict:` line
-that ends its report:
+at `Verified` or `Released`, do nothing and report its status. If it is at `Approved`, `Planned`,
+or `Coded`, use start-task and resume. If it is at `Draft`, first delegate contract validation to
+reviewer on the current branch, and act on the `Verdict:` line that ends its report:
 - `blocking findings present`: do not create a branch or commit, leave the contract at `Draft`,
   and return the findings to the user.
 - `no blocking findings`: report any non-blocking findings, use start-task, which carries the
@@ -57,9 +57,11 @@ delegate replanning to engineer.
 
 # Commit points
 Every commit of the contract uses the contract identifier, `<spec-slug-id>` or `<analysis-id>`,
-as its scope, with the type of what the commit changes, following commit-changes. Commit only
-green work, with the delegates' evidence for the committed phases as their phase entries define
-it. After each of these succeeds, mark its markers and commit them with its
+as its scope, with the type of what the commit changes, following commit-changes. After
+engineer replans without a stop, commit the implementation plan as
+`docs(<spec-slug-id>): replan specification` or `docs(<analysis-id>): replan methods vN`. Commit
+only green work, with the delegates' evidence for the committed phases as their phase entries
+define it. After each of these succeeds, mark its markers and commit them with its
 changes: each Removed entry, each step, each increment, and each Finalization phase; in Setup,
 `coder: renumber`, each `tester: image-check` and `coder: image-build` pair, together,
 `engineer: software-versions`, the `tester: test-setup` and `coder: test-setup` pair, together,
@@ -71,8 +73,9 @@ When every phase before Finalization is complete, change the contract to `Coded`
 Then run the Finalization phases and stop for the user's implementation review. Change the
 contract to `Verified` and commit only on the user's explicit approval; for a methods document,
 that approval also requires the user's full `run-analysis.sh` run and green `post-run` checks.
-On resume at `Coded` without that approval, run any pending Finalization phases, then
-`coder: full-validation` and `reviewer: implementation-review` again.
+On resume at `Coded` without that approval, run the pending Finalization phases in order; when a
+Finalization phase before `coder: full-validation` was pending, also run `coder: full-validation`
+and `reviewer: implementation-review` again.
 
 # Stops
 Stop and report to the user, citing the affected contract section or criterion, or implementation
@@ -84,8 +87,9 @@ plan step, increment, or phase, without reinterpreting either, when:
 - engineer reports a scientific gap in a methods document, a change that needs a new `Version`,
   which only the user sets, or a required implementation plan change it cannot resolve;
 - retries are exhausted, or the contract or implementation plan is ambiguous or contradictory;
-- a delegate reports a stop of its phase entry that agent-delegation does not route to
-  replanning; report it as the delegate states it, including what to ask an administrator for.
+- a delegate reports a stop of its phase entry that agent-delegation does not route to a retry
+  or to replanning, such as a test that tester confirms valid against coder's report; report it
+  as the delegate states it, including what to ask an administrator for.
 When stopping, do not change the status or commit. When the implementation plan exists, record
 each stop condition in its Blockers, with the citation above, as an uncommitted change. Report the
 uncommitted files. Resume only on explicit user direction, and then delete the Blockers entries

@@ -220,62 +220,6 @@ def read_version():
     return version
 
 
-def agents_key(target, key):
-    """Return the value of a key that the target's AGENTS.md declares, or None.
-
-    A key that is absent or still holds a template placeholder, such as `{Key}`, counts as not
-    declared.
-    """
-    path = os.path.join(target, "AGENTS.md")
-    if not os.path.isfile(path):
-        return None
-    with open(path) as fh:
-        match = re.search(r"\*\*%s\*\*:\s*`?([^\s`]+)" % re.escape(key), fh.read())
-    if not match or match.group(1).startswith("{"):
-        return None
-    return match.group(1)
-
-
-def tooluniverse_cli(target):
-    """Return the ToolUniverse_CLI path that the target's AGENTS.md declares, or None."""
-    cli = agents_key(target, "ToolUniverse_CLI")
-    if cli is None:
-        return None
-    cli = os.path.expanduser(cli)
-    return cli if os.path.isabs(cli) else os.path.join(target, cli)
-
-
-def nextflow_project(target):
-    """Return True when the target is a Nextflow project.
-
-    It is one when it has a `nextflow.config` or its AGENTS.md declares Nextflow_Reference_Folder.
-    """
-    return (os.path.isfile(os.path.join(target, "nextflow.config"))
-            or agents_key(target, "Nextflow_Reference_Folder") is not None)
-
-
-def check_tools(target):
-    """Warn about optional external tools that the agents use and that are not available."""
-    if shutil.which("wave") is None:
-        print("\nwarning: the Wave CLI (`wave`) is not on PATH; selecting-container-images "
-              "cannot request Seqera Containers images and sends them to a recipe (tier 4). "
-              "Install it from https://github.com/seqeralabs/wave-cli.")
-    cli = tooluniverse_cli(target)
-    if cli is not None:
-        if not (os.path.isfile(cli) and os.access(cli, os.X_OK)):
-            print("\nwarning: ToolUniverse_CLI in AGENTS.md is %s, which is not an executable "
-                  "file; searching-tooluniverse-catalog will skip the catalog." % cli)
-    elif shutil.which("tu") is None:
-        print("\nwarning: the ToolUniverse CLI (`tu`) is not on PATH and AGENTS.md does not "
-              "declare ToolUniverse_CLI; data-analyst will design methods without the "
-              "ToolUniverse catalog. See https://github.com/mims-harvard/ToolUniverse.")
-    if nextflow_project(target) and shutil.which("nf-core") is None:
-        print("\nwarning: nf-core tools (`nf-core`) is not on PATH in this Nextflow project; "
-              "nfcore-component-reuse and importing-nf-core stop without it, and linting "
-              "reports the nf-core lint checks of the project's own modules, subworkflows and "
-              "pipeline as unavailable. Install it from https://github.com/nf-core/tools.")
-
-
 def main():
     parser = argparse.ArgumentParser(description="Install or update the agent definitions.")
     parser.add_argument("target", help="path to the target Git repository")
@@ -311,7 +255,6 @@ def main():
     if old_key is not None and semver_key(new_version) < old_key:
         print("\nwarning: the source version %s is lower than the installed version %s; "
               "installing it downgrades the project." % (new_label, old_label))
-    check_tools(target)
 
     if args.dry_run:
         return

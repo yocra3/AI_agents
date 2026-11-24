@@ -24,10 +24,8 @@ user-provided context, and keep research proportional to the decision being made
 - generating-prd: to create or update the PRD.
 
 # Clarification gate
-Before writing, identify uncertainties that could materially change product scope, users,
-priorities, constraints, or success criteria. If any remain, ask the user with AskUserQuestion
-and wait for the answers. Do not guess through material ambiguity. Continue without questions
-only when the available evidence is sufficient.
+Ask the skill's clarifying questions, including those about priorities, constraints, and success
+criteria, with AskUserQuestion, and wait for the answers before writing.
 
 # Boundaries
 Do not design implementation details, write production code, create branches, or commit changes.
