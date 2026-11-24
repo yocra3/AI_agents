@@ -8,7 +8,9 @@ description: Change the framework's agents, skills, templates, references, or ph
 Apply a requested framework change so that every environment gets the same behavior, no
 reference is left dangling, and the documentation describes the result. Follow the principles in
 `{Agents_Folder}/references/framework-principles.md`; resolve `{Agents_Folder}` from
-`{Agents_file}`.
+`{Agents_file}`. Read
+`references/research-sources.md` only when the user requests external workflow research or the
+repository does not provide enough evidence for a proposal.
 
 # Agents
 
@@ -21,23 +23,32 @@ reference is left dangling, and the documentation describes the result. Follow t
   ---
   name: <hyphenated-name, equal to the file name>
   description: <responsibility and activation boundary, one line>
+  profile: <high | medium | low>
+  effort: <low | medium | high | xhigh>
+  skills:                   # the framework skills the agent may use
+    - <skill-name>
   codex:
-    model: <Codex model>
-    model_reasoning_effort: <low | medium | high | ...>
     sandbox_mode: <read-only | workspace-write>
-    disabled_skills:        # optional: skills the agent must not use
-      - <skill-name>
   claude:
-    model: <Claude Code model>
-    effort: <Claude Code effort>
     tools: Read, Grep, Glob, Skill, <other tools>
   ---
   ```
 
-  Take `claude.model` from the model equivalence in the framework's `README.md` unless the user
-  sets an override for the agent.
-- Create or reformat an agent with `{Agents_Folder}/templates/agents.template.md`. To remove an
-  agent, delete its source and its two generated files.
+- `profile` gives the model of each environment from the table in
+  `{Agents_Folder}/config/model-profiles.md`; change a model there, not in a source. `effort`
+  is written as Codex `model_reasoning_effort` and Claude Code `effort`.
+- `skills` lists exactly the framework skills that the body's `# Skills` section names, also those
+  the agent uses through another skill. The generator disables in Codex every other skill of
+  `{Agents_Folder}/skills/`, so a new skill is disabled for every agent until a source lists it.
+  Claude Code subagents cannot restrict skills in their frontmatter, so there the restriction
+  lives only in the Skills section.
+- Create or reformat an agent with `{Agents_Folder}/references/templates/agents.template.md`,
+  whose skeleton gives the frontmatter and the sections of principle 5 and whose writing rules
+  apply to every agent. In the body, say when to use a tool in the section where it is used, and
+  what context to read in Role, or in Skills when the skill already says it. Keep phase
+  procedures in the phase entries (principle 4): a delegated agent follows the phase instructions
+  of its delegation and returns the evidence they request. To remove an agent, delete its source
+  and its two generated files.
 - Regenerate from the repository root:
 
   ```bash
@@ -46,7 +57,8 @@ reference is left dangling, and the documentation describes the result. Follow t
 
   It writes `.claude/agents/<name>.md` and `.codex/agents/<name>.toml` from each source, with the
   name each environment expects, and `docs/catalog.md` where the repository keeps one. It lists,
-  and never changes, agent files without a source, such as a project's own agents.
+  and never changes, agent files without a source, such as a project's own agents. It rejects a
+  source whose `skills` differ from its Skills section or whose `profile` is not in the table.
 - Review the regenerated files with read-only `git diff -- .claude/agents .codex/agents docs`.
   Every difference must follow from the change to the sources; report any other. When the
   generator rejects a source, fix the source; do not edit the generator only to make it pass.
@@ -59,10 +71,10 @@ reference is left dangling, and the documentation describes the result. Follow t
 - Use the skill-creator skill of the current environment for the structure, frontmatter
   `description`, and validation of a skill.
 - A skill that must run only on explicit request also gets `agents/openai.yaml` with
-  `allow_implicit_invocation: false`, and the agents that must not use it list it in their
-  `codex.disabled_skills`.
+  `allow_implicit_invocation: false`. An agent may use a skill only when its source lists it in
+  `skills`.
 - A skill's private files are read only by that skill; move material that another skill or
-  agent needs to `{Agents_Folder}/references/`.
+  agent needs to `{Agents_Folder}/references/`, as principle 1 says.
 
 # Phase entries
 

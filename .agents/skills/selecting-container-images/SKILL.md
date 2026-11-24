@@ -6,7 +6,8 @@ description: Select the container image of each increment and of the input check
 # Purpose
 
 Give every increment of the implementation plan, and its input checks, one image that provides
-all their tools, following the rules of `{Agents_Folder}/templates/container-images.template.md`.
+all their tools, following the rules of
+`{Agents_Folder}/references/templates/container-images.template.md`.
 `engineer` resolves tiers 1 to 3 here and records their registry entries; a tier-4 image becomes
 Setup phases of the implementation plan, where `coder` writes its recipe and builds it.
 

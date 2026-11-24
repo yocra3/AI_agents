@@ -115,11 +115,11 @@ implementation plan, including `<agent>: validation-fix`.
 ## `coder: test-setup`
 
 - **Meaning**: Write the test support code and create the test inputs, to GREEN.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Run tester's setup tests from the brief and confirm the expected RED.
   2. Write or rewrite the reference subset script, the synthetic data generator, the input
-     checks, the test configuration, and `run-tests.sh`, as coding-spec's analysis profile defines
+     checks, the test configuration, and `run-tests.sh`, as writing-code's analysis profile defines
      them. After `coder: renumber`, also update the script list of `run-tests.sh`.
   3. Create the test inputs in `{Analysis_Test_Inputs_Folder}` with the reference subset script
      and the synthetic data generator.
@@ -134,7 +134,7 @@ implementation plan, including `<agent>: validation-fix`.
 ## `coder: real-config`
 
 - **Meaning**: Write the real configuration from Configuration.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Write `{Analysis_Real_Config_file}` with `ANALYSIS_ID`, `ANALYSIS_VERSION` set to the
      implementation plan's `Version`, the output folders set to the version folders of the
@@ -172,7 +172,7 @@ implementation plan, including `<agent>: validation-fix`.
 ## `coder: post-run-implementation`
 
 - **Meaning**: Implement the increment, validated with lint and syntax checks only.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Implement exactly the increment's methods steps.
   2. Lint the changed files with the linting skill, including its syntax checks, and fix findings
@@ -184,7 +184,7 @@ implementation plan, including `<agent>: validation-fix`.
 ## `cleaner: analysis-refactor`
 
 - **Meaning**: Refactor all analysis code once.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Run the full run, `run-tests.sh synthetic`, and confirm GREEN before changing code.
   2. Refactor the computation scripts, render scripts, report sources, and shared functions of
@@ -204,9 +204,9 @@ implementation plan, including `<agent>: validation-fix`.
 ## `coder: run-script`
 
 - **Meaning**: Write `run-analysis.sh`.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
-  1. Write or rewrite `run-analysis.sh` as coding-spec's analysis profile defines it.
+  1. Write or rewrite `run-analysis.sh` as writing-code's analysis profile defines it.
   2. Lint it with the linting skill and fix findings in it. Never execute it.
 - **Evidence**: the file and the lint results.
 - **Stops**: none of its own.

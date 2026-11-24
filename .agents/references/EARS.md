@@ -1,4 +1,5 @@
 # EARS Format for Acceptance Criteria
+
 EARS (Easy Approach to Requirements Syntax) is a structured format for writing clear and testable acceptance criteria. 
 It helps ensure that requirements are unambiguous and verifiable.
 

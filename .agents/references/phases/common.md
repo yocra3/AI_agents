@@ -19,7 +19,7 @@ Phases shared by specification and analysis implementation plans, and the delega
 
 - **Meaning**: Remove the code of a removed step, acceptance criterion, or increment from the
   files that the Removed entry lists.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Remove only the code of the removed item from the files that the Removed entry lists,
      deleting a file that holds nothing else.
@@ -46,7 +46,7 @@ Phases shared by specification and analysis implementation plans, and the delega
 ## `coder: implementation`
 
 - **Meaning**: Make the minimum change that turns the tests of a step or increment GREEN.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Run tester's exact command from the brief and confirm the expected RED before editing code.
   2. Make the minimum production change that turns the tests GREEN, with no unrelated behavior
@@ -101,7 +101,7 @@ Phases shared by specification and analysis implementation plans, and the delega
 - **Meaning**: Fix the failures of the `full-validation` report in the files routed to the agent.
   Not a plan marker: delegated to `coder`, `tester`, or `cleaner` when the `full-validation`
   report shows a failure in a file that agent owns.
-- **Skill**: coding-spec for `coder` and `cleaner`, testing-unit for `tester`.
+- **Skill**: writing-code for `coder` and `cleaner`, testing-unit for `tester`.
 - **Steps**:
   1. Fix only the failures that the brief routes to you, in those files.
   2. `tester` changes only tests and their static data; `cleaner` only refactors, preserving

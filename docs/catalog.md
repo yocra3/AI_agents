@@ -8,20 +8,24 @@ reference. Regenerate it with `python3 .agents/scripts/generate_agents.py`.
 
 ## Agents
 
-| Agent | Description |
-| --- | --- |
-| [`analyst`](../.agents/agents/analyst.md) | Product analyst that researches, clarifies, and owns the project PRD. |
-| [`architect`](../.agents/agents/architect.md) | Architecture specialist that clarifies constraints and owns the project ADD. |
-| [`cleaner`](../.agents/agents/cleaner.md) | Refactoring specialist for behavior-preserving cleanup after verification. |
-| [`coder`](../.agents/agents/coder.md) | Implementation specialist that follows approved implementation plans and local test feedback. |
-| [`craftsman`](../.agents/agents/craftsman.md) | Maintains the project's agents, skills, templates, references, prompts, and evaluations for Codex and Claude Code. |
-| [`data-analyst`](../.agents/agents/data-analyst.md) | User-facing data analyst that writes and revises one analysis methods document per analysis with the user, leaving it at Draft. |
-| [`dev-ops`](../.agents/agents/dev-ops.md) | Documentation and release specialist for explicitly requested delivery work. |
-| [`engineer`](../.agents/agents/engineer.md) | Implementation planner that maintains one implementation plan per approved specification or analysis methods document, and the applicable data model. |
-| [`implementation-coordinator`](../.agents/agents/implementation-coordinator.md) | Main-session coordinator that validates, approves, and executes one user-authorized specification or analysis methods document with engineer, tester, coder, cleaner, reviewer, and dev-ops. |
-| [`product-owner`](../.agents/agents/product-owner.md) | Product owner that creates or updates one testable lifecycle specification. |
-| [`reviewer`](../.agents/agents/reviewer.md) | Read-only reviewer that validates a methods document or specification before its approval commit, or reviews completed work against its approved contract and implementation plan. |
-| [`tester`](../.agents/agents/tester.md) | Quality specialist that writes, reviews, and establishes the red test baseline. |
+An agent's profile sets its model in each environment, as
+[model-profiles.md](../.agents/config/model-profiles.md) defines it;
+Skills lists the framework skills that the agent may use.
+
+| Agent | Profile | Skills | Description |
+| --- | --- | --- | --- |
+| [`analyst`](../.agents/agents/analyst.md) | `high` | `generating-prd` | Product analyst that researches, clarifies, and owns the project PRD. |
+| [`architect`](../.agents/agents/architect.md) | `high` | `generating-add` | Architecture specialist that clarifies constraints and owns the project ADD. |
+| [`cleaner`](../.agents/agents/cleaner.md) | `medium` | `writing-code`, `linting` | Refactoring specialist for behavior-preserving cleanup. |
+| [`coder`](../.agents/agents/coder.md) | `medium` | `writing-code`, `linting`, `building-container-images`, `importing-nf-core` | Implementation specialist that follows approved implementation plans and local test feedback. |
+| [`craftsman`](../.agents/agents/craftsman.md) | `high` | `maintaining-framework` | Maintains the project's agents, skills, templates, references, prompts, and evaluations for Codex and Claude Code. |
+| [`data-analyst`](../.agents/agents/data-analyst.md) | `high` | `defining-analysis-inputs`, `searching-tooluniverse-catalog` | User-facing data analyst that writes and revises one analysis methods document per analysis with the user, leaving it at Draft. |
+| [`dev-ops`](../.agents/agents/dev-ops.md) | `low` | `documenting-code`, `releasing-version`, `linting` | Documentation and release specialist for explicitly requested delivery work. |
+| [`engineer`](../.agents/agents/engineer.md) | `high` | `planning-specs`, `planning-analysis`, `data-modeling`, `selecting-container-images`, `nfcore-component-reuse` | Implementation planner that maintains one implementation plan per approved specification or analysis methods document, and the applicable data model. |
+| [`implementation-coordinator`](../.agents/agents/implementation-coordinator.md) | `high` | `start-task`, `commit-changes`, `agent-delegation` | Main-session coordinator that validates, approves, and executes one user-authorized specification or analysis methods document with engineer, tester, coder, cleaner, reviewer, and dev-ops. |
+| [`product-owner`](../.agents/agents/product-owner.md) | `high` | `generating-specs` | Product owner that creates or updates one testable lifecycle specification. |
+| [`reviewer`](../.agents/agents/reviewer.md) | `high` | `validating-contracts`, `reviewing-implementation` | Read-only reviewer that validates a methods document or specification before its approval commit, or reviews completed work against its approved contract and implementation plan. |
+| [`tester`](../.agents/agents/tester.md) | `medium` | `testing-unit`, `linting` | Quality specialist that writes and runs tests. |
 
 ## Skills
 
@@ -29,7 +33,6 @@ reference. Regenerate it with `python3 .agents/scripts/generate_agents.py`.
 | --- | --- |
 | [`agent-delegation`](../.agents/skills/agent-delegation/SKILL.md) | Brief a delegate with the instructions of its phase from the phase reference, check the evidence it returns, and route its failures. Use from implementation-coordinator for every delegation of an implementation plan phase, contract validation, planning, or replanning. Do not use to run a phase yourself. |
 | [`building-container-images`](../.agents/skills/building-container-images/SKILL.md) | Write the recipe of a tier-4 container image of an analysis implementation plan, build the image, and add its registry entry. Use for coder's `image-build` phase. Never modify tests, image checks, or existing registry entries. |
-| [`coding-spec`](../.agents/skills/coding-spec/SKILL.md) | Apply maintainable coding conventions while implementing or refactoring software. Use language profiles and repository conventions; do not activate for documentation-only work. |
 | [`commit-changes`](../.agents/skills/commit-changes/SKILL.md) | Create reviewed local commits when requested, or at a commit point of an active implementation-coordinator. Never publish or rewrite history. |
 | [`data-modeling`](../.agents/skills/data-modeling/SKILL.md) | Define or update persistent entities, attributes, relationships, and cardinalities when a specification changes the system's data model. Do not use for transient DTOs or formatting-only changes. |
 | [`defining-analysis-inputs`](../.agents/skills/defining-analysis-inputs/SKILL.md) | Write or revise the Input data section of an analysis methods document, by interview or, with explicit authorization for each path, by exploring the structure of the data. Use from data-analyst or when the user asks to define an analysis's inputs. Never creates the methods document. |
@@ -53,21 +56,23 @@ reference. Regenerate it with `python3 .agents/scripts/generate_agents.py`.
 | [`start-task`](../.agents/skills/start-task/SKILL.md) | Prepare a clean local task branch when explicitly requested or when an active implementation-coordinator workflow needs its task branch. Do not use for ordinary edits on an existing task branch. |
 | [`testing-unit`](../.agents/skills/testing-unit/SKILL.md) | Write, run, and interpret tests for one component or behavior using TDD. Use the applicable framework profile; do not use for live-service contracts or full-system validation. |
 | [`validating-contracts`](../.agents/skills/validating-contracts/SKILL.md) | Validate an analysis methods document or a specification read-only and report its blocking and non-blocking findings in plain language, ending with a verdict. Use for reviewer's contract validation, after the user authorizes a contract and before its approval commit, or when the user asks reviewer to validate one. Do not use while a contract is being drafted. Never edits the contract or reads data files. |
+| [`writing-code`](../.agents/skills/writing-code/SKILL.md) | Apply maintainable coding conventions while implementing or refactoring software. Use language profiles and repository conventions; do not activate for documentation-only work. |
 
 ## Templates
 
 | File | Description |
 | --- | --- |
-| [`agents.template.md`](../.agents/templates/agents.template.md) | Use this template for the neutral source of an agent, `{Agents_Folder}/agents/<agent-name>.md`, from which `{Agents_Folder}/scripts/generate_agents.py` generates the agent of each environment. |
-| [`analysis-methods.template.md`](../.agents/templates/analysis-methods.template.md) | Use this template for `{Analysis_Methods_file}`, where `<analysis-id>` is `analysis-<slug>`. |
-| [`container-images.template.md`](../.agents/templates/container-images.template.md) | Use this template for `{Analysis_Images_file}`, the project's registry of the container images that analysis increments and input checks run in. |
+| [`agents.template.md`](../.agents/references/templates/agents.template.md) | Skeleton of the neutral source of an agent, `{Agents_Folder}/agents/<agent-name>.md`, from which `{Agents_Folder}/scripts/generate_agents.py` generates the agent of each environment. |
+| [`analysis-methods.template.md`](../.agents/references/templates/analysis-methods.template.md) | Use this template for `{Analysis_Methods_file}`, where `<analysis-id>` is `analysis-<slug>`. |
+| [`container-images.template.md`](../.agents/references/templates/container-images.template.md) | Use this template for `{Analysis_Images_file}`, the project's registry of the container images that analysis increments and input checks run in. |
+| [`spec.template.md`](../.agents/references/templates/spec.template.md) | Allowed status flow: Draft -> Approved -> Planned -> Coded -> Verified -> Released. |
 
 ## References
 
 | File | Description |
 | --- | --- |
+| [`EARS.md`](../.agents/references/EARS.md) | EARS (Easy Approach to Requirements Syntax) is a structured format for writing clear and testable acceptance criteria. |
 | [`analysis-inputs.md`](../.agents/references/analysis-inputs.md) | Rules for the Input data section of an analysis methods document. |
-| [`craftsman-sources.md`](../.agents/references/craftsman-sources.md) | Use these sources only when the user requests external workflow research or the local repository does not provide enough evidence for a proposal. |
 | [`framework-principles.md`](../.agents/references/framework-principles.md) | Design rules of the agent framework that `craftsman` keeps when it changes agents, skills, templates, references, or their documentation; the maintaining-framework skill gives the procedures that apply them. |
 | [`phases/analysis.md`](../.agents/references/phases/analysis.md) | Phases of the implementation plan of an analysis methods document, in execution order, and the analysis rules of the phases of common.md that analysis plans use. |
 | [`phases/common.md`](../.agents/references/phases/common.md) | Phases shared by specification and analysis implementation plans, and the delegations of `implementation-coordinator` that are not plan markers; each plan type's own phases are in specs.md, nextflow.md, and analysis.md. |

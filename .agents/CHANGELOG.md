@@ -43,9 +43,14 @@ documents alike, and the agents of every environment are generated from neutral 
   diff since that commit: it resets the markers of affected steps and of Finalization, appends new
   steps, and adds Removed entries for removed steps or criteria.
 - Neutral agent sources, `.agents/agents/<name>.md`, one per agent: the frontmatter holds the
-  name, the description, and the settings of each environment, and the body the instructions.
-  The generator `.agents/scripts/generate_agents.py` writes `.claude/agents/*.md`,
-  `.codex/agents/*.toml`, and `docs/catalog.md` from them; `--check` lists out-of-date files.
+  name, the description, the model profile, the reasoning effort, the skills the agent may use,
+  the Codex sandbox and the Claude Code tools, and the body the instructions. The generator
+  `.agents/scripts/generate_agents.py` writes `.claude/agents/*.md`, `.codex/agents/*.toml`, and
+  `docs/catalog.md` from them; `--check` lists out-of-date files. It rejects a source whose
+  `skills` differ from the skills its Skills section names, or whose profile is unknown.
+- Configuration file `.agents/config/model-profiles.md`: the Codex and Claude Code model of each
+  profile, `high`, `medium` and `low`. It replaces the model equivalence of `README.md`. The
+  generated catalog shows each agent's profile and skills.
 - Reference `.agents/references/framework-principles.md` and skill `maintaining-framework`, which
   `craftsman` follows for every framework change.
 - `install.py` warns when the Wave CLI is not on `PATH`, and when the ToolUniverse CLI is neither
@@ -79,8 +84,10 @@ documents alike, and the agents of every environment are generated from neutral 
 - `implementation-coordinator` commits the implementation plan after planning, with the
   `Planned` status and any ER model, as `docs(<spec-slug-id>): plan specification` or
   `docs(<analysis-id>): plan methods vN`. In analysis Setup it commits after `coder: renumber`,
-  each image pair, `tester: test-setup`, `coder: real-config` and `tester: real-input-check`
-  instead of once for the whole section.
+  each `tester: image-check` and `coder: image-build` pair, `engineer: software-versions`, the
+  `tester: test-setup` and `coder: test-setup` pair, `coder: real-config` and
+  `tester: real-input-check`, instead of once for the whole section; a phase that ends in RED is
+  never committed alone.
 - In specification plans, each step's Execution is a checkbox list of phase markers, the only
   progress record, instead of a free-form `agent:phase` sequence: `tester: test`,
   `coder: implementation` and `cleaner: refactor` by default, `coder: direct-implementation` for
@@ -99,10 +106,10 @@ documents alike, and the agents of every environment are generated from neutral 
 - Analysis `synthetic` increments use the same `tester: test` and `coder: implementation` phases
   as specification steps, and the analysis Finalization review is
   `reviewer: implementation-review`, with the `reviewing-implementation` skill.
-- The Nextflow reference implementation profile of `coding-spec` applies to the
+- The Nextflow reference implementation profile of `writing-code` applies to the
   `coder: reference-generation` phase.
 - Skill profiles keep only conventions: their phase procedures, such as the Phases sections of the
-  `analysis.md` profiles of `coding-spec` and `testing-unit` and the phase sections of the
+  `analysis.md` profiles of `writing-code` and `testing-unit` and the phase sections of the
   Nextflow testing profile, move to the phase reference. `testing-unit` holds the only general
   definition of valid RED, and phase entries add only their own cases.
 - Test support code moves from `tester` to `coder`. `tester` writes only tests and their static
@@ -133,13 +140,44 @@ documents alike, and the agents of every environment are generated from neutral 
 - `craftsman` is neutral between environments: it uses the skill-creator skill and the official
   documentation of each environment instead of Codex-only skills, and edits the neutral sources
   with `maintaining-framework`, which replaces its procedure for keeping `.claude/agents` in sync.
-- The agent template, `agents.template.md`, describes a neutral source with the common sections
-  Role, Goal, Skills, the agent's own sections, Boundaries, and Output.
+  It no longer suggests prompt optimizers as research aids; sending repository content to
+  external services, installing packages, or adopting external prompts or skills still requires
+  an explicit user request and a review of provenance and fit.
+- Every agent follows the common structure of the agent template, `agents.template.md`: Role,
+  Goal, Skills, the agent's own sections, Boundaries, and Output, with tools only in the
+  frontmatter. Agents no longer describe phase procedures: `tester`, `coder`, `cleaner`, and
+  `engineer`, `reviewer` and `dev-ops` when delegated, follow the phase instructions of the
+  delegation and return the evidence they request, and the descriptions of `tester` and `cleaner`
+  no longer name phases. Only `implementation-coordinator` names markers, for its commit points,
+  status and stops; it stops on its own conditions and on any stop that a delegate reports from
+  its phase entry, which holds the phase-specific stops, such as a failed
+  `tester: real-input-check` or missing image-build permissions.
+- Each agent's Skills section lists every skill it may use, and in Codex every other skill is
+  disabled for it: `reviewer`, for example, can use only `validating-contracts` and
+  `reviewing-implementation`. `project-bootstrap`, `push-changes` and `merging-default` belong to
+  no agent and run only in the main session. Claude Code subagents cannot restrict skills, so
+  there the Skills section is the only restriction.
+- Models follow three profiles: `high` (`gpt-6-sol`, `claude-opus-5-5`) for `analyst`,
+  `architect`, `craftsman`, `data-analyst`, `engineer`, `implementation-coordinator`,
+  `product-owner` and `reviewer`; `medium` (`gpt-6-sol`, `claude-sonnet-5-5`) for `coder`,
+  `tester` and `cleaner`; and `low` (`gpt-6-luna`, `claude-haiku-5-5`) for `dev-ops`. The only
+  model that changes is `cleaner`'s in Codex, from `gpt-6-luna` to `gpt-6-sol`; efforts are
+  unchanged.
 - Agent names are hyphenated in every text, such as `implementation-coordinator`, and the analysis
   Finalization marker is `dev-ops: code-documentation`. The generated Codex agents keep the
   underscore form in their `name` field.
 - `README.md` keeps the rules common to both workflows and, for each workflow, a summary and its
   figure; the detailed workflow documentation moves to `docs/`.
+- Skill `coding-spec` is renamed `writing-code`, with the same conventions, and its folder
+  `nextflow_guidelines/` is renamed `nextflow-guidelines/`.
+- Shared templates live in `.agents/references/templates/`: `agents.template.md` and
+  `container-images.template.md` move there from `.agents/templates/`, which is removed, and
+  `spec.template.md` from `generating-specs`; the new `analysis-methods.template.md` is there too.
+  The EARS guide moves from `generating-specs` to `.agents/references/EARS.md`, since
+  `validating-contracts` and `planning-analysis` also read it. Material that only one skill uses
+  stays in that skill, such as a plan template, and `craftsman`'s research sources,
+  `.agents/references/craftsman-sources.md`, move into `maintaining-framework` as
+  `references/research-sources.md`.
 
 ### Removed
 
@@ -148,6 +186,9 @@ documents alike, and the agents of every environment are generated from neutral 
 - The analysis plan template, `analysis-plan.template.md`.
 - Skill `validating-changes`; its rules are the `coder: full-validation` phase.
 - `.claude/scripts/generate_agents.py`, replaced by `.agents/scripts/generate_agents.py`.
+- `default_subagent_model` and `default_subagent_reasoning_effort` from `.codex/config.toml`:
+  every generated Codex agent sets its own model and reasoning effort. The file keeps `[agents]`
+  with `enabled` and `max_concurrent_threads_per_session`.
 - `.agents/CODEX.md`; its content is in `README.md`, `docs/`, and the generated catalog.
 
 ### Upgrade notes
@@ -160,9 +201,9 @@ documents alike, and the agents of every environment are generated from neutral 
 - Rerun `project-bootstrap` to refresh `AGENTS.md`, and update `CLAUDE.md` by hand: their
   analysis keys and agent names changed, and `AGENTS.md` now needs the recipes and images folders
   and the container execution rules. Every text now uses the hyphenated agent names, so
-  `CLAUDE.md` no longer needs to map `product_owner` to `product-owner`. Ignore the built images
-  folder in Git, and consider denying Claude Code's `Read` tool on the data folders in
-  `.claude/settings.json`.
+  `CLAUDE.md` no longer needs to map `product_owner` to `product-owner`, nor the model
+  equivalence between Codex and Claude Code. Ignore the built images folder in Git, and consider
+  denying Claude Code's `Read` tool on the data folders in `.claude/settings.json`.
 - Specification plans of 0.9.0 do not follow the new format of
   `.agents/skills/planning-specs/plan.template.md`. Before resuming one with
   `implementation-coordinator`, update it by hand: add the `Approval commit` header with the
@@ -179,13 +220,27 @@ documents alike, and the agents of every environment are generated from neutral 
   `None.`.
 - Agents are generated from `.agents/agents/`. If the project changed its installed agents in
   `.codex/agents` or `.claude/agents`, move those changes into the agent's source and regenerate
-  both with `python3 .agents/scripts/generate_agents.py`. The project's own agents, without a
-  source, are listed and never changed.
+  both with `python3 .agents/scripts/generate_agents.py`; a changed model goes in
+  `.agents/config/model-profiles.md` or the agent's `profile`. The project's own agents,
+  without a source, are listed and never changed. A project's own skill in `.agents/skills/` is
+  disabled in Codex for every generated agent until a source lists it in `skills`.
+- `coding-spec` is now `writing-code`. Replace the old name in the project's own files, such as
+  its own agents and skills or `CLAUDE.md`, and move any change the project made to a
+  `coding-spec` file, such as a language profile, to the same file in
+  `.agents/skills/writing-code/`.
+- Shared templates and the EARS guide moved to `.agents/references/`. Replace
+  `.agents/templates/`, `generating-specs/spec.template.md` and `generating-specs/EARS.md` in the
+  project's own files, and move any change the project made to those files to their new paths.
+  Do the same for `.agents/references/craftsman-sources.md`, now
+  `.agents/skills/maintaining-framework/references/research-sources.md`.
+- The installer never replaces an existing `.codex/config.toml`. Its `default_subagent_model`
+  and `default_subagent_reasoning_effort` do not affect the generated agents, which set their own
+  model and effort; remove them by hand unless the project wants them for its own subagents.
 - The installer deletes the files of the removed agents, `builder` and `analysis-coordinator`,
-  of the analysis plan template, of the `validating-changes` skill, of
-  `.claude/scripts/generate_agents.py`, and of `.agents/CODEX.md`, unless the project modified
-  them; it then keeps them, and you can delete them yourself. A project installed without a
-  manifest only gets them listed.
+  of the analysis plan template, of the `validating-changes` and `coding-spec` skills, of
+  `.claude/scripts/generate_agents.py` and `.agents/CODEX.md`, and the old copies of the moved
+  templates, EARS guide and research sources, unless the project modified them; it then keeps them, and you can
+  delete them yourself. A project installed without a manifest only gets them listed.
 
 ## 0.9.0 - 2026-11-20
 

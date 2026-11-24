@@ -4,10 +4,11 @@ Agent definitions for programming with AI, usable from Codex and Claude Code.
 
 ## Contents
 
-- `.agents/`: the neutral agent sources (`agents/`), shared skills (`skills/`), templates
-  (`templates/`), references (`references/`, including the phase reference `phases/` and the
-  framework principles), the agent generator (`scripts/generate_agents.py`), and the version
-  marker (`VERSION`) with its `CHANGELOG.md`. The `AGENTS.md` template lives in the
+- `.agents/`: the neutral agent sources (`agents/`), shared skills (`skills/`), references
+  (`references/`, including the phase reference `phases/`, the shared templates `templates/`, and
+  the framework principles), the framework configuration (`config/`, with the model of each
+  agent profile in `model-profiles.md`), the agent generator (`scripts/generate_agents.py`), and
+  the version marker (`VERSION`) with its `CHANGELOG.md`. The `AGENTS.md` template lives in the
   `project-bootstrap` skill.
 - `.codex/`: Codex configuration and the 12 custom agents (`agents/*.toml`), generated from
   `.agents/agents`.
@@ -20,7 +21,7 @@ Agent definitions for programming with AI, usable from Codex and Claude Code.
   repository. They are repository-only and not installed in projects.
 
 The definitions are kept in one piece. They include Nextflow, Groovy and nf-core profiles and
-skills (`coding-spec`, `linting`, `planning-specs`, `generating-specs`, `testing-unit`,
+skills (`writing-code`, `linting`, `planning-specs`, `generating-specs`, `testing-unit`,
 `nfcore-component-reuse`, `importing-nf-core`), and the analysis workflow (`data-analyst`, the
 analysis methods template, the input data reference `.agents/references/analysis-inputs.md`, the
 `defining-analysis-inputs`, `planning-analysis`, `selecting-container-images` and
@@ -119,7 +120,7 @@ flowchart TD
     RV -- "no blocking findings" --> AP["task branch and approval commit<br/>methods document: Approved"]
     AP --> EN["engineer: planning<br/>implementation plan, images, test data rules<br/>methods document: Planned"]
     EN --> PC["plan commit"]
-    PC --> SE["Setup, committed after each phase or image pair<br/>tier-4 images, software versions, test support code,<br/>real configuration, input checks on the real data"]
+    PC --> SE["Setup, committed after each phase or RED and GREEN pair<br/>tier-4 images, software versions, test support code,<br/>real configuration, input checks on the real data"]
     SE --> INC
     subgraph INC ["For each increment, in NN order"]
         direction LR
@@ -171,11 +172,10 @@ Then, in the target repository:
 
 1. Generate `AGENTS.md`, the briefing and the changelog with the `project-bootstrap` skill
    (template in `.agents/skills/project-bootstrap/AGENTS.template.md`).
-2. Add a `CLAUDE.md` that imports it with `@AGENTS.md`, plus the Claude Code notes: skills are
-   shared through `.claude/skills`, and the model equivalence between Codex and Claude Code. Run
-   user-facing roles as the main session with `claude --agent <name>`; this includes
-   `product-owner`, `data-analyst`, `implementation-coordinator`, and `reviewer` for the manual
-   contract validation.
+2. Add a `CLAUDE.md` that imports it with `@AGENTS.md`, plus the Claude Code note that skills are
+   shared through `.claude/skills`. Run user-facing roles as the main session with
+   `claude --agent <name>`; this includes `product-owner`, `data-analyst`,
+   `implementation-coordinator`, and `reviewer` for the manual contract validation.
 3. Create `agents_data/specs/` and `agents_data/plans/`, where the lifecycle artifacts are stored;
    the implementation plans of both workflows go in `agents_data/plans/`. For the analysis
    workflow, also define in `AGENTS.md` the `Analysis_*` folders, among them
@@ -193,30 +193,23 @@ Then, in the target repository:
 
 ## Update
 
-Each agent has one neutral source, `.agents/agents/<name>.md`: its frontmatter holds the name,
-the description and the settings of each environment (Codex model, reasoning effort, sandbox and
-disabled skills; Claude Code model, effort and tools), and its body holds the instructions. Edit
-the source, never the generated files, then regenerate the Codex and Claude Code agents and the
-catalog:
+Each agent has one neutral source, `.agents/agents/<name>.md`. Its frontmatter holds the name,
+the description, the model `profile` (`high`, `medium` or `low`, which sets the model of each
+environment), the reasoning `effort`, the `skills` the agent may use, which must match the skills
+its `# Skills` section names, and the settings of each environment: the Codex sandbox and the
+Claude Code tools. Its body holds the instructions. Edit the source, never the generated files,
+then regenerate the Codex and Claude Code agents and the catalog:
 
 ```bash
 python3 .agents/scripts/generate_agents.py          # write the generated files
 python3 .agents/scripts/generate_agents.py --check  # only list the files that are out of date
 ```
 
+The generated Codex agents disable every skill that the source does not list; Claude Code
+subagents cannot restrict skills, so there the Skills section is the only restriction. Agent names
+use hyphens everywhere; only the generated Codex agents keep the underscore form in their `name`
+field (`implementation_coordinator`), as Codex's own examples do.
+
 `craftsman` makes these changes with the `maintaining-framework` skill, following
 `.agents/references/framework-principles.md`. Record each change in the Unreleased section of
 `.agents/CHANGELOG.md` as its net change from the last released version, upgrade notes included.
-
-## Model equivalence
-
-| Codex | Claude Code |
-| --- | --- |
-| `gpt-6-sol` | `claude-opus-5-5` |
-| `gpt-5.6-terra` | `claude-sonnet-5-5` |
-| `gpt-6-luna` | `claude-haiku-5-5` |
-
-Each source sets its Claude Code model by this table, except `coder`, `tester` and `cleaner`,
-which run on `claude-sonnet-5-5` in Claude Code; their Codex models and every effort level are
-unchanged. Agent names use hyphens everywhere; only the generated Codex agents keep the
-underscore form in their `name` field (`implementation_coordinator`), as Codex's own examples do.

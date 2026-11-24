@@ -11,8 +11,8 @@ or `CLAUDE.md` in projects.
   edit. Edit files or launch `craftsman` only on an explicit order.
 - Make every framework change, to agents, skills, templates, references, or phase entries,
   through `craftsman`, even a small fix. It follows the
-  [framework principles](.agents/references/framework-principles.md) and the
-  [maintaining-framework](.agents/skills/maintaining-framework/SKILL.md) skill.
+  [framework principles](.agents/references/framework-principles.md)
+  and the [maintaining-framework](.agents/skills/maintaining-framework/SKILL.md) skill.
 - Work in steps. Between steps, review the diff and report errors or inconsistencies before
   continuing.
 - Evaluate compatibility and upgrade notes against the last released version, the newest dated

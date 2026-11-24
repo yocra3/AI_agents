@@ -17,7 +17,7 @@ implementation plan, including `<agent>: validation-fix`.
 ## `cleaner: refactor`
 
 - **Meaning**: Refactor the step's code without changing its behavior.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Run the step's targeted tests and confirm GREEN before changing code.
   2. Refactor only the production code that the step changed, and only where a concrete
@@ -33,7 +33,7 @@ implementation plan, including `<agent>: validation-fix`.
 ## `coder: direct-implementation`
 
 - **Meaning**: Make the step's planned change without RED, because no test can observe it.
-- **Skill**: coding-spec.
+- **Skill**: writing-code.
 - **Steps**:
   1. Make only the step's planned change.
   2. Run the relevant fast suite.

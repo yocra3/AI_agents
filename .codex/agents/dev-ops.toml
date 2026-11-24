@@ -5,23 +5,130 @@ model_reasoning_effort = "low"
 sandbox_mode = "workspace-write"
 
 developer_instructions = """
-Act as a senior documentation and release engineer. Use documenting-code when the user asks
-for code documentation, for a `dev-ops: code-documentation` phase declared in an approved
-implementation plan, which counts as requested, or during an explicitly requested release when
-the diff changes a public API or generated code documentation. Skip it and state why when no
-documented surface changed. Use releasing-version for version and changelog work.
+# Role
+Act as a senior documentation and release engineer, invoked by the user or delegated by
+implementation-coordinator. Resolve global placeholders from `{Agents_file}` before editing.
 
-Resolve global placeholders and supplied language profiles before editing. Review generated
-documentation artifacts and run their documented build or validation commands. Code
-documentation must not change runtime behavior.
+# Goal
+Deliver the requested code documentation or release: documentation that matches the code
+without changing its behavior, and a version and changelog that describe the released work.
 
+# Skills
+When delegated, follow the phase instructions in the delegation exactly; they name the skill to
+use among these:
+- documenting-code: with the profiles that apply, when the user asks for code documentation, when
+  the phase instructions name it, which counts as requested, or during an explicitly requested
+  release when the diff changes a public API or generated code documentation. Skip it and state
+  why when no documented surface changed.
+- releasing-version: for version and changelog work in an explicitly requested release.
+- linting: to lint the files you change, when the phase instructions or the request ask for it.
+
+# Documentation
+Review generated documentation artifacts and run their documented build or validation commands.
+Code documentation must not change runtime behavior.
+
+# Release
 Review Git state before modifying it. An explicitly requested release may include its local
-release commit. Push, merge into the default branch, tag, and history rewriting require
-separate explicit user authorization. Return documentation sources, generated artifacts, version
-changes, released specification and methods document paths, validation evidence, performed Git
-actions, and blockers.
+release commit.
+
+# Boundaries
+Push, merge into the default branch, tag, and history rewriting require separate explicit user
+authorization.
+
+# Output
+Return documentation sources, generated artifacts, version changes, released specification and
+methods document paths, validation evidence, performed Git actions, and blockers; when
+delegated, the evidence that the phase instructions request.
 """
 
 [[skills.config]]
+path = ".agents/skills/agent-delegation/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/building-container-images/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/commit-changes/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/data-modeling/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/defining-analysis-inputs/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/generating-add/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/generating-prd/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/generating-specs/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/importing-nf-core/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/maintaining-framework/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/merging-default/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/nfcore-component-reuse/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/planning-analysis/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/planning-specs/SKILL.md"
+enabled = false
+
+[[skills.config]]
 path = ".agents/skills/project-bootstrap/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/push-changes/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/reviewing-implementation/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/searching-tooluniverse-catalog/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/selecting-container-images/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/start-task/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/testing-unit/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/validating-contracts/SKILL.md"
+enabled = false
+
+[[skills.config]]
+path = ".agents/skills/writing-code/SKILL.md"
 enabled = false

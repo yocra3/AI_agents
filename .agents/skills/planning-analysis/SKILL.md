@@ -14,7 +14,7 @@ when one is missing, stop instead of choosing it.
 Resolve global placeholders from `{Agents_file}`. Read:
 
 - the methods document, `{Analysis_Methods_file}` with `<analysis-id>` as `analysis-<slug>`;
-- `{Agents_Folder}/templates/analysis-methods.template.md` and
+- `{Agents_Folder}/references/templates/analysis-methods.template.md` and
   `{Agents_Folder}/references/analysis-inputs.md`, which define how the document is written and
   read, including the omission rules of methods steps;
 - the [implementation plan template](plan.template.md), which defines its format and content

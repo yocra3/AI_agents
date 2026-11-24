@@ -15,7 +15,7 @@ Resolve global placeholders from `{Agents_file}`. Read:
 - the image's row in the implementation plan's Images table: its ID, its recipe path in
   `{Analysis_Recipes_Folder}`, and its Contents, with the base image, every package and its
   version, the test framework, the linter, and rmarkdown and Pandoc when listed;
-- `{Agents_Folder}/templates/container-images.template.md` and `{Analysis_Images_file}`;
+- `{Agents_Folder}/references/templates/container-images.template.md` and `{Analysis_Images_file}`;
 - the execution rules in `{Agents_file}`, which declare whether the project runs images with
   Apptainer or Docker.
 

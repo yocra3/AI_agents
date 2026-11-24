@@ -33,7 +33,7 @@ Types of specifications to generate include:
 
 ### Specification output template
 
-Read and follow the specific [spec template](spec.template.md) to generate the document.
+Read and follow the specific [spec template](../../references/templates/spec.template.md) to generate the document.
 
 For Nextflow work, also load [Nextflow specifications](references/nextflow.md).
 
@@ -61,7 +61,7 @@ For Nextflow work, also load [Nextflow specifications](references/nextflow.md).
     - Persistence
 ### Step 6: Set Acceptance Criteria:
   - [ ] Up to 9 criteria in EARS format that define when the spec is complete.
-  - [ ] Follow the [EARS format guide](./EARS.md).
+  - [ ] Follow the [EARS format guide](../../references/EARS.md).
 ### Step 7: Resolve the spec-slug-id:
   - [ ] Reuse the existing specification identifier when updating its file.
   - [ ] Otherwise create a short-name identifier based on the type and title.
@@ -69,7 +69,7 @@ For Nextflow work, also load [Nextflow specifications](references/nextflow.md).
 ### Step 8: Write the Specification:
   - [ ] Use short sentences and bullet points where possible.
   - [ ] Keep the specification concise but complete.
-  - [ ] Follow the [spec template](spec.template.md)
+  - [ ] Follow the [spec template](../../references/templates/spec.template.md)
   - [ ] Write it in markdown format at `{Specs_Folder}/<spec-slug-id>.spec.md`.
 
 ## Output Checklist

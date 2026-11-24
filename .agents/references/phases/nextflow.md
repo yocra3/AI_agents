@@ -35,7 +35,7 @@ assigns them, and the Nextflow rules of some other phases. The rules for every p
 
 - **Meaning**: Generate the test prerequisites and reference outputs until their validations are
   GREEN.
-- **Skill**: coding-spec, with its Nextflow reference implementation profile.
+- **Skill**: writing-code, with its Nextflow reference implementation profile.
 - **Steps**:
   1. Run tester's validations from the brief and confirm the expected RED.
   2. Write the generation scripts and produce every concrete input, companion file, test

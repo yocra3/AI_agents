@@ -48,7 +48,7 @@ The figure of this sequence is in the [README](../README.md#analysis-workflow).
   reports, the expected outputs, and formal acceptance criteria. `engineer` stops and reports a
   scientific gap in the methods document instead of filling it.
 - Paths come from the Analysis layout of the project's `AGENTS.md`, and the coding and testing
-  conventions from the `analysis.md` profiles of coding-spec and testing-unit.
+  conventions from the `analysis.md` profiles of writing-code and testing-unit.
 
 ## Phases
 
@@ -73,8 +73,11 @@ The delegations that are not plan markers, the retries, and the stops follow the
 `<agent>: validation-fix`, to `tester` for tests and image checks, to `cleaner` for a file that
 `cleaner: analysis-refactor` changed, and to `coder` for any other file.
 
-The coordinator commits each Removed entry, each increment, and each Finalization phase, and in
-Setup each phase, with each image pair committed together.
+The coordinator commits each Removed entry, each increment, and each Finalization phase. In Setup
+it commits `coder: renumber`, `engineer: software-versions`, `coder: real-config`, and
+`tester: real-input-check` each on its own, and each RED and GREEN pair together: each
+`tester: image-check` with its `coder: image-build`, and `tester: test-setup` with
+`coder: test-setup`, so a phase that ends in RED is never committed alone.
 
 ## Test data and test support code
 

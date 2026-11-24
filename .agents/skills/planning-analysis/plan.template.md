@@ -5,7 +5,7 @@ the methods document `{Analysis_Methods_file}` with the same `<analysis-id>`, `a
 `engineer` owns the content; `implementation-coordinator` changes only the execution markers
 and Blockers.
 Write acceptance criteria with the EARS guide in
-`{Agents_Folder}/skills/generating-specs/EARS.md`.
+`{Agents_Folder}/references/EARS.md`.
 
 ```markdown
 # Implementation plan: <analysis-id>

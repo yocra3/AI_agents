@@ -16,11 +16,11 @@ Resolve global placeholders from `{Agents_file}`. Validate exactly the one contr
 request, identified by its folder:
 
 - a file in `{Analysis_Methods_Folder}`: a methods document. Read
-  `{Agents_Folder}/templates/analysis-methods.template.md` and
+  `{Agents_Folder}/references/templates/analysis-methods.template.md` and
   `{Agents_Folder}/references/analysis-inputs.md`, which define its format and rules.
 - a file in `{Specs_Folder}`: a specification. Read
-  `{Agents_Folder}/skills/generating-specs/spec.template.md` and
-  `{Agents_Folder}/skills/generating-specs/EARS.md`, which define its format and its criteria.
+  `{Agents_Folder}/references/templates/spec.template.md` and
+  `{Agents_Folder}/references/EARS.md`, which define its format and its criteria.
 
 Stop and report when the path is missing, does not exist, or is in neither folder.
 

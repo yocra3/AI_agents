@@ -1,5 +1,5 @@
 ---
-name: coding-spec
+name: writing-code
 description: Apply maintainable coding conventions while implementing or refactoring software. Use language profiles and repository conventions; do not activate for documentation-only work.
 ---
 
@@ -25,7 +25,7 @@ and polyglot changes may provide more than one.
 - Nextflow scripts and configuration: [Nextflow](references/nextflow.md) together with
   [Groovy](references/groovy.md).
 - nf-core modules and subworkflows: also the [nf-core guidelines index](references/nf-core.md),
-  which selects the files in `nextflow_guidelines/`.
+  which selects the files in `nextflow-guidelines/`.
 - Preparatory reference implementation of a Nextflow contract: also
   [Nextflow reference implementation](nextflow-reference.md).
 - Scripts, reports, configurations, test support code, image recipes, and `run-analysis.sh` of
