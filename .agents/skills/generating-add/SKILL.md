@@ -34,7 +34,7 @@ Read and respect the current [AGENTS]({Agents_file}) file if it exists.
   - Keep the document concise, aiming for clarity and brevity.
   - Put a TOC at the start of the document.
 
-### Step 4: Review and Finalize
+### Step 3: Review and Finalize
 
 - [ ] Review the documents for completeness and accuracy.
 - [ ] Write the final Architecture Design Document (ADD) at `{Project_Folder}/ADD.md`. 

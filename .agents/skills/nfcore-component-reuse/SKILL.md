@@ -1,12 +1,12 @@
 ---
 name: nfcore-component-reuse
-description: Analyze a Nextflow functional specification before implementation planning to identify reusable local and nf-core modules or subworkflows, reusable compositions, and functionality that requires new implementation. Use from planning-spec before designing the final Nextflow component structure.
+description: Analyze a Nextflow functional specification before implementation planning to identify reusable local and nf-core modules or subworkflows, reusable compositions, and functionality that requires new implementation. Use from planning-specs before designing the final Nextflow component structure.
 ---
 
 # Purpose
 
 Determine what existing Nextflow components can satisfy a functional specification before
-`planning-spec` designs the final implementation.
+`planning-specs` designs the final implementation.
 
 Do not design the final Nextflow structure or implement missing components.
 
@@ -31,7 +31,8 @@ Treat explicitly specified methods and tools as hard requirements.
 Search the current repository first for modules and subworkflows that can satisfy individual
 requirements or groups of requirements.
 
-For requirements not fully covered locally, run:
+For requirements not fully covered locally, run the search script, whose path is relative to this
+skill's folder:
 
     python scripts/search_nfcore.py <search terms>
 
@@ -87,8 +88,8 @@ candidates, not as requirements of the functional specification.
 Only after considering existing components and compositions, classify uncovered executable
 requirements as `new-required`.
 
-Do not design those components. `planning-spec` owns the final component design and converts these
-gaps into `new` modules or subworkflows when appropriate.
+Do not design those components. `planning-specs` owns the final component design and converts
+these gaps into `new` modules or subworkflows when appropriate.
 
 # Output
 

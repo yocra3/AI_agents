@@ -18,7 +18,7 @@ instructions before editing.
 3. Update the configured version source and `{Root_Folder}/CHANGELOG.md`.
 4. Update only documentation whose behavior, setup, or public contracts changed. Use
    `documenting-code` when a changed public API requires source or generated documentation.
-5. Run the release validation commands defined by the project or supplied profile.
+5. Run the release validation commands defined by the project.
 6. Create a local release commit only when the release request authorizes it.
 7. Report the version, changelog entries, released specification and methods document paths,
    documentation, validation, and remaining delivery actions.

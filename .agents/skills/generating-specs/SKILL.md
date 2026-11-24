@@ -42,6 +42,8 @@ For Nextflow work, also load [Nextflow specifications](references/nextflow.md).
 ### Step 1: Capture inputs:
   - [ ] Confirm `feat/fix/chore` to specify; if missing, ask.
   - [ ] Draft the issue title from the request; if unclear, ask.
+  - [ ] Ask about every uncertainty that could materially change user behavior, scope, acceptance
+    criteria, compatibility, or priority; do not invent product decisions.
 ### Step 2: Resolve the lifecycle specification:
   - [ ] Prefer an explicitly supplied specification path or identifier.
   - [ ] Otherwise search `{Specs_Folder}` for a specification that clearly represents the same work.
@@ -53,14 +55,14 @@ For Nextflow work, also load [Nextflow specifications](references/nextflow.md).
 ### Step 3: Define the Problem:
   - [ ] Clearly outline the problem that we aim to solve.
 ### Step 4: List User Stories:
-  - [ ] Up to 3 US that describe the problem from the user's perspective.
+  - [ ] Write the user stories within the template's limit.
 ### Step 5: Outline the Solution:
   - [ ] Describe the simplest approach without technical details for:
     - User/App interface
     - Model and logic
     - Persistence
 ### Step 6: Set Acceptance Criteria:
-  - [ ] Up to 9 criteria in EARS format that define when the spec is complete.
+  - [ ] Write the criteria within the template's limit.
   - [ ] Follow the [EARS format guide](../../references/EARS.md).
 ### Step 7: Resolve the spec-slug-id:
   - [ ] Reuse the existing specification identifier when updating its file.

@@ -11,11 +11,10 @@ Write the smallest clear change that preserves the repository's design and publi
 
 1. Explicit task instructions.
 2. Existing repository conventions and architecture.
-3. Supplied Markdown language or framework profiles.
+3. The applicable bundled profiles.
 4. The general guidance below.
 
-Load only profiles relevant to the changed files. The caller may provide any Markdown profile,
-and polyglot changes may provide more than one.
+Load the bundled profiles that apply to the changed files.
 
 ## Bundled profiles
 
@@ -28,8 +27,8 @@ and polyglot changes may provide more than one.
   which selects the files in `nextflow-guidelines/`.
 - Preparatory reference implementation of a Nextflow contract: also
   [Nextflow reference implementation](nextflow-reference.md).
-- Scripts, reports, configurations, test support code, image recipes, and `run-analysis.sh` of
-  the implementation plan of an analysis methods document: additionally the
+- Scripts, reports, configurations, test support code, and `run-analysis.sh` of the
+  implementation plan of an analysis methods document: additionally the
   [analysis guidelines](analysis.md).
 
 ## General guidance
@@ -39,7 +38,6 @@ and polyglot changes may provide more than one.
 - Prefer straightforward control flow and explicit error handling.
 - Avoid speculative abstractions, generic utility modules, and unrelated cleanup.
 - Preserve established public APIs unless the approved change requires an API change.
-- Validate with the tests defined by the repository or profile.
 
 If a required global placeholder or profile path cannot be resolved, stop and report it rather
 than inventing a project layout or toolchain.

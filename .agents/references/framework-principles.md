@@ -24,8 +24,9 @@ procedures that apply them.
    frontmatter of its source.
 6. **`{Agents_file}` is brief.** The `AGENTS.md` template holds its content, the blueprint the
    values and defaults, and the project-bootstrap skill when to include each part.
-7. **Documentation follows every change.** Each change updates the CHANGELOG's Unreleased
-   section, `README.md`, and the workflow documents in `docs/` where they describe what changed.
+7. **Documentation follows every change.** In the AI_agents repository only, each change updates
+   the CHANGELOG's Unreleased section, `README.md`, and the workflow documents in `docs/` where
+   they describe what changed.
    The figure of each workflow lives only in its `README.md` subsection; a change to a flow
    updates that figure.
 8. **The CHANGELOG starts from the last release.** Every entry of the CHANGELOG's Unreleased

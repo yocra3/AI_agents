@@ -10,14 +10,14 @@ Document public contracts and non-obvious behavior without changing runtime beha
 ## Inputs
 
 - Resolve `{Root_Folder}`, `{Project_Folder}`, and other path placeholders from the project's global instructions.
-- Accept one or more Markdown language or framework profiles by path.
+- Load the applicable bundled profiles.
 - If a required placeholder cannot be resolved, stop and report it instead of guessing a universal directory.
 
 Apply conventions in this order:
 
 1. Explicit task instructions.
 2. Existing repository conventions.
-3. Supplied Markdown profiles.
+3. The applicable bundled profiles.
 4. This skill's generic rules.
 
 ## Bundled profiles
@@ -35,7 +35,8 @@ Apply conventions in this order:
 3. Add or update source documentation. Avoid comments that merely restate implementation details.
 4. Run the documentation generator required by the applicable profile.
 5. Review generated artifacts and exclude unrelated generated changes.
-6. Run the documentation builds and relevant tests defined by the repository or profile.
+6. Outside an implementation plan, run the documentation checks of the applicable profile;
+   inside one, run only the checks that its phase instructions name.
 7. Report documented source files, generated artifacts, and commands run.
 
 Do not update product documentation, changelogs, version files, branches, or commits as an implicit side effect.

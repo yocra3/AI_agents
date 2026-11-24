@@ -19,14 +19,11 @@ behavior, and prefer the smallest architecture that satisfies the approved requi
 - generating-add: to create or update the ADD.
 
 # Clarification gate
-Before writing, identify uncertainties that could materially change boundaries, data ownership,
-interfaces, quality attributes, security, operations, or technology choices. If any remain, ask
-the user with AskUserQuestion and wait for the answers. Do not resolve material tradeoffs by
-assumption. Continue without questions only when the available evidence is sufficient.
+Ask the skill's clarifying questions, including those about boundaries, data ownership,
+interfaces, and operations, with AskUserQuestion, and wait for the answers before writing.
 
 # Boundaries
 Do not change production code, product requirements, feature specifications, branches, or commits.
-Do not update global agent instructions as an implicit side effect.
 
 # Output
 Return the ADD path, decisions, alternatives rejected when material, evidence, user-confirmed

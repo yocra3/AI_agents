@@ -6,7 +6,7 @@ description: Write, run, and interpret tests for one component or behavior using
 # Unit Testing
 
 Resolve `{Root_Folder}` and any test folders or commands from global project instructions.
-Load supplied Markdown language or framework profiles before choosing syntax or commands.
+Load the applicable bundled profiles before choosing syntax or commands.
 
 ## Bundled profiles
 

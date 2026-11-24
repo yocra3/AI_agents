@@ -29,17 +29,18 @@ documents alike, and the agents of every environment are generated from neutral 
 - Container images in four tiers: the project registry, BioContainers, Seqera Containers and a
   recipe that `coder` builds in Setup, with `tester: image-check` and `coder: image-build`. When
   the Tech Stack declares a language version, such as `R 4.4`, an image of tiers 1 to 3 qualifies
-  only with that version of the language, and a tier-4 image is built on it. The plan gives a tier-4 image only its requirements, with no base image and no versions except
-  those that the methods document fixes, and its Software rows say `pending image-build`. The
-  image check requires every package and the fixed versions. `building-container-images` chooses
+  only with that version of the language, and a tier-4 image is built on it. The plan gives a
+  tier-4 image only its requirements, with no base image and no versions except those that the
+  methods document fixes, and its Software rows say `pending image-build`. The image check
+  requires every package and the fixed versions. `building-container-images` chooses
   the base image of the ecosystem from its reference `base-images.md`, such as `rocker/r-ver`
   with a dated Posit Package Manager snapshot, `bioconductor/bioconductor_docker`, `python` or
   `mambaorg/micromamba`, at its latest stable release, pinned by tag and digest; resolves the
   latest stable package versions with the native package manager, never development, pre-release
   or floating ones; pins them in the recipe; and records the installed versions in the registry
-  entry. It stops when a fixed version cannot be installed. `engineer: software-versions` then fills the pending
-  versions and effective parameters from that entry, and a replanning that adds a tier-4 image
-  resets it.
+  entry. It stops when a fixed version cannot be installed. `engineer: software-versions` then
+  fills the pending versions and effective parameters from that entry, and a replanning that adds
+  a tier-4 image resets it.
 - Project keys `Analysis_Recipes_Folder`, `Analysis_Images_Folder` and the container execution
   rules in the `AGENTS.md` template.
 - The Tech Stack of the `AGENTS.md` template declares, per language, with its version when the
@@ -70,7 +71,9 @@ documents alike, and the agents of every environment are generated from neutral 
   `planning-analysis` read it, and delegates receive their entry verbatim.
 - Skill `agent-delegation` for `implementation-coordinator`: what each delegate's brief holds,
   the evidence required back, retries and failure routing, with `full-validation` failures fixed
-  as `<agent>: validation-fix`.
+  as `<agent>: validation-fix` by the agent whose phase changed the file, `cleaner` for the files
+  that a refactoring phase changed last. A test that `coder` reports as invalid goes back to
+  `tester`'s phase, and becomes a stop only when `tester` confirms it valid.
 - `planning-specs` records the specification's approval commit in the plan header, stops when the
   specification has none or differs from it in anything other than `Status`, and replans from the
   diff since that commit: it resets the markers of affected steps and of Finalization, appends new
@@ -86,10 +89,6 @@ documents alike, and the agents of every environment are generated from neutral 
   generated catalog shows each agent's profile and skills.
 - Reference `.agents/references/framework-principles.md` and skill `maintaining-framework`, which
   `craftsman` follows for every framework change.
-- `install.py` warns when the Wave CLI is not on `PATH`; when the ToolUniverse CLI is neither
-  on `PATH` nor an executable at the target's declared `ToolUniverse_CLI`; and, in a Nextflow
-  project, one with a `nextflow.config` or a declared `Nextflow_Reference_Folder`, when nf-core
-  tools (`nf-core`) is not on `PATH`.
 - Repository-only files, not installed in projects: `docs/programming-workflow.md` and
   `docs/analysis-workflow.md`, the detailed workflow documentation; `docs/catalog.md`, the
   generated catalog of agents, skills, templates, and references; `eval/README.md`, the design of
@@ -100,7 +99,7 @@ documents alike, and the agents of every environment are generated from neutral 
 
 - `builder` is renamed `implementation-coordinator` and coordinates specifications and methods
   documents. It runs the phases that the implementation plan declares, Finalization included,
-  and manages only the statuses.
+  and manages only the statuses; on a `Verified` or `Released` contract it does nothing.
 - Analysis plans become two documents: a methods document with the scientific decisions, written
   by `data-analyst` with the user, and an implementation plan in `{Plans_Folder}`, written by
   `engineer` with `planning-analysis`, with the images, test data rules, seeds, increments,
@@ -122,11 +121,12 @@ documents alike, and the agents of every environment are generated from neutral 
   `docs(<spec-slug-id>): approve specification` or `docs(<analysis-id>): approve methods vN`.
 - `implementation-coordinator` commits the implementation plan after planning, with the
   `Planned` status and any ER model, as `docs(<spec-slug-id>): plan specification` or
-  `docs(<analysis-id>): plan methods vN`. In analysis Setup it commits after `coder: renumber`,
-  each `tester: image-check` and `coder: image-build` pair, `engineer: software-versions`, the
-  `tester: test-setup` and `coder: test-setup` pair, `coder: real-config` and
-  `tester: real-input-check`, instead of once for the whole section; a phase that ends in RED is
-  never committed alone.
+  `docs(<analysis-id>): plan methods vN`, and the plan after each replanning, as
+  `docs(<spec-slug-id>): replan specification` or `docs(<analysis-id>): replan methods vN`. In
+  analysis Setup it commits after `coder: renumber`, each `tester: image-check` and
+  `coder: image-build` pair, `engineer: software-versions`, the `tester: test-setup` and
+  `coder: test-setup` pair, `coder: real-config` and `tester: real-input-check`, instead of once
+  for the whole section; a phase that ends in RED is never committed alone.
 - `commit-changes` follows Conventional Commits 1.0.0: blank lines between header, body and
   footers; the types `feat`, `fix`, `test`, `perf`, `refactor`, `style`, `docs`, `build`, `ci`,
   `chore` and `revert`, each with its meaning; as scope, the contract identifier for every commit
@@ -140,7 +140,8 @@ documents alike, and the agents of every environment are generated from neutral 
   `tester: reference-validation` and `coder: reference-generation` before the default phases of a
   component with reference outputs. The default phases replace `tester: production-test`,
   `coder: production-implementation` and `cleaner: production-refactor`, and Nextflow rules are
-  added to their briefs in such a step.
+  added to their briefs in such a step, and to the briefs of `<agent>: validation-fix` in a plan
+  with such a step.
 - Specification plans also get a Removed section, with `tester: remove-tests` and
   `coder: remove-code`, and a Finalization section with `coder: full-validation` and
   `reviewer: implementation-review`. Tasks are plain bullets, the specification flow says "step"
@@ -160,9 +161,10 @@ documents alike, and the agents of every environment are generated from neutral 
 - The Nextflow reference implementation profile of `writing-code` applies to the
   `coder: reference-generation` phase.
 - Skill profiles keep only conventions: their phase procedures, such as the Phases sections of the
-  `analysis.md` profiles of `writing-code` and `testing-unit` and the phase sections of the
-  Nextflow testing profile, move to the phase reference. `testing-unit` holds the only general
-  definition of valid RED, and phase entries add only their own cases.
+  `analysis.md` profiles of `writing-code` and `testing-unit`, and the phase sections, the
+  snapshot order and the `--update-snapshot` prohibition of the Nextflow testing profile, move to
+  the phase reference. `testing-unit` holds the only general definition of valid RED, and phase
+  entries add only their own cases.
 - Only the `linting` skill lints, in the steps of the phases that write or change code or tests,
   and each of those phases returns its lint results; `writing-code`, `documenting-code` and
   `importing-nf-core` no longer lint on their own. Where each analysis file is linted, which the
@@ -170,6 +172,9 @@ documents alike, and the agents of every environment are generated from neutral 
   stated, is now only in the analysis profile of `linting`. `linting` adds `nextflow lint` for
   Nextflow scripts and configuration, and the Python docstring check that `documenting-code`
   ran, only when a task adds or changes docstrings.
+- `writing-code` and `documenting-code` no longer run tests. `documenting-code` runs only
+  documentation checks, such as the documentation build, doctests or `R CMD check --no-tests`,
+  and only outside an implementation plan, whose phase instructions decide the checks.
 - Imported nf-core components are never linted, when imported, by a later phase, or by
   `coder: full-validation`: a component in nf-core is assumed to have passed nf-core lint.
   `importing-nf-core` checks instead that `modules.json` records the pinned SHA, and
@@ -219,8 +224,11 @@ documents alike, and the agents of every environment are generated from neutral 
   delegation and return the evidence they request, and the descriptions of `tester` and `cleaner`
   no longer name phases. Only `implementation-coordinator` names markers, for its commit points,
   status and stops; it stops on its own conditions and on any stop that a delegate reports from
-  its phase entry, which holds the phase-specific stops, such as a failed
-  `tester: real-input-check` or missing image-build permissions.
+  its phase entry and that `agent-delegation` does not route to a retry or to replanning; the
+  phase entry holds the phase-specific stops, such as a failed `tester: real-input-check` or
+  missing image-build permissions. `product-owner`, `analyst` and `architect` leave to their
+  skills the procedures that the skills state, such as one specification per work item, and keep
+  a clarification gate that asks with AskUserQuestion and waits for the answers.
 - Each agent's Skills section lists every skill it may use, and in Codex every other skill is
   disabled for it: `reviewer`, for example, can use only `validating-contracts` and
   `reviewing-implementation`. `project-bootstrap`, `push-changes` and `merging-default` belong to
@@ -239,10 +247,13 @@ documents alike, and the agents of every environment are generated from neutral 
   figure; the detailed workflow documentation moves to `docs/`. Its new Requirements section lists
   the framework's external tools, who uses each, when it is needed and what happens without it.
 - Skill `coding-spec` is renamed `writing-code`, with the same conventions, and its folder
-  `nextflow_guidelines/` is renamed `nextflow-guidelines/`.
+  `nextflow_guidelines/` is renamed `nextflow-guidelines/`. `planning-specs/test_data.md` is
+  renamed `test-data.md`.
 - Shared templates live in `.agents/references/templates/`: `agents.template.md` and
   `container-images.template.md` move there from `.agents/templates/`, which is removed, and
-  `spec.template.md` from `generating-specs`; the new `analysis-methods.template.md` is there too.
+  `spec.template.md` from `generating-specs`, now with the limits of at most 3 user stories and
+  9 acceptance criteria that `generating-specs` and `validating-contracts` apply; the new
+  `analysis-methods.template.md` is there too.
   The EARS guide moves from `generating-specs` to `.agents/references/EARS.md`, since
   `validating-contracts` and `planning-analysis` also read it. Material that only one skill uses
   stays in that skill, such as a plan template, and `craftsman`'s research sources,
@@ -256,6 +267,8 @@ documents alike, and the agents of every environment are generated from neutral 
 - The analysis plan template, `analysis-plan.template.md`.
 - Skill `validating-changes`; its rules are the `coder: full-validation` phase.
 - `.claude/scripts/generate_agents.py`, replaced by `.agents/scripts/generate_agents.py`.
+- `CLAUDE_CODE_SUBAGENT_MODEL`, and its `env` block, from `.claude/settings.json`: every
+  generated Claude Code agent sets its own model. The file keeps its `permissions.deny` rules.
 - `default_subagent_model` and `default_subagent_reasoning_effort` from `.codex/config.toml`:
   every generated Codex agent sets its own model and reasoning effort. The file keeps `[agents]`
   with `enabled` and `max_concurrent_threads_per_session`.
@@ -323,11 +336,17 @@ documents alike, and the agents of every environment are generated from neutral 
 - The installer never replaces an existing `.codex/config.toml`. Its `default_subagent_model`
   and `default_subagent_reasoning_effort` do not affect the generated agents, which set their own
   model and effort; remove them by hand unless the project wants them for its own subagents.
+  Likewise, an existing `.claude/settings.json` is never replaced and keeps
+  `CLAUDE_CODE_SUBAGENT_MODEL`, which applies only to subagents without a `model` of their own,
+  not to the generated agents; you may remove it.
 - The installer deletes the files of the removed agents, `builder` and `analysis-coordinator`,
   of the analysis plan template, of the `validating-changes` and `coding-spec` skills, of
   `.claude/scripts/generate_agents.py` and `.agents/CODEX.md`, and the old copies of the moved
-  templates, EARS guide and research sources, unless the project modified them; it then keeps them, and you can
-  delete them yourself. A project installed without a manifest only gets them listed.
+  templates, EARS guide and research sources and of the renamed `planning-specs/test_data.md`,
+  unless the project modified them; it then keeps them, and you can delete them yourself. In a
+  project installed without a manifest, it deletes none of them and lists only those that Git
+  tracks in `.agents/skills`, `.agents/templates`, `.codex/agents`, `.claude/agents` and
+  `.claude/scripts`.
 
 ## 0.9.0 - 2026-11-20
 
