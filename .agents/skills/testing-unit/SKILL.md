@@ -10,9 +10,11 @@ Load supplied Markdown language or framework profiles before choosing syntax or 
 
 ## Bundled profiles
 
-- Language profiles, whenever tests are written in that language:
-  [R and R Markdown](references/R.md), [Python](references/python.md), and
-  [Bash](references/bash.md).
+- Test each language with the test framework that the Tech Stack of `{Agents_file}` declares for
+  it, and load its profile: [R and R Markdown](references/R.md), [Python](references/python.md),
+  and [Bash](references/bash.md). When the Tech Stack declares no test framework for a language,
+  use the one of its profile; run a declared framework that has no profile here with its
+  documented commands.
 - Nextflow implementation plans and their reference implementations: also
   [Nextflow component testing](references/nextflow.md); for nf-core module or subworkflow
   nf-tests, also [module testing](references/nf-core/testing_modules.md) or

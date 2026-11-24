@@ -47,8 +47,9 @@ The figure of this sequence is in the [README](../README.md#analysis-workflow).
   input checks, the synthetic data and reference subset rules, the seeds, the increments, the
   reports, the expected outputs, and formal acceptance criteria. `engineer` stops and reports a
   scientific gap in the methods document instead of filling it.
-- Paths come from the Analysis layout of the project's `AGENTS.md`, and the coding and testing
-  conventions from the `analysis.md` profiles of writing-code and testing-unit.
+- Paths come from the Analysis layout of the project's `AGENTS.md`; the test framework, linter,
+  recommended packages and report format of each language from its Tech Stack; and the coding and
+  testing conventions from the `analysis.md` profiles of writing-code and testing-unit.
 
 ## Phases
 

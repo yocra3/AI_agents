@@ -107,8 +107,6 @@ For a new component requiring reference outputs, declare the phases in this orde
 The phase reference defines each of these phases, with the Nextflow rules that the last three
 follow in such a step.
 
-Generated reference data belongs under
-`{Project_Folder}/reference-data/<spec-slug-id>/` and remains untracked. Version any required
-generation or validation helpers under `{Plans_Folder}/<spec-slug-id>.reference/`. Record
-provenance, checksums, containers, commands and reproduction information required to recreate
-the artifacts from an empty workspace.
+Reference generation and validation scripts and the generated reference data belong in
+`{Nextflow_Reference_Folder}`. Record provenance, checksums, containers, commands and
+reproduction information required to recreate the artifacts from an empty workspace.

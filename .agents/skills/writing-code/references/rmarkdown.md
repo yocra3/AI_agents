@@ -4,7 +4,8 @@ Apply to R Markdown documents in any project. Repository conventions take preced
 
 ## Source
 
-- Use `output: html_document` with `self_contained: true` unless another format is required.
+- Use the report output format that the Tech Stack of `{Agents_file}` declares, otherwise
+  `html_document`, always with `self_contained: true`.
 - Load packages and inputs in the first chunks, and keep chunks short and named by purpose.
 - Show tables with `knitr::kable()` or an available display package, and embed existing figure
   files with `knitr::include_graphics()`.

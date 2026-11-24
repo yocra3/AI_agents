@@ -31,6 +31,26 @@ documents alike, and the agents of every environment are generated from neutral 
   `engineer: software-versions` then records the versions of the tier-4 software in the plan.
 - Project keys `Analysis_Recipes_Folder`, `Analysis_Images_Folder` and the container execution
   rules in the `AGENTS.md` template.
+- The Tech Stack of the `AGENTS.md` template declares, per language, with its version when the
+  project requires one, the test framework, the linter and the recommended packages for support
+  tasks, and one output format for the project's R Markdown reports, with the rule to name any
+  other package in the implementation plan; its free text keeps only the technologies without a
+  language line, such as Nextflow, Apptainer or Docker, or a database.
+  `project-bootstrap` proposes the blueprint's defaults, which the user accepts, edits or
+  declines: R testthat, lintr with styler, and individual tidyverse packages, readxl, arrow,
+  ggplot2, patchwork, scales, ggrepel, future and furrr; Python pytest, ruff, pandas, numpy,
+  pyarrow, matplotlib and seaborn; Bash bats and shellcheck; reports
+  `BiocStyle::html_document` with knitr, DT and kableExtra. `linting` and `testing-unit` use the
+  declared linter and test framework, otherwise those of their profiles,
+  `selecting-container-images` requires the declared test framework and linter in each image and
+  stops when a language has none, and `writing-code` renders reports in the declared format,
+  otherwise `html_document`, always self-contained.
+- Project key `Nextflow_Reference_Folder` for Nextflow projects, by default
+  `{Project_Folder}/reference-data/<spec-slug-id>/`, read by `planning-specs` and `writing-code`:
+  the reference generation and validation scripts go in its versioned `scripts/`, instead of
+  `{Specs_Folder}/<spec-slug-id>.reference/` or, as `planning-specs` said,
+  `{Plans_Folder}/<spec-slug-id>.reference/`; the generated inputs, outputs and manifests go in
+  its `results/`, ignored by Git.
 - The phase reference, `.agents/references/phases/` (`common.md`, `specs.md`, `nextflow.md` and
   `analysis.md`): one entry per phase of the implementation plans and per delegation that is not
   a plan marker, with its meaning, skill, steps, evidence and stops. `planning-specs` and
@@ -135,6 +155,11 @@ documents alike, and the agents of every environment are generated from neutral 
   `Analysis_Test_Subset_Folder` to `Analysis_Test_Inputs_Folder`. The `subset` verification mode
   becomes `synthetic`, and `PLAN_VERSION` and the provenance row `plan_version` become
   `ANALYSIS_VERSION` and `analysis_version`.
+- The `AGENTS.md` template holds only the content of `AGENTS.md`: every `Analysis_*` key,
+  `Analysis_Methods_Folder` included, is in its Analysis layout section, its Analysis workflow
+  section only says which agents run as main sessions and to validate with `reviewer` before
+  authorizing, and it has no instructions for the generator. The blueprint holds the values and
+  defaults, and `project-bootstrap` decides when to include each section and key.
 - `.codex/agents` is no longer the source of the agents: the Codex and Claude Code agents are
   both generated from the neutral sources.
 - `craftsman` is neutral between environments: it uses the skill-creator skill and the official
@@ -190,6 +215,12 @@ documents alike, and the agents of every environment are generated from neutral 
   every generated Codex agent sets its own model and reasoning effort. The file keeps `[agents]`
   with `enabled` and `max_concurrent_threads_per_session`.
 - `.agents/CODEX.md`; its content is in `README.md`, `docs/`, and the generated catalog.
+- From the `AGENTS.md` template: the base analysis folder keys `Analysis_Scripts_Folder`,
+  `Analysis_Tests_Folder`, `Analysis_Reports_Folder`, `Analysis_Results_Folder`,
+  `Analysis_Figures_Folder` and `Analysis_Test_Data_Folder`, which no skill or agent reads and
+  which the blueprint keeps only to compose the Analysis layout defaults; `Custom_Agents_Folder`;
+  the `feat`, `fix` and `chore` prefixes, which `start-task` and `commit-changes` define; and the
+  line "Replace template values with verified project information."
 
 ### Upgrade notes
 
@@ -198,12 +229,22 @@ documents alike, and the agents of every environment are generated from neutral 
   documents also go through `implementation-coordinator`.
 - Write new analyses as methods documents with `data-analyst`; `engineer` derives their
   implementation plans. The analysis plans of 0.9.0 are not migrated.
-- Rerun `project-bootstrap` to refresh `AGENTS.md`, and update `CLAUDE.md` by hand: their
-  analysis keys and agent names changed, and `AGENTS.md` now needs the recipes and images folders
-  and the container execution rules. Every text now uses the hyphenated agent names, so
+- Rerun `project-bootstrap` to refresh `AGENTS.md`, or edit it by hand, and update `CLAUDE.md` by
+  hand: their analysis keys and agent names changed. `AGENTS.md` now needs the recipes and images
+  folders and the container execution rules; in the Tech Stack, one line per language with its
+  test framework, linter and recommended packages, and a Reports line with the R Markdown output
+  format and packages, with the languages removed from its free text; and, in a Nextflow project, `Nextflow_Reference_Folder`. It no longer
+  needs the base analysis folder keys or `Custom_Agents_Folder`. Without a declared test
+  framework and linter for a language, `selecting-container-images` stops; without a report
+  format, reports keep `html_document`. Every text now uses the hyphenated agent names, so
   `CLAUDE.md` no longer needs to map `product_owner` to `product-owner`, nor the model
   equivalence between Codex and Claude Code. Ignore the built images folder in Git, and consider
   denying Claude Code's `Read` tool on the data folders in `.claude/settings.json`.
+- In a Nextflow project, move each reference implementation's versioned scripts from
+  `{Specs_Folder}/<spec-slug-id>.reference/` or `{Plans_Folder}/<spec-slug-id>.reference/` to
+  `scripts/` of `Nextflow_Reference_Folder`, and its generated data from
+  `{Project_Folder}/reference-data/<spec-slug-id>/` to `results/`, or regenerate it there. Ignore
+  only the `results/` folders in Git, and update the paths that implementation plans cite.
 - Specification plans of 0.9.0 do not follow the new format of
   `.agents/skills/planning-specs/plan.template.md`. Before resuming one with
   `implementation-coordinator`, update it by hand: add the `Approval commit` header with the

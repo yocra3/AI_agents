@@ -171,22 +171,26 @@ the links of skills that no longer exist. It records every installed file and it
 Then, in the target repository:
 
 1. Generate `AGENTS.md`, the briefing and the changelog with the `project-bootstrap` skill
-   (template in `.agents/skills/project-bootstrap/AGENTS.template.md`).
+   (template in `.agents/skills/project-bootstrap/AGENTS.template.md`). It proposes, for each
+   language of the Tech Stack, a test framework, a linter and recommended packages, and for R
+   Markdown reports an output format, by default `BiocStyle::html_document`; accept, edit or
+   decline each. `linting`, `testing-unit` and `selecting-container-images` use the declared
+   toolchain.
 2. Add a `CLAUDE.md` that imports it with `@AGENTS.md`, plus the Claude Code note that skills are
    shared through `.claude/skills`. Run user-facing roles as the main session with
    `claude --agent <name>`; this includes `product-owner`, `data-analyst`,
    `implementation-coordinator`, and `reviewer` for the manual contract validation.
 3. Create `agents_data/specs/` and `agents_data/plans/`, where the lifecycle artifacts are stored;
    the implementation plans of both workflows go in `agents_data/plans/`. For the analysis
-   workflow, also define in `AGENTS.md` the `Analysis_*` folders, among them
-   `Analysis_Methods_Folder` for the methods documents, `Analysis_Tests_Folder` for the tests,
-   `Analysis_Recipes_Folder` for the versioned image recipes and `Analysis_Images_Folder` for the
-   built images; the Analysis layout keys, such as `Analysis_Methods_file` and
-   `Analysis_Test_Inputs_Folder`; and the container execution rules: the engine that runs and
+   workflow, also define in `AGENTS.md` the Analysis layout keys, among them
+   `Analysis_Methods_Folder` for the methods documents, `Analysis_Recipes_Folder` for the
+   versioned image recipes, `Analysis_Images_Folder` for the built images, `Analysis_Methods_file`
+   and `Analysis_Test_Inputs_Folder`; and the container execution rules: the engine that runs and
    builds images, Apptainer or Docker, how to run a command in an image, when an image is
    available, and the build permissions. Ignore the rendered reports, results, figures, test
-   inputs, built images and test run outputs (`<Analysis_Tests_Folder>/*/results/` with the
-   default layout).
+   inputs, built images and test run outputs (the `results/` folder of each analysis's tests with
+   the default layout). For a Nextflow project, define `Nextflow_Reference_Folder`, by default
+   `<Project_Folder>/reference-data/<spec-slug-id>/`, and ignore its `results/` folders.
 4. For the analysis workflow, deny Claude Code's `Read` tool on the folders that hold the real
    data and reference resources in the project's `.claude/settings.json`, for example
    `"deny": ["Read(/data/**)"]`, so that file contents do not reach the model by accident.

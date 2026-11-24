@@ -6,11 +6,8 @@ reference implementation and concrete review data, not production Nextflow code.
 
 ## Location and languages
 
-- Keep generated inputs, outputs and manifests under
-  `{Project_Folder}/reference-data/<spec-slug-id>/`, outside product source and excluded from
-  version control. Never stage or commit them.
-- Version only generation and validation scripts under
-  `{Specs_Folder}/<spec-slug-id>.reference/`.
+- Write generation and validation scripts in `scripts/` of `{Nextflow_Reference_Folder}`, and
+  generated inputs, outputs and manifests in its `results/`. Never stage or commit `results/`.
 - Prefer Bash for orchestration and command execution. Use Python for structured parsing,
   non-trivial transformations or validations that would be fragile in shell. Keep both small,
   deterministic and parameterized; do not embed generated data in scripts.
@@ -24,8 +21,8 @@ reference implementation and concrete review data, not production Nextflow code.
   Verify source revisions and checksums before use, fetch required companion files, and never
   modify user-supplied originals.
 - Use the exact plan-selected image with Apptainer. Accept an existing SIF or pull its pinned
-  OCI/Docker URI to the untracked data workspace. Do not use mutable tags such as `latest` or fall
-  back to host-installed tools.
+  OCI/Docker URI to `results/`. Do not use mutable tags such as `latest` or fall back to
+  host-installed tools.
 - Execute tools with `apptainer exec --cleanenv`; bind inputs read-only and outputs read-write:
 
   ```bash
@@ -36,7 +33,7 @@ reference implementation and concrete review data, not production Nextflow code.
   ```
 
 - Record the Apptainer version, pinned image URI or digest, SIF checksum, tool versions, parameters,
-  seeds and the exact reproduction command in an untracked manifest. Use multiple pinned images
+  seeds and the exact reproduction command in a manifest in `results/`. Use multiple pinned images
   when a subworkflow's tools do not share a container.
 - Implement the specified behavior independently with the underlying tools. Do not invoke, copy or
   translate the module or subworkflow being developed.

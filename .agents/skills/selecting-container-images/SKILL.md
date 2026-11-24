@@ -17,8 +17,9 @@ List what each image must provide:
 
 - the packages and tools of the increment's steps, with the version that the methods document
   fixes, if any;
-- the test framework and the linter of the increment's language, and rmarkdown and Pandoc for a
-  report increment;
+- the test framework and the linter that the Tech Stack of `{Agents_file}` declares for the
+  increment's language, and rmarkdown and Pandoc for a report increment; when it declares none
+  for that language, stop and report it;
 - for the input checks, the tools that read each input format, such as `samtools` for BAM
   headers.
 

@@ -6,9 +6,11 @@ description: Run lint checks and, when requested, fix lint findings using reposi
 # Linting
 
 Use the repository's lint commands, pinned tools, and configuration for the requested scope.
-Load the profile of each language in scope: [R and R Markdown](references/R.md),
-[Python](references/python.md), and [Bash](references/bash.md). For Nextflow projects, load
-[Nextflow](references/nextflow.md).
+Lint each language in scope with the linter that the Tech Stack of `{Agents_file}` declares for
+it, and load its profile: [R and R Markdown](references/R.md), [Python](references/python.md), and
+[Bash](references/bash.md). For Nextflow projects, load [Nextflow](references/nextflow.md). When
+the Tech Stack declares no linter for a language, use the one of its profile; run a declared
+linter that has no profile here with its documented check command.
 
 - Run every check the loaded profiles define, without automatic fixes unless the task includes
   corrections.

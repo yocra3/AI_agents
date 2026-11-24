@@ -42,6 +42,8 @@ The figure of this sequence is in the [README](../README.md#programming-workflow
   and the Blockers that the coordinator records. Its header records the approval commit it was
   planned from.
 - The ER model, from data-modeling, exists only when persistent data change.
+- The reference implementation of a Nextflow component goes in `{Nextflow_Reference_Folder}`:
+  versioned scripts in `scripts/` and generated, untracked data in `results/`.
 
 ## Phases
 
