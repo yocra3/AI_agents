@@ -61,8 +61,8 @@ the analysis rules of that phase, when it has them.
 | --- | --- | --- |
 | Removed | `tester: remove-tests`, `coder: remove-code` | At a new version, remove the tests and files of a removed increment. |
 | Setup | `coder: renumber` | At a new version that renumbers increments, rename their files. |
-| Setup | `tester: image-check`, `coder: image-build`, per tier-4 image | A permanent image check in RED, then the recipe, the build, and the registry entry. |
-| Setup | `engineer: software-versions` | After the last image pair, fill the versions and effective parameters of the tier-4 software. |
+| Setup | `tester: image-check`, `coder: image-build`, per tier-4 image | A permanent image check in RED, then the base image, the resolved versions, the pinned recipe, the build, and the registry entry with the installed versions. |
+| Setup | `engineer: software-versions` | After the last image pair, fill the plan's `pending image-build` versions and effective parameters of the tier-4 software. |
 | Setup | `tester: test-setup`, `coder: test-setup` | The setup tests in RED, then the test support code and the test inputs to GREEN. |
 | Setup | `coder: real-config`, `tester: real-input-check` | The real configuration, then the input checks on the real inputs. |
 | Increments, `synthetic` | `tester: test`, `coder: implementation` | Formal output checks in RED, then the increment's script on the test inputs to GREEN. |
@@ -116,14 +116,24 @@ check in its image:
 - Images come, in this order, from the project registry (`{Analysis_Images_file}`),
   BioContainers, Seqera Containers, or a recipe (tier 4). `engineer` selects them while planning,
   with selecting-container-images; without the Wave CLI, Seqera Containers images go to tier 4.
+  When the Tech Stack declares a language version, such as `R 4.4`, an image of any tier must
+  have that version of the language.
 - Each image also provides the support packages, such as for data handling, input and output, or
   figures, that the plan declares for its increments or the input checks, starting from the
   packages of the Tech Stack and, for reports, the package of the report format. A replanning
   re-resolves an image only on the user's request, for a methods change, or when implementation
   shows that it lacks a support package.
-- `coder` builds each tier-4 image in Setup, after `tester` writes its permanent image check, and
-  adds its registry entry. `engineer: software-versions` then fills the plan's versions and
-  effective parameters of the tier-4 software from the registry.
+- The plan gives a tier-4 image only its requirements: its packages, without versions except
+  those that the methods document fixes, the test framework, the linter, and rmarkdown and Pandoc
+  for reports. Its Software rows keep `pending image-build` until the image is built.
+- `coder` builds each tier-4 image in Setup, after `tester` writes its permanent image check,
+  which checks that every package is present and that the versions the document fixes match. It
+  starts from the latest stable release of the base image of the ecosystem, such as
+  `rocker/r-ver` or `python`, pinned by tag and digest, never a development, pre-release or
+  floating tag; resolves the latest stable package versions with the native package manager; pins
+  them in the recipe, so that a rebuild gives the same image; and records the installed versions
+  in the registry entry. `engineer: software-versions` then fills the pending versions and
+  effective parameters from that entry, and a replanning that adds a tier-4 image runs it again.
 - Recipes are versioned in `{Analysis_Recipes_Folder}`; built images are not.
 
 ## Versions and revisions

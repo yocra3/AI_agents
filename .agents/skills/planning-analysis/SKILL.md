@@ -76,8 +76,9 @@ package of every report increment.
 
 Use selecting-container-images for every increment and for the input checks, with any version
 that the document fixes. From its records, fill Images and the Setup image pairs; fill Software
-and effective parameters from the resolved versions and their documentation. When no image can
-provide every package of an increment, split the increment and repeat this step.
+and effective parameters from the resolved versions and their documentation, and with
+`pending image-build` where the template leaves a tier-4 value pending. When no image can provide
+every package of an increment, split the increment and repeat this step.
 
 ## 6. Write outputs and criteria
 
@@ -96,6 +97,8 @@ Before returning, confirm that:
 - every rule of the template holds, and every methods step, input, global parameter, and result
   to report is covered;
 - every tier-1 to tier-3 image has its registry entry with its digest;
+- `pending image-build` appears only where the template allows it, in Software rows of tier-4
+  images, and `engineer: software-versions` is pending while any remains;
 - `Version` equals the document's and the approval commit is the last one.
 
 Leave the document's `Status` unchanged; the caller owns lifecycle transitions.
@@ -123,8 +126,9 @@ Replanning for implementation evidence, with no document change, follows the sam
   - `tester: test-setup` and `coder: test-setup` when implementation evidence shows that the
     frozen test support code must change or fails functionally, and also
     `tester: real-input-check` when the change affects the input checks;
-  - `coder: renumber` when a new version changes some increment number.
-  New tier-4 images add new, pending image pairs.
+  - `coder: renumber` when a new version changes some increment number;
+  - `engineer: software-versions` when a new tier-4 image is added, which also adds its new,
+    pending image pair.
 - Within a version, only append: new increments go at the end, with the next `NN`, and no
   increment is removed or renumbered.
 - At a new version, move each removed increment from Increments to Removed, as one entry with all

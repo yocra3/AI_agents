@@ -27,6 +27,9 @@ ID.
   while planning, tiers 2 and 3; tier-1 images already have their entry.
 - `coder` adds the entry of a tier-4 image after building it in `coder: image-build`, with the
   image ID of the implementation plan and the sha256 of the image file.
+- Contents record the versions installed in the image, never requested ones; for a tier-4 image,
+  every item of its Contents in the implementation plan, with the version read in the built
+  image.
 - Never modify or remove an entry. A rebuilt image gets a new ID and a new entry.
 - Recipes are versioned in `{Analysis_Recipes_Folder}`. Built image files are kept in
   `{Analysis_Images_Folder}`, which Git ignores.

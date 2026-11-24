@@ -27,8 +27,19 @@ documents alike, and the agents of every environment are generated from neutral 
   checks that also run on the real inputs (`tester: real-input-check`) and at the start of every
   `run-analysis.sh` run, and permanent checks of tier-4 images.
 - Container images in four tiers: the project registry, BioContainers, Seqera Containers and a
-  recipe that `coder` builds in Setup, with `tester: image-check` and `coder: image-build`.
-  `engineer: software-versions` then records the versions of the tier-4 software in the plan.
+  recipe that `coder` builds in Setup, with `tester: image-check` and `coder: image-build`. When
+  the Tech Stack declares a language version, such as `R 4.4`, an image of tiers 1 to 3 qualifies
+  only with that version of the language, and a tier-4 image is built on it. The plan gives a tier-4 image only its requirements, with no base image and no versions except
+  those that the methods document fixes, and its Software rows say `pending image-build`. The
+  image check requires every package and the fixed versions. `building-container-images` chooses
+  the base image of the ecosystem from its reference `base-images.md`, such as `rocker/r-ver`
+  with a dated Posit Package Manager snapshot, `bioconductor/bioconductor_docker`, `python` or
+  `mambaorg/micromamba`, at its latest stable release, pinned by tag and digest; resolves the
+  latest stable package versions with the native package manager, never development, pre-release
+  or floating ones; pins them in the recipe; and records the installed versions in the registry
+  entry. It stops when a fixed version cannot be installed. `engineer: software-versions` then fills the pending
+  versions and effective parameters from that entry, and a replanning that adds a tier-4 image
+  resets it.
 - Project keys `Analysis_Recipes_Folder`, `Analysis_Images_Folder` and the container execution
   rules in the `AGENTS.md` template.
 - The Tech Stack of the `AGENTS.md` template declares, per language, with its version when the
@@ -99,11 +110,11 @@ documents alike, and the agents of every environment are generated from neutral 
   and `post-run` checks, and `releasing-version` also releases methods documents.
 - `engineer` selects the container images while planning, with `selecting-container-images`,
   instead of `data-analyst`. It adds the registry entries of the images it selects, `coder` those
-  of the tier-4 images it builds, and each entry gets a `Source` field. Each image also provides
-  the support packages, those that no methods step names, that the implementation plan declares
-  for its increments or the input checks, in Software rows with `Effective parameters` `none`; a
-  replanning re-resolves an image only on the user's request, for a methods change, or for a
-  missing support package.
+  of the tier-4 images it builds, and each entry gets a `Source` field; its Contents record the
+  versions installed in the image. Each image also provides the support packages, those that no
+  methods step names, that the implementation plan declares for its increments or the input
+  checks, in Software rows with `Effective parameters` `none`; a replanning re-resolves an image
+  only on the user's request, for a methods change, or for a missing support package.
 - `implementation-coordinator` validates a `Draft` contract on the current branch and creates the
   task branch only when validation reports no blocking findings, just before the approval commit,
   `docs(<spec-slug-id>): approve specification` or `docs(<analysis-id>): approve methods vN`.

@@ -8,8 +8,9 @@ description: Select the container image of each increment and of the input check
 Give every increment of the implementation plan, and its input checks, one image that provides
 all their tools, following the rules of
 `{Agents_Folder}/references/templates/container-images.template.md`.
-`engineer` resolves tiers 1 to 3 here and records their registry entries; a tier-4 image becomes
-Setup phases of the implementation plan, where `coder` writes its recipe and builds it.
+`engineer` resolves tiers 1 to 3 here and records their registry entries. A tier-4 image is
+specified here only by its requirements and becomes Setup phases of the implementation plan,
+where `coder` chooses its base image, resolves its versions, writes its recipe, and builds it.
 
 # Requirements
 
@@ -36,13 +37,25 @@ Try the tiers in this order and stop at the first that provides every requiremen
 3. **Seqera Containers**: an image built on request for a combination of Conda or PyPI packages.
 4. **Recipe**: an image that `coder` builds from a recipe.
 
+When the Tech Stack of `{Agents_file}` declares a version of the language of the increment or of
+the input checks, such as `R 4.4`, an image of tiers 1 to 3 qualifies only when its language
+runtime has that version: the same major.minor, such as any `4.4.Z` for `R 4.4`, or the exact
+version when the Tech Stack gives one. The registry entry's Contents show it for tier 1, and the
+package's language dependency in the index, such as `r-base >=4.4,<4.5.0a0`, for tier 2; a
+tier-3 request includes the language at that version, such as `conda-forge::r-base=4.4`. When no
+candidate of a tier matches, or its version cannot be shown, go to the next tier as for a missing
+package.
+
 Versions:
 
 - A registry image that already has the package wins even without its latest version, unless the
   methods document fixes another version.
-- A new image, of tiers 2 to 4, uses the latest version available in the package index, or the
+- A new image of tiers 2 and 3 uses the latest version available in the package index, or the
   version that the document fixes, compatible with the other packages of the image.
-- Resolve each version once, at planning; replanning keeps it unless the document fixes a new one.
+- A tier-4 image gets no version here except those that the document fixes; `coder` resolves the
+  others when it builds the image.
+- Resolve each version once, at planning or, for tier 4, at the build; replanning keeps it unless
+  the document fixes a new one.
 
 ## 1. Project registry
 
@@ -98,9 +111,11 @@ at `https://seqera.io/containers/`. A missing Wave CLI is never a stop condition
 
 ## 4. Recipe
 
-When no tier provides every requirement, specify the image for the implementation plan: a base
-image, every package with its version, and the recipe path in `{Analysis_Recipes_Folder}`. Do not
-write the recipe or build the image.
+When no tier provides every requirement, specify the image for the implementation plan by its
+requirements only: every package, without a version except those that the methods document
+fixes, the test framework and the linter, rmarkdown and Pandoc for a report increment, and the
+recipe path in `{Analysis_Recipes_Folder}`. Do not choose a base image, resolve versions, write
+the recipe, or build the image.
 
 # Registry entries
 
@@ -117,7 +132,7 @@ Return one record per image:
   tier: <1 | 2 | 3 | 4>
   image: <URI, or recipe path for tier 4>
   digest: <sha256:..., or registry for tier 4>
-  contents: <base for tier 4; packages with versions; test framework; linter; rmarkdown and Pandoc>
+  contents: <packages with versions, or for tier 4 without versions except those that the document fixes; test framework; linter; rmarkdown and Pandoc>
   used_by: <increments and input checks>
   entry_added: <true | false>
 ```

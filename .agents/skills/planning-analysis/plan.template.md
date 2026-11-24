@@ -18,13 +18,13 @@ Write acceptance criteria with the EARS guide in
 
 | Package | Version | Image | Digest | Effective parameters | Steps |
 | --- | --- | --- | --- | --- | --- |
-| `<package>` | `<resolved version>` | `<image ID>` | `<sha256:...>, or registry` | `<name = value for each key parameter that the document does not fix, or none>` | `<M1, M2; or, for a support package, increment numbers or input checks>` |
+| `<package>` | `<resolved version, or pending image-build>` | `<image ID>` | `<sha256:...>, or registry` | `<name = value for each key parameter that the document does not fix, none, or pending image-build>` | `<M1, M2; or, for a support package, increment numbers or input checks>` |
 
 ## Images
 
 | ID | Tier | Image | Contents | Used by |
 | --- | --- | --- | --- | --- |
-| `<ID>` | `<1 registry, 2 BioContainers, 3 Seqera Containers, or 4 recipe>` | `<URI, or recipe path for tier 4>` | `<base for tier 4>; <packages with versions>; tests: <framework>; lint: <linter>; <rmarkdown and Pandoc, if present>` | `<increment numbers, input checks>` |
+| `<ID>` | `<1 registry, 2 BioContainers, 3 Seqera Containers, or 4 recipe>` | `<URI, or recipe path for tier 4>` | `<packages with versions, or for tier 4 without versions except those that the document fixes>; tests: <framework>; lint: <linter>; <rmarkdown and Pandoc, if present>` | `<increment numbers, input checks>` |
 
 ## Configuration
 
@@ -150,8 +150,8 @@ Every marker names its phase as `<agent>: <phase>`, one of the phases that
 
 ## Software and effective parameters
 
-- One row per package that a methods step uses, with the version that
-  selecting-container-images resolves and the image that provides it.
+- One row per package that a methods step uses, with its resolved version and the image that
+  provides it.
 - A support package is one that no methods step names and that an increment, a report, or the
   image of the input checks needs, such as for data handling, file input and output, figures, or
   the synthetic data generator. It gets one row per image that provides it, with `Steps` = the
@@ -159,6 +159,11 @@ Every marker names its phase as `<agent>: <phase>`, one of the phases that
   `none`. The user removes these rows for the manuscript.
 - Digest is the image's digest for tiers 1 to 3, and `registry` for tier 4: `coder` records it in
   `{Analysis_Images_file}` under the image ID at `coder: image-build`.
+- A row of a tier-4 image without a registry entry yet has Version and Effective parameters
+  `pending image-build`, or only Version for a support package, whose Effective parameters are
+  `none`. A version that the methods document fixes, and its effective parameters, are written at
+  planning instead. `engineer: software-versions` replaces every `pending image-build` from the
+  installed versions in the image's registry entry.
 - Effective parameters lists, for each step, the values that the resolved version uses for the
   key parameters that the document leaves at their defaults, meaning those that can change the
   results, such as thresholds, test or fit types, filtering, and normalization. Take them from
@@ -170,8 +175,10 @@ Every marker names its phase as `<agent>: <phase>`, one of the phases that
 - Every increment and the input checks run in exactly one image of the Images table, as
   selecting-container-images selects it. The image of the input checks also runs the synthetic
   data generator and the reference subset script.
-- A tier-4 image's Image is its recipe path in `{Analysis_Recipes_Folder}`, its Contents give the
-  base image and every package with its version, and it has one `tester: image-check` and
+- A tier-4 image's Image is its recipe path in `{Analysis_Recipes_Folder}`, and its Contents give
+  every package without a version, except those that the methods document fixes, the test
+  framework, the linter, and rmarkdown and Pandoc for a report increment; `coder` chooses its base
+  image and resolves the other versions when it builds it. It has one `tester: image-check` and
   `coder: image-build` pair in Setup. When a missing Wave CLI sent the image to tier 4, its Tier
   is `4 recipe, Wave CLI missing`.
 

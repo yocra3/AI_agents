@@ -32,9 +32,11 @@ These rules override the skill's general guidance on reference outputs and test 
 
 Write one permanent image check per tier-4 image, a Bash script run on the host that finds the
 image through its `{Analysis_Images_file}` entry and runs read-only commands in it. It checks that
-the entry and its image file exist and that the image provides every package of the image's
-Contents in the Images table at its version, the test framework and the linter listed there, and
-rmarkdown and Pandoc when listed. A missing entry or image file means the image is missing.
+the entry and its image file exist, that the image provides every package of the image's Contents
+in the Images table, the test framework and the linter listed there, and rmarkdown and Pandoc
+when listed, and that each version given there matches. Contents give only the versions that the
+methods document fixes; the check tests no other version, since the build resolves them. A
+missing entry or image file means the image is missing.
 
 ## Setup tests
 

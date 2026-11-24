@@ -63,9 +63,10 @@ implementation plan, including `<agent>: validation-fix`.
 - **Steps**:
   1. Write the image check of the image that the marker names, as testing-unit's analysis
      profile defines it.
-  2. Run it. RED is valid only when the image is missing or lacks a required package; any other
-     failure, such as a syntax error or a missing host tool, is not. When the image already exists
-     and passes, report that instead of RED.
+  2. Run it. RED is valid only when the image is missing, lacks a package of its Contents, or has
+     another version of a package whose version its Contents give; any other failure, such as a
+     syntax error or a missing host tool, is not. When the image already exists and passes,
+     report that instead of RED.
   3. Lint the image check with the linting skill and fix findings in it.
 - **Evidence**: the image check's path, its command and result, and the RED reason, or that the
   image already passes.
@@ -73,13 +74,15 @@ implementation plan, including `<agent>: validation-fix`.
 
 ## `coder: image-build`
 
-- **Meaning**: Write the image's recipe, build it, and add its registry entry, to GREEN.
+- **Meaning**: Choose the image's base and versions, write its recipe, build it, and add its
+  registry entry, to GREEN.
 - **Skill**: building-container-images.
 - **Steps**:
   1. Run tester's image check from the brief and confirm the expected RED. When tester reported
      that the image already exists and passes, change nothing and report it.
-  2. Build the image that the marker names with building-container-images, which ends with the
-     image check passing.
+  2. Build the image that the marker names with building-container-images: it chooses the base
+     image, resolves and pins the versions, builds the image, records the installed versions in
+     the registry entry, and ends with the image check passing.
 - **Evidence**: the skill's output.
 - **Stops**: the skill's stops.
 
