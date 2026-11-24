@@ -18,7 +18,7 @@ Write acceptance criteria with the EARS guide in
 
 | Package | Version | Image | Digest | Effective parameters | Steps |
 | --- | --- | --- | --- | --- | --- |
-| `<package>` | `<resolved version>` | `<image ID>` | `<sha256:...>, or registry` | `<name = value for each key parameter that the document does not fix, or none>` | `<M1, M2, or report increment>` |
+| `<package>` | `<resolved version>` | `<image ID>` | `<sha256:...>, or registry` | `<name = value for each key parameter that the document does not fix, or none>` | `<M1, M2; or, for a support package, increment numbers or input checks>` |
 
 ## Images
 
@@ -150,8 +150,13 @@ Every marker names its phase as `<agent>: <phase>`, one of the phases that
 
 ## Software and effective parameters
 
-- One row per package that a methods step or a report uses, with the version that
+- One row per package that a methods step uses, with the version that
   selecting-container-images resolves and the image that provides it.
+- A support package is one that no methods step names and that an increment, a report, or the
+  image of the input checks needs, such as for data handling, file input and output, figures, or
+  the synthetic data generator. It gets one row per image that provides it, with `Steps` = the
+  increment numbers or `input checks` that use it in that image, and `Effective parameters` =
+  `none`. The user removes these rows for the manuscript.
 - Digest is the image's digest for tiers 1 to 3, and `registry` for tier 4: `coder` records it in
   `{Analysis_Images_file}` under the image ID at `coder: image-build`.
 - Effective parameters lists, for each step, the values that the resolved version uses for the

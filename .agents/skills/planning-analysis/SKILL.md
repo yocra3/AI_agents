@@ -41,6 +41,9 @@ in place, create it when none exists, and stop when several candidates exist.
 - **New plan**: no implementation plan exists.
 - **Same-version replanning**: the implementation plan's `Version` equals the document's.
 - **New-version replanning**: the document has a new `Version`.
+- **Software versions**: the `engineer: software-versions` phase. Do only what its entry in the
+  phase reference states, with the template's rules for Software and effective parameters, and
+  return without the other steps.
 
 Write the document's `Version` and its last approval commit in the implementation plan's header.
 
@@ -50,31 +53,43 @@ Read each methods step as its tool, inputs, non-default parameters, filters, mod
 multiple-testing correction, applying the omission rules. Check every step, design comparison,
 result to report, and input for the stop conditions below before planning.
 
-## 3. Select software and images
+## 3. Define inputs and test data
+
+From Input data and Global parameters, write Configuration. Derive the technical requirements
+that the steps' functions impose on the inputs, and choose the language of the input checks and
+the support packages of their image. Write the synthetic data rules with planted signal, the
+reference subset rules, and the seeds.
+
+Declare support packages as the template defines them, starting from the packages that the Tech
+Stack of `{Agents_file}` declares, when present: in the line of the language, or for a report in
+its R and Reports lines.
+
+## 4. Plan increments and reports
+
+Group the methods steps into computation increments in execution order, with the language and
+support packages of each, and choose each increment's verification mode. Decide the reports from
+Results to report, with their support packages; the package of the report output format that
+the Tech Stack declares, such as `BiocStyle` for `BiocStyle::html_document`, is a support
+package of every report increment.
+
+## 5. Select software and images
 
 Use selecting-container-images for every increment and for the input checks, with any version
 that the document fixes. From its records, fill Images and the Setup image pairs; fill Software
-and effective parameters from the resolved versions and their documentation.
+and effective parameters from the resolved versions and their documentation. When no image can
+provide every package of an increment, split the increment and repeat this step.
 
-## 4. Define inputs and test data
+## 6. Write outputs and criteria
 
-From Input data and Global parameters, write Configuration. Derive the technical requirements
-that the steps' functions impose on the inputs, and choose the language and image of the input
-checks. Write the synthetic data rules with planted signal, the reference subset rules, and the
-seeds.
+Write Expected outputs and formal EARS acceptance criteria, mapping each criterion to one
+increment.
 
-## 5. Plan increments, reports, outputs, and criteria
-
-Group the methods steps into computation increments in execution order and decide the reports
-from Results to report. Choose each increment's verification mode, then write Expected outputs
-and formal EARS acceptance criteria, mapping each criterion to one increment.
-
-## 6. Write the execution sections
+## 7. Write the execution sections
 
 Write Removed, Setup, the Execution markers of each increment, and Finalization, as the template
 defines them. In replanning, apply the rules below.
 
-## 7. Check
+## 8. Check
 
 Before returning, confirm that:
 
@@ -96,7 +111,8 @@ Replanning for implementation evidence, with no document change, follows the sam
   methods, inputs, images, outputs, or criteria must change. Unchanged increments keep their
   markers, also when renumbered.
 - Keep the resolved versions and the chosen images, also an image that a missing Wave CLI sent
-  to tier 4. Re-resolve an image only when the user asks or a methods change requires it; only a
+  to tier 4. Re-resolve an image only when the user asks, a methods change requires it, or
+  implementation evidence shows that it lacks a support package, which you then declare; only a
   version that the user fixes in the document updates a version, which may need a new image ID.
 - Reset to pending:
   - the Execution markers of every modified increment;
@@ -133,7 +149,9 @@ the document or choosing for it, when:
   increment inserted before an existing one, such as a new dependency of an increment on a later
   one; suggest a new version, which only the user sets;
 - the document has no approval commit or differs from it, several implementation plans match,
-  or a package version cannot be provided by any image tier.
+  or a package version cannot be provided by any image tier;
+- the Tech Stack of `{Agents_file}` declares no test framework or linter for the language of an
+  increment or of the input checks.
 
 For a scientific gap, say in plain language what the document must state, not which value to
 choose.

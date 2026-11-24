@@ -116,6 +116,11 @@ check in its image:
 - Images come, in this order, from the project registry (`{Analysis_Images_file}`),
   BioContainers, Seqera Containers, or a recipe (tier 4). `engineer` selects them while planning,
   with selecting-container-images; without the Wave CLI, Seqera Containers images go to tier 4.
+- Each image also provides the support packages, such as for data handling, input and output, or
+  figures, that the plan declares for its increments or the input checks, starting from the
+  packages of the Tech Stack and, for reports, the package of the report format. A replanning
+  re-resolves an image only on the user's request, for a methods change, or when implementation
+  shows that it lacks a support package.
 - `coder` builds each tier-4 image in Setup, after `tester` writes its permanent image check, and
   adds its registry entry. `engineer: software-versions` then fills the plan's versions and
   effective parameters of the tier-4 software from the registry.

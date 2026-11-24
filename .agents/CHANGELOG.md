@@ -41,10 +41,12 @@ documents alike, and the agents of every environment are generated from neutral 
   ggplot2, patchwork, scales, ggrepel, future and furrr; Python pytest, ruff, pandas, numpy,
   pyarrow, matplotlib and seaborn; Bash bats and shellcheck; reports
   `BiocStyle::html_document` with knitr, DT and kableExtra. `linting` and `testing-unit` use the
-  declared linter and test framework, otherwise those of their profiles,
-  `selecting-container-images` requires the declared test framework and linter in each image and
-  stops when a language has none, and `writing-code` renders reports in the declared format,
-  otherwise `html_document`, always self-contained.
+  declared linter and test framework, otherwise those of their profiles;
+  `selecting-container-images` requires the declared test framework and linter in each image, and
+  it and `planning-analysis` stop when a language has none; `planning-analysis` declares the
+  support packages of each image starting from the declared packages, with the package of the
+  report format in every report's image; and `writing-code` renders reports in the declared
+  format, otherwise `html_document`, always self-contained.
 - Project key `Nextflow_Reference_Folder` for Nextflow projects, by default
   `{Project_Folder}/reference-data/<spec-slug-id>/`, read by `planning-specs` and `writing-code`:
   the reference generation and validation scripts go in its versioned `scripts/`, instead of
@@ -97,7 +99,11 @@ documents alike, and the agents of every environment are generated from neutral 
   and `post-run` checks, and `releasing-version` also releases methods documents.
 - `engineer` selects the container images while planning, with `selecting-container-images`,
   instead of `data-analyst`. It adds the registry entries of the images it selects, `coder` those
-  of the tier-4 images it builds, and each entry gets a `Source` field.
+  of the tier-4 images it builds, and each entry gets a `Source` field. Each image also provides
+  the support packages, those that no methods step names, that the implementation plan declares
+  for its increments or the input checks, in Software rows with `Effective parameters` `none`; a
+  replanning re-resolves an image only on the user's request, for a methods change, or for a
+  missing support package.
 - `implementation-coordinator` validates a `Draft` contract on the current branch and creates the
   task branch only when validation reports no blocking findings, just before the approval commit,
   `docs(<spec-slug-id>): approve specification` or `docs(<analysis-id>): approve methods vN`.
@@ -233,10 +239,11 @@ documents alike, and the agents of every environment are generated from neutral 
   hand: their analysis keys and agent names changed. `AGENTS.md` now needs the recipes and images
   folders and the container execution rules; in the Tech Stack, one line per language with its
   test framework, linter and recommended packages, and a Reports line with the R Markdown output
-  format and packages, with the languages removed from its free text; and, in a Nextflow project, `Nextflow_Reference_Folder`. It no longer
-  needs the base analysis folder keys or `Custom_Agents_Folder`. Without a declared test
-  framework and linter for a language, `selecting-container-images` stops; without a report
-  format, reports keep `html_document`. Every text now uses the hyphenated agent names, so
+  format and packages, with the languages removed from its free text; and, in a Nextflow
+  project, `Nextflow_Reference_Folder`. It no longer needs the base analysis folder keys or
+  `Custom_Agents_Folder`. Without a declared test framework and linter for a language,
+  `planning-analysis` and `selecting-container-images` stop; without a report format, reports
+  keep `html_document`. Every text now uses the hyphenated agent names, so
   `CLAUDE.md` no longer needs to map `product_owner` to `product-owner`, nor the model
   equivalence between Codex and Claude Code. Ignore the built images folder in Git, and consider
   denying Claude Code's `Read` tool on the data folders in `.claude/settings.json`.
