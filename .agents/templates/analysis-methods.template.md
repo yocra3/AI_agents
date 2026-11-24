@@ -2,8 +2,8 @@
 
 Use this template for `{Analysis_Methods_file}`, where `<analysis-id>` is `analysis-<slug>`.
 The document reads like the methods section of a paper: the user discusses it with
-`data_analyst` and within the group, and `engineer` derives the implementation plan from it.
-`data_analyst` owns the content; the implementation workflow changes only `Status`.
+`data-analyst` and within the group, and `engineer` derives the implementation plan from it.
+`data-analyst` owns the content; the implementation workflow changes only `Status`.
 
 ```markdown
 # Analysis methods: <short title>
@@ -77,7 +77,7 @@ elements of the step.>
   the user updates one only by fixing it here, with its row in the version control table.
 - Never anticipate results or state expected values.
 - Write the document concisely; explanations, alternatives, and their consequences stay in the
-  conversation with `data_analyst`.
+  conversation with `data-analyst`.
 
 ## Methods steps
 
@@ -134,7 +134,7 @@ revision after an approval sets `Status` back to `Draft`.
   has been approved. Rows added since the last approval may be edited until the next approval.
   `Change` is `added`, `modified`, or `removed`; `Section or step` names the section, the step
   ID, or the input key.
-- Before the first authorization, `data_analyst` writes the initial row
+- Before the first authorization, `data-analyst` writes the initial row
   `| v1 | Document | added | Initial document | First approval |`. Until the first approval
   commit, the draft is edited freely and the table holds only that row.
 - After the first approval, revise the document in place and add one row per content change, with

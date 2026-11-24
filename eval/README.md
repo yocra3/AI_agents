@@ -31,10 +31,10 @@ the restructuring into one implementation flow (version `1.0.0`).
 
 ## What cannot be automated well
 
-- **The quality of `data_analyst`'s explanations for beginners.** A scripted user cannot judge
+- **The quality of `data-analyst`'s explanations for beginners.** A scripted user cannot judge
   whether an explanation is clear. A person reads the transcript.
 - **Interaction.** In non-interactive mode agents cannot ask questions, so the script must answer
-  everything in advance. `data_analyst` tends to ask, which can end in a stop rather than a
+  everything in advance. `data-analyst` tends to ask, which can end in a stop rather than a
   realistic exchange.
 - **Permissions.** Unattended runs need relaxed session permissions in the test repository. Limit
   them to that directory and never use them on real projects.
@@ -63,7 +63,7 @@ or untreated with dexamethasone.
 
 This exercises manifests, design variables and relations between inputs.
 
-**Expected methods**, which `data_analyst` writes with the scripted user:
+**Expected methods**, which `data-analyst` writes with the scripted user:
 1. Import with `DESeq2::DESeqDataSetFromHTSeqCount`, which reads the samplesheet.
 2. Filtering of low-count genes.
 3. DESeq2 with design `~ cell + dex`, treated versus untreated, Benjamini-Hochberg correction.
@@ -78,7 +78,7 @@ Results to report: PCA, MA plot, volcano plot and a table of differential genes.
 | --- | --- | --- |
 | A | Drafting with input exploration | Inputs skill, context rules, canaries |
 | B | Manual `reviewer` validation, plus a methods document with the multiple-testing correction omitted | Step cards and blocking verdict |
-| C | Authorization and `implementation_coordinator` up to `Coded` | Approval, planning, Setup, increments, Finalization |
+| C | Authorization and `implementation-coordinator` up to `Coded` | Approval, planning, Setup, increments, Finalization |
 | D | The user's `run-analysis.sh` run and `post-run` checks up to `Verified` | Pre-checks and closing |
 | E | A deliberate error in the real inputs | `real-input-check` and `run-analysis.sh` stop with messages that carry no values |
 | F | Same-version revision that appends a final step | Increments are only appended |
@@ -94,7 +94,7 @@ branch, then repeat in Codex.
 
 Formal checks stay as scripts: they are deterministic and cost nothing. A judge agent covers only
 what a script cannot assess:
-- whether `data_analyst` explains in plain language, proposes instead of asking, and gives
+- whether `data-analyst` explains in plain language, proposes instead of asking, and gives
   alternatives with their consequences;
 - whether `reviewer`'s findings are understandable and cite the affected section;
 - whether stops were justified or unnecessary;

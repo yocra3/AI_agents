@@ -47,7 +47,7 @@ web API, may be mentioned to the user as an option, but it never enters the meth
 
 # Output
 
-Return a short YAML in the conversation; do not save it to a file. `data_analyst` uses it to
+Return a short YAML in the conversation; do not save it to a file. `data-analyst` uses it to
 propose the methods to the user. The methods document cites only the method and its reference.
 
 ```yaml

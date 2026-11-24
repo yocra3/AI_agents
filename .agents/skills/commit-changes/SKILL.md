@@ -1,12 +1,12 @@
 ---
 name: commit-changes
-description: Create reviewed local commits when requested, or at a commit point of an active implementation_coordinator. Never publish or rewrite history.
+description: Create reviewed local commits when requested, or at a commit point of an active implementation-coordinator. Never publish or rewrite history.
 ---
 
 # Committing Changes Skill
 
 Use this skill only when the user explicitly asks for a local commit or an active coordinator
-reaches a commit point. An active implementation_coordinator commits only at its approval,
+reaches a commit point. An active implementation-coordinator commits only at its approval,
 planning, and status commits and at the green commit points of the implementation plan it
 executes.
 

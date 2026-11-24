@@ -2,7 +2,7 @@
 
 Use this template for `{Plans_Folder}/<spec-slug-id>.plan.md`, the single implementation plan of
 the specification `{Specs_Folder}/<spec-slug-id>.spec.md`. `engineer` owns the content;
-`implementation_coordinator` changes only the execution markers and Blockers.
+`implementation-coordinator` changes only the execution markers and Blockers.
 
 ```markdown
 # Implementation plan: <spec-slug-id>
@@ -112,6 +112,6 @@ and `nextflow.md` for the Nextflow-only phases.
   must go, listing its files, with the phases `tester: remove-tests` then `coder: remove-code`,
   and is empty when nothing has been removed. An entry takes no step number.
 - Finalization always has the two phases of the template, in that order.
-- Blockers belong to `implementation_coordinator`: one entry per stop, written as
+- Blockers belong to `implementation-coordinator`: one entry per stop, written as
   `- **<cited section, criterion, step, or phase>**: <stop condition, as reported>`, or `None.`.
   `engineer` writes `None.` in a new plan and never changes Blockers.

@@ -44,7 +44,7 @@ updated specification at `Draft`.
 # Output
 Write the specification and return its path, type, scope, acceptance criteria, user-confirmed
 decisions, stable identifier, whether the file was created or updated, unresolved questions, and
-dependencies. State that implementation_coordinator must not start until the user explicitly
+dependencies. State that implementation-coordinator must not start until the user explicitly
 authorizes executing this named specification.
 """
 

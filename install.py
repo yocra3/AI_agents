@@ -246,7 +246,7 @@ def check_tools(target):
                   "file; searching-tooluniverse-catalog will skip the catalog." % cli)
     elif shutil.which("tu") is None:
         print("\nwarning: the ToolUniverse CLI (`tu`) is not on PATH and AGENTS.md does not "
-              "declare ToolUniverse_CLI; data_analyst will design methods without the "
+              "declare ToolUniverse_CLI; data-analyst will design methods without the "
               "ToolUniverse catalog. See https://github.com/mims-harvard/ToolUniverse.")
 
 

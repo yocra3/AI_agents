@@ -2,7 +2,7 @@
 
 Use this template for `{Plans_Folder}/<analysis-id>.plan.md`, the single implementation plan of
 the methods document `{Analysis_Methods_file}` with the same `<analysis-id>`, `analysis-<slug>`.
-`engineer` owns the content; `implementation_coordinator` changes only the execution markers
+`engineer` owns the content; `implementation-coordinator` changes only the execution markers
 and Blockers.
 Write acceptance criteria with the EARS guide in
 `{Agents_Folder}/skills/generating-specs/EARS.md`.
@@ -102,7 +102,7 @@ Write acceptance criteria with the EARS guide in
 - [ ] `coder: run-script`
 - [ ] `coder: full-validation`
 - [ ] `reviewer: implementation-review`
-- [ ] `dev_ops: code-documentation`
+- [ ] `dev-ops: code-documentation`
 
 ## Reports
 
@@ -275,6 +275,6 @@ Every marker names its phase as `<agent>: <phase>`, one of the phases that
 
 ## Blockers
 
-- Blockers belong to `implementation_coordinator`: one entry per stop, written as
+- Blockers belong to `implementation-coordinator`: one entry per stop, written as
   `- **<cited section, step, increment, or phase>**: <stop condition, as reported>`, or `None.`.
   `engineer` writes `None.` in a new implementation plan and never changes Blockers.

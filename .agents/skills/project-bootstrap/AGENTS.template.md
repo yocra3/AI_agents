@@ -59,12 +59,12 @@
 
 ### Analysis workflow
 
-`data_analyst` writes analysis methods documents in `{Analysis_Methods_Folder}` and leaves them at
-`Draft`. `implementation_coordinator` executes a methods document only after the user explicitly
+`data-analyst` writes analysis methods documents in `{Analysis_Methods_Folder}` and leaves them at
+`Draft`. `implementation-coordinator` executes a methods document only after the user explicitly
 authorizes executing that named document; it first delegates contract validation to `reviewer`,
 and `engineer` writes the implementation plan in `{Plans_Folder}`. Before authorizing, the user
-should validate the document by running `reviewer` as a main session. `data_analyst` and
-`implementation_coordinator` run as main sessions. Omit this section, the Analysis layout and
+should validate the document by running `reviewer` as a main session. `data-analyst` and
+`implementation-coordinator` run as main sessions. Omit this section, the Analysis layout and
 Container execution rules sections, and the `Analysis_*` keys when the project has no analysis
 workflow.
 

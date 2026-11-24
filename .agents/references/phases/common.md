@@ -1,7 +1,7 @@
 # Common phases
 
 Phases shared by specification and analysis implementation plans, and the delegations of
-`implementation_coordinator` that are not plan markers; each plan type's own phases are in
+`implementation-coordinator` that are not plan markers; each plan type's own phases are in
 [specs.md](specs.md), [nextflow.md](nextflow.md), and [analysis.md](analysis.md).
 
 ## `tester: remove-tests`

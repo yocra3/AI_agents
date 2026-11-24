@@ -1,6 +1,6 @@
 ---
 name: defining-analysis-inputs
-description: Write or revise the Input data section of an analysis methods document, by interview or, with explicit authorization for each path, by exploring the structure of the data. Use from data_analyst or when the user asks to define an analysis's inputs. Never creates the methods document.
+description: Write or revise the Input data section of an analysis methods document, by interview or, with explicit authorization for each path, by exploring the structure of the data. Use from data-analyst or when the user asks to define an analysis's inputs. Never creates the methods document.
 ---
 
 # Purpose
@@ -11,15 +11,15 @@ and the section records only the shape of what the analysis uses.
 
 # Where the section goes
 
-- Used by `data_analyst`: return the section in the conversation; `data_analyst` writes it into
+- Used by `data-analyst`: return the section in the conversation; `data-analyst` writes it into
   the document.
 - Invoked by the user: require an existing methods document, the `{Analysis_Methods_file}` the
   user names or the single match in `{Analysis_Methods_Folder}`; ask when several match. Change
   only its Input data section. If the document has an approval commit,
   `docs(<analysis-id>): approve methods vN`, tell the user that the change also needs a row in its
-  version control table and `Status` back at `Draft`, which `data_analyst` records.
-- With no methods document and no `data_analyst` session: stop, and explain that the analysis
-  must first be started with `data_analyst`. Never create the methods document, not even empty.
+  version control table and `Status` back at `Draft`, which `data-analyst` records.
+- With no methods document and no `data-analyst` session: stop, and explain that the analysis
+  must first be started with `data-analyst`. Never create the methods document, not even empty.
 
 # Modes
 

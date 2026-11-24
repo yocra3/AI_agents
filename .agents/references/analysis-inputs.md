@@ -15,7 +15,7 @@ Rules for the Input data section of an analysis methods document.
   BAM, belong to the implementation plan, where `engineer` turns them into input checks.
 - Use only the formats and the vocabulary below. A missing format is added to this reference
   through `craftsman`; never write "other".
-- The section may be written by the user, by `data_analyst`, or with `defining-analysis-inputs`,
+- The section may be written by the user, by `data-analyst`, or with `defining-analysis-inputs`,
   at any time before the document is authorized.
 
 ## Section layout

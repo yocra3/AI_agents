@@ -5,7 +5,7 @@ description: Create or update the single implementation plan for an approved spe
 
 # Purpose
 
-Turn an approved specification into the implementation plan that `implementation_coordinator`
+Turn an approved specification into the implementation plan that `implementation-coordinator`
 executes: ordered steps, each with the phases and agents that run it.
 
 # Contract

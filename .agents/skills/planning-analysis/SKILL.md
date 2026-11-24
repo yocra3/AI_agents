@@ -5,7 +5,7 @@ description: Create or update the single implementation plan for an approved ana
 
 # Purpose
 
-Turn an approved methods document into the implementation plan that `implementation_coordinator`
+Turn an approved methods document into the implementation plan that `implementation-coordinator`
 executes. Make only engineering decisions: every scientific decision comes from the document, and
 when one is missing, stop instead of choosing it.
 

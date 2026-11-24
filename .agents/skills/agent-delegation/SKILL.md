@@ -1,6 +1,6 @@
 ---
 name: agent-delegation
-description: Brief a delegate with the instructions of its phase from the phase reference, check the evidence it returns, and route its failures. Use from implementation_coordinator for every delegation of an implementation plan phase, contract validation, planning, or replanning. Do not use to run a phase yourself.
+description: Brief a delegate with the instructions of its phase from the phase reference, check the evidence it returns, and route its failures. Use from implementation-coordinator for every delegation of an implementation plan phase, contract validation, planning, or replanning. Do not use to run a phase yourself.
 ---
 
 # Purpose
@@ -40,7 +40,7 @@ Send the delegate, in this order:
      entry, then the phase's rules for its plan type when they exist: its analysis rules in
      `analysis.md` for an analysis plan, or its Nextflow rules in `nextflow.md` for a step that
      has `tester: reference-validation`;
-   - for a phase of `engineer`, `reviewer`, or `dev_ops`, including contract validation, planning,
+   - for a phase of `engineer`, `reviewer`, or `dev-ops`, including contract validation, planning,
      and replanning, the entry only.
 4. The earlier evidence that the entry uses, such as tester's exact command and RED result for
    the coder phase that follows it, tester's image check command for `coder: image-build`, the

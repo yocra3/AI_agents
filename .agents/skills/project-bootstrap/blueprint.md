@@ -15,7 +15,7 @@ Define these values in the project's global agent instructions.
 
 ## Analysis workflow
 
-Required only when the project uses `data_analyst` and analysis methods documents:
+Required only when the project uses `data-analyst` and analysis methods documents:
 
 - `{Analysis_Methods_Folder}`: analysis methods documents. It must not be, or be inside,
   `{Specs_Folder}` or `{Plans_Folder}`; their implementation plans go in `{Plans_Folder}`.

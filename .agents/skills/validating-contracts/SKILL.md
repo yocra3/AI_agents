@@ -162,8 +162,8 @@ Verdict: <blocking findings present | no blocking findings>
 ```
 
 Omit Step cards for a specification. The verdict is always the last line and uses exactly one of
-the two values. Revisions are not part of validation: `data_analyst` revises methods documents
-and `product_owner` revises specifications.
+the two values. Revisions are not part of validation: `data-analyst` revises methods documents
+and `product-owner` revises specifications.
 
 # Prohibited
 

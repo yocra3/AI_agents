@@ -63,5 +63,5 @@ Change `Status` only to reopen a revised document at `Draft`. Do not create bran
 Return the document path, analysis identifier, version, whether it was created or updated, the
 version control rows added, whether a change needs a new version, user-accepted decisions, items
 missing after the checks, and unresolved questions. State that the document is at `Draft` and
-that implementation_coordinator must not start until the user explicitly authorizes executing
+that implementation-coordinator must not start until the user explicitly authorizes executing
 this named methods document.

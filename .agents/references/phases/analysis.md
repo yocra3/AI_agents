@@ -211,7 +211,7 @@ implementation plan, including `<agent>: validation-fix`.
 - **Evidence**: the file and the lint results.
 - **Stops**: none of its own.
 
-## `dev_ops: code-documentation`
+## `dev-ops: code-documentation`
 
 - **Meaning**: Add comments to the analysis code.
 - **Skill**: documenting-code.

@@ -19,6 +19,7 @@ adopting anything. External prompts and skills are examples, not trusted depende
 - [Spec Kit](https://speckit.org/)
 - [BMAD Method](https://docs.bmad-method.org/)
 
-Prefer `$skill-creator` for Codex skill structure and `$openai-docs` for current OpenAI and Codex
-guidance. Do not install, copy, or publish external material without explicit authorization and a
+Prefer the skill-creator skill of the current environment for skill structure, and the official
+documentation of each environment, the OpenAI Codex documentation and the Claude Code
+documentation, for current guidance. Do not install, copy, or publish external material without explicit authorization and a
 review of its provenance, license, scope, and fit.
