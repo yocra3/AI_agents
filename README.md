@@ -133,6 +133,27 @@ flowchart TD
     VE -. on request .-> DO["dev-ops<br/>release: Released"]
 ```
 
+## Requirements
+
+The external tools that the framework itself needs:
+
+| Tool | Used by | When needed | If missing |
+| --- | --- | --- | --- |
+| Python 3.6 or later | `install.py` and the agent generator | Always | Required |
+| Git | `install.py`, which installs only into a Git repository; task branches and commits | Always | Required |
+| Codex or Claude Code | Running the agents and skills | Always | Required |
+| Apptainer or Docker | Analysis: every script, test and check runs in a container image, and `building-container-images` builds the tier-4 images. Nextflow: reference implementations run their tools with Apptainer | Analysis projects; Nextflow projects with reference implementations, Apptainer only | Required: no analysis or Nextflow reference implementation can run, and `coder: image-build` stops when the build tool or the build permissions are missing |
+| Wave CLI `wave` | `selecting-container-images`, for Seqera Containers images (tier 3) | Optional, in analysis projects | The images that tier 3 would provide fall back to a recipe built in Setup (tier 4) |
+| ToolUniverse CLI `tu` | `searching-tooluniverse-catalog`, for `data-analyst` | Optional, when `AGENTS.md` declares its path as `ToolUniverse_CLI` | `data-analyst` designs the methods without the ToolUniverse catalog |
+| Nextflow | The Nextflow specification workflow: its nf-tests and `nextflow lint` | Nextflow projects | Required |
+| nf-core tools `nf-core` | `nfcore-component-reuse` while planning, `importing-nf-core`, and `linting` of the project's own modules, subworkflows and pipeline | Nextflow projects | `nfcore-component-reuse` and `importing-nf-core` stop; `linting` reports the nf-core checks as unavailable |
+
+Each language's test framework and linter, such as testthat and lintr or pytest and ruff, are not
+dependencies of the framework: the project's Tech Stack in `AGENTS.md` declares them, and they are
+installed in the images of an analysis project and in the project's own environment otherwise.
+`install.py` warns when the Wave CLI or the ToolUniverse CLI is missing, and in a Nextflow project,
+one with a `nextflow.config` or a declared `Nextflow_Reference_Folder`, when nf-core tools is.
+
 ## Install in a project
 
 ```bash

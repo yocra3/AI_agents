@@ -1,34 +1,77 @@
-# Conventional Commits 
+# Conventional Commits
 
-- Structured commit messages to convey the type of change.
-
-- Message Syntax template:
+Commit message rules of the commit-changes skill, following
+[Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ```txt
-<type>[optional scope]: <description>
-[optional body]
-[optional footer] 
+<type>[(<scope>)][!]: <description>
+
+[body]
+
+[footers]
 ```
 
-### Types of Changes
+## Type
 
-- `feat:` new feature 
-- `fix:` bug fix 
-- `test:` adding or fixing tests 
-- `perf:` code performance improvements 
-- `refactor|style:` code cleanup 
-- `docs:` documentation only changes 
-- `chore|build|ci:` build process or auxiliary tool changes
-- Breaking changes (indicated by `!` or "BREAKING CHANGE") 
+The type of what the commit changes:
 
-### Message description
+- `feat`: a new feature or capability.
+- `fix`: a bug fix.
+- `test`: tests added or fixed, with no change to the code under test.
+- `perf`: a performance improvement.
+- `refactor`: a code change with no behavior change.
+- `style`: formatting only, such as whitespace or layout.
+- `docs`: documentation only.
+- `build`: the build system, images, or dependencies.
+- `ci`: continuous integration configuration.
+- `chore`: other maintenance that touches neither code nor tests.
+- `revert`: reverts earlier commits, named in a `Refs:` trailer by hash.
 
-- Concise summary of the change.
-- Sacrifice grammar to fit 50 characters.
-- Add issue/ticket references if applicable.
+## Scope
 
-### Body and Footer
+Optional and lowercase with hyphens; there is no closed list.
 
-- Body: detailed explanation of the change.
-- Footer: references to issues or breaking changes.
-- Sacrifice grammar to fit 72 characters.
+- Commits of a contract run by implementation-coordinator: the contract identifier,
+  `<spec-slug-id>` or `<analysis-id>`, for every commit of that contract, from approval and plan
+  through Removed entries, steps, increments, Setup, Finalization, and status.
+- Other commits: the area that changes, such as a module, a component, or a top-level folder of
+  the project; omit it when the change spans the project or has no clear area.
+
+## Description
+
+English, imperative, lowercase, with no final period. The whole header is at most 72 characters,
+ideally about 50.
+
+## Body
+
+What changes and why, not how, wrapped at 72 characters per line.
+
+## Footers
+
+- A breaking change adds `!` before the colon and a
+  `BREAKING CHANGE: <what changes and what an upgrader must do>` footer.
+- Trailers, such as `Refs: <issue or hash>` and `Co-Authored-By: <name> <email>`, go last, one
+  per line.
+
+## Examples
+
+A contract commit:
+
+```txt
+feat(analysis-rna-velocity): add spliced read counts
+
+Count spliced and unspliced reads per cell with the pinned image, as
+the methods document requires for the velocity model.
+```
+
+A commit outside a contract:
+
+```txt
+fix(parser)!: reject sheets without a condition column
+
+Sheets without the column produced an empty design and a silent
+failure in the model step.
+
+BREAKING CHANGE: every sample sheet needs a condition column; add one
+before rerunning.
+```

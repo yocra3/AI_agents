@@ -12,7 +12,7 @@ A versioning scheme that uses a 3-part number format: MAJOR.MINOR.PATCH.
 - Messages should follow this convention 
   - `<type>[optional scope][optional !]: <description>`
 - Change version numbers based on the nature of changes:
-  - Increment MAJOR version for breaking changes `<type>!:`.
+  - Increment MAJOR version for breaking changes: `<type>!:` or a `BREAKING CHANGE:` footer.
   - Increment MINOR version for new features `feat:`.
   - Increment PATCH version for bug fixes `fix:`.
   - Ignore other types of commits for version increments.

@@ -220,17 +220,38 @@ def read_version():
     return version
 
 
-def tooluniverse_cli(target):
-    """Return the ToolUniverse_CLI path that the target's AGENTS.md declares, or None."""
+def agents_key(target, key):
+    """Return the value of a key that the target's AGENTS.md declares, or None.
+
+    A key that is absent or still holds a template placeholder, such as `{Key}`, counts as not
+    declared.
+    """
     path = os.path.join(target, "AGENTS.md")
     if not os.path.isfile(path):
         return None
     with open(path) as fh:
-        match = re.search(r"\*\*ToolUniverse_CLI\*\*:\s*`?([^\s`]+)", fh.read())
+        match = re.search(r"\*\*%s\*\*:\s*`?([^\s`]+)" % re.escape(key), fh.read())
     if not match or match.group(1).startswith("{"):
         return None
-    cli = os.path.expanduser(match.group(1))
+    return match.group(1)
+
+
+def tooluniverse_cli(target):
+    """Return the ToolUniverse_CLI path that the target's AGENTS.md declares, or None."""
+    cli = agents_key(target, "ToolUniverse_CLI")
+    if cli is None:
+        return None
+    cli = os.path.expanduser(cli)
     return cli if os.path.isabs(cli) else os.path.join(target, cli)
+
+
+def nextflow_project(target):
+    """Return True when the target is a Nextflow project.
+
+    It is one when it has a `nextflow.config` or its AGENTS.md declares Nextflow_Reference_Folder.
+    """
+    return (os.path.isfile(os.path.join(target, "nextflow.config"))
+            or agents_key(target, "Nextflow_Reference_Folder") is not None)
 
 
 def check_tools(target):
@@ -248,6 +269,11 @@ def check_tools(target):
         print("\nwarning: the ToolUniverse CLI (`tu`) is not on PATH and AGENTS.md does not "
               "declare ToolUniverse_CLI; data-analyst will design methods without the "
               "ToolUniverse catalog. See https://github.com/mims-harvard/ToolUniverse.")
+    if nextflow_project(target) and shutil.which("nf-core") is None:
+        print("\nwarning: nf-core tools (`nf-core`) is not on PATH in this Nextflow project; "
+              "nfcore-component-reuse and importing-nf-core stop without it, and linting "
+              "reports the nf-core lint checks of the project's own modules, subworkflows and "
+              "pipeline as unavailable. Install it from https://github.com/nf-core/tools.")
 
 
 def main():

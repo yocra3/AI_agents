@@ -86,8 +86,10 @@ documents alike, and the agents of every environment are generated from neutral 
   generated catalog shows each agent's profile and skills.
 - Reference `.agents/references/framework-principles.md` and skill `maintaining-framework`, which
   `craftsman` follows for every framework change.
-- `install.py` warns when the Wave CLI is not on `PATH`, and when the ToolUniverse CLI is neither
-  on `PATH` nor an executable at the target's declared `ToolUniverse_CLI`.
+- `install.py` warns when the Wave CLI is not on `PATH`; when the ToolUniverse CLI is neither
+  on `PATH` nor an executable at the target's declared `ToolUniverse_CLI`; and, in a Nextflow
+  project, one with a `nextflow.config` or a declared `Nextflow_Reference_Folder`, when nf-core
+  tools (`nf-core`) is not on `PATH`.
 - Repository-only files, not installed in projects: `docs/programming-workflow.md` and
   `docs/analysis-workflow.md`, the detailed workflow documentation; `docs/catalog.md`, the
   generated catalog of agents, skills, templates, and references; `eval/README.md`, the design of
@@ -125,6 +127,12 @@ documents alike, and the agents of every environment are generated from neutral 
   `tester: test-setup` and `coder: test-setup` pair, `coder: real-config` and
   `tester: real-input-check`, instead of once for the whole section; a phase that ends in RED is
   never committed alone.
+- `commit-changes` follows Conventional Commits 1.0.0: blank lines between header, body and
+  footers; the types `feat`, `fix`, `test`, `perf`, `refactor`, `style`, `docs`, `build`, `ci`,
+  `chore` and `revert`, each with its meaning; as scope, the contract identifier for every commit
+  of a contract and otherwise the area that changes; a header of at most 72 characters, ideally
+  about 50, and a body wrapped at 72; and a `BREAKING CHANGE:` footer, besides `!`, that says
+  what an upgrader must do. `releasing-version` also counts that footer as a major change.
 - In specification plans, each step's Execution is a checkbox list of phase markers, the only
   progress record, instead of a free-form `agent:phase` sequence: `tester: test`,
   `coder: implementation` and `cleaner: refactor` by default, `coder: direct-implementation` for
@@ -142,7 +150,13 @@ documents alike, and the agents of every environment are generated from neutral 
   records each stop there and clears resolved entries on resume.
 - Analysis `synthetic` increments use the same `tester: test` and `coder: implementation` phases
   as specification steps, and the analysis Finalization review is
-  `reviewer: implementation-review`, with the `reviewing-implementation` skill.
+  `reviewer: implementation-review`, with the `reviewing-implementation` skill. Its analysis
+  rules block costly, inferential or model-based computation in a report that the report's entry
+  in Reports does not list, and a statistical test or model in a computation script that no
+  methods step states; a descriptive table, file or figure that the methods document does not ask
+  for and that changes no required result is non-blocking, with the recommendation to remove it
+  or add it to Results to report, either in a revision of the current `Version` or in a new
+  `Version`, as the user decides.
 - The Nextflow reference implementation profile of `writing-code` applies to the
   `coder: reference-generation` phase.
 - Skill profiles keep only conventions: their phase procedures, such as the Phases sections of the
@@ -222,7 +236,8 @@ documents alike, and the agents of every environment are generated from neutral 
   Finalization marker is `dev-ops: code-documentation`. The generated Codex agents keep the
   underscore form in their `name` field.
 - `README.md` keeps the rules common to both workflows and, for each workflow, a summary and its
-  figure; the detailed workflow documentation moves to `docs/`.
+  figure; the detailed workflow documentation moves to `docs/`. Its new Requirements section lists
+  the framework's external tools, who uses each, when it is needed and what happens without it.
 - Skill `coding-spec` is renamed `writing-code`, with the same conventions, and its folder
   `nextflow_guidelines/` is renamed `nextflow-guidelines/`.
 - Shared templates live in `.agents/references/templates/`: `agents.template.md` and

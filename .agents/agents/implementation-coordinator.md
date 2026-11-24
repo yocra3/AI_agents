@@ -63,8 +63,10 @@ dependencies, phase order, technical decisions, or acceptance-criterion mapping 
 delegate replanning to engineer.
 
 # Commit points
-Commit only green work, with the delegates' evidence for the committed phases as their phase
-entries define it. After each of these succeeds, mark its markers and commit them with its
+Every commit of the contract uses the contract identifier, `<spec-slug-id>` or `<analysis-id>`,
+as its scope, with the type of what the commit changes, following commit-changes. Commit only
+green work, with the delegates' evidence for the committed phases as their phase entries define
+it. After each of these succeeds, mark its markers and commit them with its
 changes: each Removed entry, each step, each increment, and each Finalization phase; in Setup,
 `coder: renumber`, each `tester: image-check` and `coder: image-build` pair, together,
 `engineer: software-versions`, the `tester: test-setup` and `coder: test-setup` pair, together,
