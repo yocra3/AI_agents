@@ -39,7 +39,7 @@ Phases shared by specification and analysis implementation plans, and the delega
   3. Run them and confirm RED, as testing-unit defines it.
   4. Lint the changed test files with the linting skill and fix findings in them.
 - **Evidence**: the covered behavior and criteria, the changed files, the exact commands and
-  results, and the expected failure reason.
+  results, the expected failure reason, and the lint results.
 - **Stops**: the tests pass before implementation, or the contract does not define the expected
   result.
 
@@ -79,7 +79,7 @@ Phases shared by specification and analysis implementation plans, and the delega
      language's test framework. Run it in the execution environment that the implementation
      plan declares, when it declares one.
   3. Lint each in-scope file with the linting skill, without fixes. Skip files that have no lint
-     profile.
+     profile and the imported nf-core components, which the linting skill never lints.
   4. Edit no file, apply no lint fix, and fix no finding; only the suite's own outputs may be
      written.
 - **Evidence**: the exact commands, the suite result, the lint result of each in-scope file, the

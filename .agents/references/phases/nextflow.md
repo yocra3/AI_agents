@@ -26,8 +26,8 @@ assigns them, and the Nextflow rules of some other phases. The rules for every p
   3. Run them and confirm RED. Do not generate the reference outputs, create production nf-tests,
      or create snapshots.
   4. Lint the changed test files with the linting skill and fix findings in them.
-- **Evidence**: the validations written, the exact commands and results, and the expected failure
-  reason.
+- **Evidence**: the validations written, the exact commands and results, the expected failure
+  reason, and the lint results.
 - **Stops**: missing source data, runtime dependencies, or required tools; they are environment
   failures, not valid RED.
 
@@ -71,11 +71,11 @@ Each of these rules follows the entry of its phase, in a step that has
 
 - Implement the production component. Run the nf-tests with `--ci`, never with
   `--update-snapshot`.
-- Never change a snapshot, a reference implementation, or an imported component; stop when a
-  snapshot is invalid or contradicts the specification.
+- Never change a snapshot or a reference implementation; stop when a snapshot is invalid or
+  contradicts the specification.
 
 ### `cleaner: refactor`
 
 - Refactor only the production component. Never change tests, snapshots, reference
-  implementations, generated fixtures, or imported components.
+  implementations, or generated fixtures.
 - Run the nf-tests with `--ci`, never with `--update-snapshot`.

@@ -79,3 +79,5 @@ resolved.
   `engineer: replanning`, which resets `tester: test-setup` and `coder: test-setup`, and also
   `tester: real-input-check` when the change affects the input checks; run the
   phases that it leaves pending. Then run `coder: full-validation` again.
+- Never route a failure in an imported nf-core component to an agent: return it to the
+  coordinator as a stop, for the user to decide how to resolve it.

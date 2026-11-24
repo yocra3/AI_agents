@@ -10,7 +10,9 @@ Lint each language in scope with the linter that the Tech Stack of `{Agents_file
 it, and load its profile: [R and R Markdown](references/R.md), [Python](references/python.md), and
 [Bash](references/bash.md). For Nextflow projects, load [Nextflow](references/nextflow.md). When
 the Tech Stack declares no linter for a language, use the one of its profile; run a declared
-linter that has no profile here with its documented check command.
+linter that has no profile here with its documented check command. When the files belong to the
+implementation plan of an analysis methods document, also load [analysis](references/analysis.md),
+which says where to lint each one.
 
 - Run every check the loaded profiles define, without automatic fixes unless the task includes
   corrections.

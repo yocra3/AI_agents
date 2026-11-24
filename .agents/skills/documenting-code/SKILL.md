@@ -35,7 +35,7 @@ Apply conventions in this order:
 3. Add or update source documentation. Avoid comments that merely restate implementation details.
 4. Run the documentation generator required by the applicable profile.
 5. Review generated artifacts and exclude unrelated generated changes.
-6. Run documentation validation and relevant tests defined by the repository or profile.
+6. Run the documentation builds and relevant tests defined by the repository or profile.
 7. Report documented source files, generated artifacts, and commands run.
 
 Do not update product documentation, changelogs, version files, branches, or commits as an implicit side effect.

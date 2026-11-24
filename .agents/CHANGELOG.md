@@ -149,6 +149,19 @@ documents alike, and the agents of every environment are generated from neutral 
   `analysis.md` profiles of `writing-code` and `testing-unit` and the phase sections of the
   Nextflow testing profile, move to the phase reference. `testing-unit` holds the only general
   definition of valid RED, and phase entries add only their own cases.
+- Only the `linting` skill lints, in the steps of the phases that write or change code or tests,
+  and each of those phases returns its lint results; `writing-code`, `documenting-code` and
+  `importing-nf-core` no longer lint on their own. Where each analysis file is linted, which the
+  `analysis.md` profiles of `writing-code`, `documenting-code` and `validating-changes` each
+  stated, is now only in the analysis profile of `linting`. `linting` adds `nextflow lint` for
+  Nextflow scripts and configuration, and the Python docstring check that `documenting-code`
+  ran, only when a task adds or changes docstrings.
+- Imported nf-core components are never linted, when imported, by a later phase, or by
+  `coder: full-validation`: a component in nf-core is assumed to have passed nf-core lint.
+  `importing-nf-core` checks instead that `modules.json` records the pinned SHA, and
+  `nf-core modules lint` and `nf-core subworkflows lint` lint only the project's own components.
+  Agents never edit an imported component: an error traced to one, such as a failing test, stops
+  the workflow, and the user decides how to resolve it, such as with another version or a patch.
 - Test support code moves from `tester` to `coder`. `tester` writes only tests and their static
   data; in Setup, `tester: test-setup` writes the setup tests of the reference subset script, the
   synthetic data generator, the input checks and the test configuration in RED, and

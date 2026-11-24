@@ -59,9 +59,9 @@ requires back the evidence that the entry lists.
 | Removed | `tester: remove-tests`, `coder: remove-code` | Remove the tests and code of a removed step or criterion. |
 | Steps | `tester: test`, `coder: implementation`, `cleaner: refactor` | Default: RED, GREEN, and REFACTOR of one step. |
 | Steps | `coder: direct-implementation` | A step that no test can observe, such as configuration or scaffolding; the plan says why. |
-| Steps, Nextflow | `coder: import-nf-core` | Import an existing nf-core module or subworkflow with nf-core tools instead of rewriting it. |
+| Steps, Nextflow | `coder: import-nf-core` | Import an existing nf-core module or subworkflow with nf-core tools instead of rewriting it, at the plan's pinned SHA. Imported components are never linted or edited: an error traced to one stops the workflow, and the user decides how to resolve it. |
 | Steps, Nextflow | `tester: reference-validation`, `coder: reference-generation` | Before the default phases of a new component: validations of independently generated reference outputs, in RED, then the reference outputs until GREEN. |
-| Finalization | `coder: full-validation`, `reviewer: implementation-review` | Run the complete suite and lint every changed file without fixing; then review read-only against the specification and the plan. |
+| Finalization | `coder: full-validation`, `reviewer: implementation-review` | Run the complete suite and lint every changed file except imported nf-core components, without fixing; then review read-only against the specification and the plan. |
 
 Delegations that are not plan markers:
 

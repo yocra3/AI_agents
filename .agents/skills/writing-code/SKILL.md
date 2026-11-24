@@ -39,7 +39,7 @@ and polyglot changes may provide more than one.
 - Prefer straightforward control flow and explicit error handling.
 - Avoid speculative abstractions, generic utility modules, and unrelated cleanup.
 - Preserve established public APIs unless the approved change requires an API change.
-- Validate with the formatter, static checks, and tests defined by the repository or profile.
+- Validate with the tests defined by the repository or profile.
 
 If a required global placeholder or profile path cannot be resolved, stop and report it rather
 than inventing a project layout or toolchain.

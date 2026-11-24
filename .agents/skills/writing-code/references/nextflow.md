@@ -10,8 +10,8 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
 ## Language and syntax
 
 - New code MUST use DSL2 and SHOULD be valid under the strict syntax parser.
-- Code MUST be free of Nextflow parser, lint, and runtime warnings supported by the repository's
-  pinned Nextflow version.
+- Code MUST be free of the parser and runtime warnings of the repository's pinned Nextflow
+  version.
 - Variables MUST be declared with `def` or an explicit type. Do not create variables through an
   undeclared assignment.
 - Deprecated features, including the `shell:` process section, MUST NOT be introduced.

@@ -17,12 +17,6 @@ implementation plan, including `<agent>: validation-fix`.
   subset script, the synthetic data generator, the input checks, and the setup tests in the image
   of the input checks; the execution runner (`run-tests.sh` in `{Analysis_Test_Code_Folder}`) and
   the image checks on the host.
-- Lint each file under the same execution rules: each script and report source in its
-  increment's image; each test file in the image of the increment it tests, and the setup tests
-  in the image of the input checks; each `{Analysis_Shared_Functions_file}` in the image of any
-  increment of its language; the input checks, the synthetic data generator, and the reference
-  subset script in the image of the input checks; `run-tests.sh`, the image checks, and
-  `run-analysis.sh` on the host or in any image that provides the lint checks of their language.
 - An increment is GREEN when `run-tests.sh increment <NN>` passes: the increment's scripts run
   and its checks pass, reusing the earlier increments' outputs in `{Analysis_Test_Run_Folder}`.
   When it fails, run `run-tests.sh synthetic <NN>` to locate the error; handle missing or stale
@@ -68,8 +62,8 @@ implementation plan, including `<agent>: validation-fix`.
      syntax error or a missing host tool, is not. When the image already exists and passes,
      report that instead of RED.
   3. Lint the image check with the linting skill and fix findings in it.
-- **Evidence**: the image check's path, its command and result, and the RED reason, or that the
-  image already passes.
+- **Evidence**: the image check's path, its command and result, the RED reason or that the
+  image already passes, and the lint results.
 - **Stops**: a failure that is not valid RED.
 
 ## `coder: image-build`
@@ -111,8 +105,8 @@ implementation plan, including `<agent>: validation-fix`.
      when they fail because the test support code or the test inputs are missing or do not meet
      the implementation plan; syntax, framework, and image errors are not.
   4. Lint the changed test files with the linting skill and fix findings in them.
-- **Evidence**: the setup tests and renamed files, the exact commands and results, and the
-  expected failure reason.
+- **Evidence**: the setup tests and renamed files, the exact commands and results, the expected
+  failure reason, and the lint results.
 - **Stops**: a rule of Input data, Configuration, or Test data cannot be checked as written.
 
 ## `coder: test-setup`
@@ -169,7 +163,8 @@ implementation plan, including `<agent>: validation-fix`.
      confirm that the checks load and are skipped. Do not attempt RED or run the increment's
      script.
   3. Lint the changed test files with the linting skill and fix findings in them.
-- **Evidence**: the checks written, and the command and result that show them skipped.
+- **Evidence**: the checks written, the command and result that show them skipped, and the lint
+  results.
 - **Stops**: none of its own.
 
 ## `coder: post-run-implementation`

@@ -13,6 +13,9 @@ implementation plan, including `<agent>: validation-fix`.
   implementation plan, and their requirements from the specification.
 - Use the test data of the implementation plan's Test data and artifacts, and run tests and
   tools in the environment and containers of its Environment and reproducibility section.
+- Never edit an imported nf-core component. When an error is traced to one, such as a test that
+  fails because of it, stop and report it; the user decides how to resolve it, such as with
+  another version or a patch.
 
 ## `cleaner: refactor`
 

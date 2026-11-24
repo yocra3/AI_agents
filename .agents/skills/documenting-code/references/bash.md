@@ -46,5 +46,4 @@ Bash comments need no generation step.
 
 ## Validation
 
-- Run `bash -n` and the repository's lint, such as `shellcheck`, on changed scripts.
 - Confirm that each documented argument, variable, and output matches the code.

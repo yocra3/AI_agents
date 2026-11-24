@@ -146,10 +146,10 @@ def label = sample?.label ?: 'unknown'
 
 ## Validation
 
-- Run the repository's formatter, compiler or linter, and tests after changing Groovy code.
+- Run the repository's tests after changing Groovy code, and its workflow tests for Groovy
+  embedded in Nextflow.
 - Tests SHOULD cover null and empty inputs, false-like values, collection shape, exceptional paths,
   and any behavior that depends on dynamic dispatch or coercion.
-- Groovy embedded in Nextflow MUST also pass the Nextflow linter and the repository's workflow tests.
 
 ## References
 

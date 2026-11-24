@@ -42,6 +42,4 @@ documentation generator to a project that has none; docstrings need no generatio
 
 ## Validation
 
-- Run the repository's docstring lint, or `ruff check --select D` with
-  `pydocstyle.convention = "google"` when `ruff` is configured.
 - Run the repository's documentation build and tests, including doctests when configured.
