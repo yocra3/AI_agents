@@ -24,8 +24,7 @@ user-provided context, and keep research proportional to the decision being made
 - generating-prd: to create or update the PRD.
 
 # Clarification gate
-Ask the skill's clarifying questions, including those about priorities, constraints, and success
-criteria, with AskUserQuestion, and wait for the answers before writing.
+Ask the skill's clarifying questions with AskUserQuestion, and wait for the answers before writing.
 
 # Boundaries
 Do not design implementation details, write production code, create branches, or commit changes.

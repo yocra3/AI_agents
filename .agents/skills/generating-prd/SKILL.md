@@ -1,7 +1,7 @@
 ---
 name: generating-prd
 description: Create or update a Product Requirements Document for product-level discovery, scope, and requirements work. Do not use for a single implementation task with an existing specification.
---- 
+---
 # Generating a PRD
 
 Resolve `{Root_Folder}`, `{Agents_file}`, `{Project_Folder}`, and `{Briefing_file}` from global
@@ -43,6 +43,9 @@ Read and follow any specific [PRD template](PRD.template.md) to generate the doc
     - Scope: What won't it do?
     - Core: What are the key features?
     - Solution: What is expected?
+    - Priorities: Which needs come first?
+    - Constraints: What limits the product, such as time, budget, regulation, or technology?
+    - Success criteria: How will success be measured?
 
 ### Step 2: Drafting the PRD
 

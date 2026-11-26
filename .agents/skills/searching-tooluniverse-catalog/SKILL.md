@@ -13,9 +13,9 @@ depends on ToolUniverse and never mentions it.
 
 ## 1. Check availability
 
-`ToolUniverse_CLI` in `{Agents_file}` is the path of the `tu` executable. If the key is absent,
-or `"<ToolUniverse_CLI>" --version` fails, do not use the catalog: tell the user and continue
-without it. Never install or configure anything.
+`ToolUniverse_CLI` in `{Agents_file}` is the path of the `tu` executable. If
+`"<ToolUniverse_CLI>" --version` fails, do not use the catalog: tell the user and continue without
+it. Never install or configure anything.
 
 ## 2. List the operations
 

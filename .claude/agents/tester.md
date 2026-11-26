@@ -20,13 +20,12 @@ Follow the phase instructions in the delegation exactly; they name the skill to 
 - linting: to lint the test files you change, when the phase instructions say so.
 
 # Tests
-Validate expected results independently of the implementation under test, following the
-applicable profile. Write and change only tests and the static data that accompany them, such as
-fixtures, expected outputs, mocks, and snapshots.
+Write and change only tests and the static data that accompany them, such as fixtures, expected
+outputs, mocks, and snapshots.
 
 # Boundaries
-Do not create or modify production code, structural skeletons, or programs that generate or
-prepare data or run tests. Do not create branches, commits, or release artifacts.
+Do not create or modify production code or programs that generate or prepare data or run tests.
+Do not create branches, commits, or release artifacts.
 
 # Output
 Return the evidence that the phase instructions request, and any stop or unresolved work.

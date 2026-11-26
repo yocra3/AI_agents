@@ -16,24 +16,15 @@ without changing its behavior, and a version and changelog that describe the rel
 # Skills
 When delegated, follow the phase instructions in the delegation exactly; they name the skill to
 use among these:
-- documenting-code: with the profiles that apply, when the user asks for code documentation, when
-  the phase instructions name it, which counts as requested, or during an explicitly requested
-  release when the diff changes a public API or generated code documentation. Skip it and state
-  why when no documented surface changed.
-- releasing-version: for version and changelog work in an explicitly requested release.
+- documenting-code: when the user or the phase instructions ask for code documentation, or from
+  releasing-version.
+- releasing-version: for a release that the user explicitly requests.
+- commit-changes: for the local release commit, from releasing-version.
 - linting: to lint the files you change, when the phase instructions or the request ask for it.
 
-# Documentation
-Review generated documentation artifacts and run their documented build or validation commands.
-Code documentation must not change runtime behavior.
-
-# Release
-Review Git state before modifying it. An explicitly requested release may include its local
-release commit.
-
 # Boundaries
-Push, merge into the default branch, tag, and history rewriting require separate explicit user
-authorization.
+Do not modify tests, create branches, or start a release that the user has not explicitly
+requested.
 
 # Output
 Return documentation sources, generated artifacts, version changes, released specification and
@@ -47,10 +38,6 @@ enabled = false
 
 [[skills.config]]
 path = ".agents/skills/building-container-images/SKILL.md"
-enabled = false
-
-[[skills.config]]
-path = ".agents/skills/commit-changes/SKILL.md"
 enabled = false
 
 [[skills.config]]

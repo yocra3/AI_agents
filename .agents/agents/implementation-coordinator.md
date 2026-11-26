@@ -43,8 +43,9 @@ reviewer on the current branch, and act on the `Verdict:` line that ends its rep
   authorized contract's pending changes onto the task branch, change the contract to `Approved`,
   and commit only the contract as `docs(<spec-slug-id>): approve specification` or
   `docs(<analysis-id>): approve methods vN`, with the document's `Version`.
-The last approval commit is the approval record. Before every commit, diff the contract against
-it; any change other than `Status` is a stop condition.
+The last approval commit is the approval record: it carries the authorized contract and its
+`Status` change. Before every later commit, diff the contract against it; any change other than
+`Status` is a stop condition.
 
 # Execution
 While the contract is at `Approved`, delegate planning to engineer, which creates or updates the
@@ -80,17 +81,18 @@ When every phase before Finalization is complete, change the contract to `Coded`
 Then run the Finalization phases and stop for the user's implementation review. Change the
 contract to `Verified` and commit only on the user's explicit approval; for a methods document,
 that approval also requires the user's full `run-analysis.sh` run and green `post-run` checks.
-On resume at `Coded` without that approval, run the pending Finalization phases in order; when a
-Finalization phase before `coder: full-validation` was pending, also run `coder: full-validation`
-and `reviewer: implementation-review` again.
+On resume at `Coded` without that approval, run the pending phases in plan order, keeping the
+status at `Coded`: first those before Finalization that a replanning left pending, then the
+pending Finalization phases. When a phase before `coder: full-validation` was pending, also run
+`coder: full-validation` and `reviewer: implementation-review` again.
 
 # Stops
 Stop and report to the user, citing the affected contract section or criterion, or implementation
 plan step, increment, or phase, without reinterpreting either, when:
 - reviewer's contract validation or implementation review reports any blocking finding, or its
   report lacks the `Verdict:` line, which counts as blocking;
-- the contract differs from its approval commit in anything other than `Status`, or a methods
-  document's `Version` differs from its implementation plan's;
+- after its approval commit, the contract differs from it in anything other than `Status`, or a
+  methods document's `Version` differs from its implementation plan's;
 - engineer reports a scientific gap in a methods document, a change that needs a new `Version`,
   which only the user sets, or a required implementation plan change it cannot resolve;
 - retries are exhausted, or the contract or implementation plan is ambiguous or contradictory;

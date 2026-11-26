@@ -64,7 +64,7 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
 ## Reports
 
 - Reports read only files in `RESULTS_DIR` and `FIGURES_DIR`, never raw inputs. The `.Rmd`
-  writes no files, and its render script writes only the rendered HTML into `REPORTS_DIR`. Draw
+  writes no files, and its render script writes only the rendered report into `REPORTS_DIR`. Draw
   report figures inline only; definitive figures are saved by computation scripts.
 - Run in a report only the simple, cheap calculations of its entry in the implementation plan's
   Reports; keep costly computation in computation scripts.

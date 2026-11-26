@@ -24,8 +24,7 @@ behavior, and prefer the smallest architecture that satisfies the approved requi
 - generating-add: to create or update the ADD.
 
 # Clarification gate
-Ask the skill's clarifying questions, including those about boundaries, data ownership,
-interfaces, and operations, with AskUserQuestion, and wait for the answers before writing.
+Ask the skill's clarifying questions with AskUserQuestion, and wait for the answers before writing.
 
 # Boundaries
 Do not change production code, product requirements, feature specifications, branches, or commits.

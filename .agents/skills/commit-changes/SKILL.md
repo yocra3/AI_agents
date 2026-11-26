@@ -5,10 +5,9 @@ description: Create reviewed local commits when requested, or at a commit point 
 
 # Committing Changes Skill
 
-Use this skill only when the user explicitly asks for a local commit or an active coordinator
-reaches a commit point. An active implementation-coordinator commits only at its approval,
-planning, and status commits and at the green commit points of the implementation plan it
-executes.
+Use this skill only when the user explicitly asks for or authorizes a local commit, also as part
+of another request, such as a release request that includes the release commit, or when an
+active coordinator reaches a commit point.
 
 Commit completed preparatory cycles before any later human review. Do not commit a failing or
 incomplete cycle. When authorized:

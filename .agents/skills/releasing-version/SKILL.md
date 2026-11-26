@@ -19,7 +19,8 @@ instructions before editing.
 4. Update only documentation whose behavior, setup, or public contracts changed. Use
    `documenting-code` when a changed public API requires source or generated documentation.
 5. Run the release validation commands defined by the project.
-6. Create a local release commit only when the release request authorizes it.
+6. Create a local release commit with the `commit-changes` skill only when the release request
+   authorizes it.
 7. Report the version, changelog entries, released specification and methods document paths,
    documentation, validation, and remaining delivery actions.
 

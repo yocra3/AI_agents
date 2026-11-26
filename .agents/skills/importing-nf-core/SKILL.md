@@ -17,9 +17,8 @@ nf-core subworkflows install <subworkflow> --sha <commit-sha>
 
 Do not use `--force` unless replacement is explicitly approved. Never hand-copy, reimplement, or
 edit the installed component. Check that `modules.json` records, under the `nf-core/modules`
-remote, the component with the pinned SHA and every component installed with it. Do not lint
-them: a component in nf-core is assumed to have passed nf-core lint. If the pinned component is
-unavailable or incompatible, stop instead of creating a local substitute.
+remote, the component with the pinned SHA and every component installed with it. If the pinned
+component is unavailable or incompatible, stop instead of creating a local substitute.
 
 Report the command, component and SHA, every changed file, the `modules.json` check, and blockers
 to the caller. Do not implement consuming wiring or perform Git operations.

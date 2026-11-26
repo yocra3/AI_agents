@@ -1,7 +1,7 @@
 ---
 name: generating-add
 description: Create or update an Architecture Design Document when requested architecture work materially changes system structure. Do not use for routine code edits.
---- 
+---
 # Generating an ADD
 
 To generate an Architecture Design Document (ADD), follow these steps:
@@ -15,17 +15,21 @@ and relevant current documentation. Stop if required context cannot be resolved.
 
 Read and follow specific templates like [ADD template](ADD.template.md) 
 
-Read and respect the current [AGENTS]({Agents_file}) file if it exists.
+Read and respect the current `{Agents_file}` if it exists.
 
 ## Steps to follow:
 
 ### Step 1: Clarifying Questions
 
--[ ] Ask only critical questions where the initial prompt is ambiguous. Focus on:
+- [ ] Ask only critical questions where the initial prompt is ambiguous. Focus on:
 
   - System Requirements: What are the key technical requirements?
   - Constraints: Are there any technology or architecture constraints?
   - Non-Functional Requirements: Are there any security, or scalability needs?
+  - Boundaries: Which components or services exist, and where does each one end?
+  - Data ownership: Which component owns each kind of data?
+  - Interfaces: How do components and external systems communicate?
+  - Operations: How is the system deployed, run, and monitored?
 
 ### Step 2: Drafting the ADD
 

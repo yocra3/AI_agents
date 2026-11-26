@@ -12,10 +12,10 @@ Choose the row that fits the packages of the image's Contents:
 | R, CRAN only | `rocker/r-ver:<X.Y.Z>` | `install.packages()` from a dated Posit Public Package Manager snapshot | the snapshot date |
 | R, with Bioconductor | `bioconductor/bioconductor_docker:RELEASE_<X>_<Y>` | `BiocManager::install()`; CRAN packages from a dated snapshot | the Bioconductor release and the snapshot date |
 | Python | `python:<X.Y.Z>-slim` | `pip install` | `==` on every package installed |
-| A command-line tool that only Bioconda packages | `mambaorg/micromamba:<X.Y.Z>` | `micromamba install` from conda-forge and bioconda | `=<version>` on every package installed |
+| A command-line tool that only Bioconda provides | `mambaorg/micromamba:<X.Y.Z>` | `micromamba install` from conda-forge and bioconda | `=<version>` on every package installed |
 
 - Prefer the native package manager of the language over conda. Use the micromamba base only
-  when the image needs a command-line tool that only Bioconda packages, and then install every
+  when the image needs a command-line tool that only Bioconda provides, and then install every
   package of the image with micromamba.
 - When no row fits the image's packages, stop and report it: the user chooses the base image.
 
