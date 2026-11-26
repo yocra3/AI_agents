@@ -1,7 +1,11 @@
 # Nextflow component testing with nf-test
 
-Use this profile with the applicable nf-core testing conventions. Resolve paths, required plugins
-and execution profiles from the repository.
+Use this profile with the applicable nf-core testing conventions. Run nf-test with the Nextflow
+version that the Nextflow line of the Tech Stack in `{Agents_file}` declares. Resolve paths,
+required plugins and execution profiles from the repository.
+
+Run every nf-test with `nf-test test <test-path> --ci` and the repository options, never with
+`--update-snapshot`, so that a missing or different snapshot fails instead of being written.
 
 ## Reference validations
 
@@ -17,8 +21,12 @@ The test harness may run on the host, but commands exercising reference behavior
 Use process tests for new local modules and workflow tests for local subworkflows or wiring. Create missing tests or extend existing coverage; preserve unrelated coverage. Stub tests verify declared outputs and wiring but do not replace real functional tests.
 
 Test inputs required by the final nf-test must be reproducibly available from a clean checkout.
-Use exact snapshots for stable results and nf-test-native assertions or projections for
-properties, formats, cardinality, metadata association and numerical tolerances.
+With verified reference outputs, use exact snapshots derived from them for stable results.
+Without reference outputs, write no snapshot: state every expectation as an explicit assertion in
+the `.nf.test`, never as a snapshot of the production component's own output. Use nf-test-native
+assertions or projections for properties, formats, cardinality, metadata association and
+numerical tolerances. Follow the snapshot rules of the nf-core testing guidelines below only with
+reference outputs; otherwise assert the same content explicitly.
 
 The final production test exercises only the production component and its normal test inputs.
 It does not materialize or read reference outputs or oracle artifacts, or execute

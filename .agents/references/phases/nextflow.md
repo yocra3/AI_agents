@@ -48,8 +48,8 @@ assigns them, and the Nextflow rules of some other phases. The rules for every p
   This phase does not implement the production component.
 - **Evidence**: the paths and checksums of the generated files, the commands, the validation
   results, and the lint results.
-- **Stops**: a validation is invalid or contradicts the specification: report why, and never
-  change it.
+- **Stops**: the RED does not reproduce, or a validation is invalid or contradicts the
+  specification: report why, and never change it.
 
 ## Nextflow rules of other phases
 
@@ -64,14 +64,12 @@ has such a step.
 - Write or extend the production nf-tests, with every expectation and snapshot derived from the
   verified reference outputs before the production implementation. Defer no snapshot until after
   GREEN.
-- Run them with `nf-test test <test-path> --ci` and the repository options. Missing snapshots,
-  invalid fixtures, and unavailable dependencies are not valid RED.
+- Missing snapshots, invalid fixtures, and unavailable dependencies are not valid RED.
 - Also return the snapshots written.
 
 ### `coder: implementation`
 
-- Implement the production component. Run the nf-tests with `--ci`, never with
-  `--update-snapshot`.
+- Implement the production component.
 - Never change a snapshot or a reference implementation; stop when a snapshot is invalid or
   contradicts the specification.
 
@@ -79,11 +77,9 @@ has such a step.
 
 - Refactor only the production component. Never change tests, snapshots, reference
   implementations, or generated fixtures.
-- Run the nf-tests with `--ci`, never with `--update-snapshot`.
 
 ### `<agent>: validation-fix`
 
-- Run the nf-tests with `--ci`, never with `--update-snapshot`.
 - Never change a reference output, a test prerequisite, or a generated fixture. In a reference
   implementation, fix only lint findings, without changing what it generates.
 - Only `tester` changes a snapshot, and only to match the verified reference outputs; stop when

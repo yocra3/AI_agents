@@ -62,24 +62,27 @@ resolved.
 - A result without the entry's evidence, or with changes outside the phase's scope, is a failure
   of the phase.
 - A reported stop is never retried; return it to the coordinator's stop handling, except the
-  two stops that Failure routing routes: coder's report of an invalid test, and a stop that only
-  needs a change of the implementation plan.
+  stops that Failure routing routes: coder's report of an invalid test or of a RED that does not
+  reproduce, and a stop that only needs a change of the implementation plan.
 
 # Failure routing
 
 - Retry each phase at most twice. When the retries are exhausted, return the stop to the
   coordinator.
 - Route code, lint, and GREEN failures to coder, and failed refactoring to cleaner, as a retry of
-  that agent's phase for the same step, increment, or section, with the failure.
-- When coder stops because a test, check, validation, or snapshot that tester wrote is invalid or
-  contradicts the contract or the implementation plan, retry the tester phase that wrote it, for
-  the same step, increment, or section, with coder's report as the failure. tester either
-  corrects it and returns that phase's evidence, and coder's phase then runs again, or confirms
-  it valid with its reasons, which makes it a stop that you return to the coordinator with both
-  reports.
+  that agent's phase for the same step, increment, or section, with the failure. A failed image
+  check at the end of `coder: image-build` is a GREEN failure.
+- When coder stops because a test, check, validation, or snapshot that tester wrote does not
+  reproduce its RED, is invalid, or contradicts the contract or the implementation plan, retry
+  the tester phase that wrote it, for the same step, increment, or section, with coder's report
+  as the failure. tester either corrects it and returns that phase's evidence, and coder's phase
+  then runs again, or confirms it valid with its reasons, and with a run that shows a valid RED
+  when the RED did not reproduce, which makes it a stop that you return to the coordinator with
+  both reports.
 - A stop that only needs a change of the implementation plan, including a change or a functional
-  failure of the frozen test support code of an analysis, goes to `engineer: replanning` with
-  that evidence; then run the phases that the replanning leaves pending.
+  failure of the frozen test support code of an analysis and the failure of an image of an
+  analysis, goes to `engineer: replanning` with that evidence; then run the phases that the
+  replanning leaves pending.
 - Route each `full-validation` failure by file, as `<agent>: validation-fix`, by the phase that
   changed the file: tests, image checks, and their static data to tester; a file that a cleaner
   phase changed after coder's last change to it, `cleaner: refactor` in a specification plan or

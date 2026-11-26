@@ -28,7 +28,31 @@ the [README](../README.md#workflows); the phases are defined in
    `Verified`.
 9. On request, `dev-ops` documents code or releases a version, which sets `Released`.
 
-The figure of this sequence is in the [README](../README.md#programming-workflow).
+```mermaid
+flowchart TD
+    AN["analyst: PRD"] -. optional .-> PO
+    AR["architect: ADD"] -. optional .-> PO
+    PO["product-owner<br/>specification: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
+    MV -.-> HA
+    PO --> HA{{"Human authorization<br/>to execute the named specification"}}
+    HA --> IC["implementation-coordinator"]
+    IC --> RV["reviewer: contract-validation"]
+    RV -- "blocking findings:<br/>stays Draft, no branch" --> PO
+    RV -- "no blocking findings" --> AP["task branch and approval commit<br/>specification: Approved"]
+    AP --> EN["engineer: planning<br/>implementation plan and ER model<br/>specification: Planned"]
+    EN --> PC["plan commit"]
+    PC --> RM["Removed entries<br/>tester: remove-tests, coder: remove-code"]
+    RM --> INC
+    subgraph INC ["For each implementation plan step"]
+        direction LR
+        T["tester: test<br/>RED"] --> C["coder: implementation<br/>GREEN"] --> CL["cleaner: refactor<br/>REFACTOR"] --> CM["commit"]
+    end
+    INC --> CO["specification: Coded"]
+    CO --> FI["Finalization<br/>coder: full-validation, fixes committed,<br/>reviewer: implementation-review"]
+    FI --> HR{{"Human implementation review"}}
+    HR --> VE["specification: Verified"]
+    VE -. on request .-> DO["dev-ops<br/>documentation, release: Released"]
+```
 
 ## Documents
 
@@ -51,9 +75,18 @@ The implementation plan names each phase as a checkbox marker, `<agent>: <phase>
 are the only progress record. For every delegation, the coordinator uses agent-delegation: it
 sends the contract and plan paths, what the phase acts on, the phase's entry pasted verbatim from
 the phase reference, with the rules for every phase of specification plans and, for a step with
-reference outputs or a validation fix in such a plan, the Nextflow rules of that phase, and the
-earlier evidence the entry uses. It
-requires back the evidence that the entry lists.
+reference outputs or a validation fix in a plan with such a step, the Nextflow rules of that
+phase, and the earlier evidence the entry uses. It requires back the evidence that the entry
+lists. testing-unit runs every nf-test with `--ci`, never `--update-snapshot`; only a step with
+reference outputs has snapshots, derived from them, and the nf-tests of other steps use explicit
+assertions.
+
+Nextflow planning depends on each specification, not on the project. A specification that
+changes no Nextflow code is planned like any other. One that changes only wiring, channels,
+configuration, parameters, or the internals of existing components gets the default phases,
+without a component search or a reference implementation. One that needs new processing also
+gets a search of local and nf-core components for that processing, with nfcore-component-reuse,
+and a reference implementation for each new component that requires reference outputs.
 
 | Section | Phases | Purpose |
 | --- | --- | --- |
@@ -69,17 +102,13 @@ Delegations that are not plan markers:
 - `reviewer: contract-validation`, before the approval commit;
 - `engineer: planning`, after the approval commit, and `engineer: replanning`, when
   implementation evidence shows that the plan must change;
-- `<agent>: validation-fix`, when the `full-validation` report shows a failure in a file that
-  the agent owns: tests and their static data to `tester`, a file that `cleaner: refactor`
-  changed after `coder`'s last change to it to `cleaner`, other files to `coder`. Then
-  `coder: full-validation` runs again.
+- `<agent>: validation-fix`, when the `full-validation` report shows a failure, to the agent
+  responsible for the failing file. Then `coder: full-validation` runs again.
 
-A failed phase is retried at most twice, with the failure: code, lint, and GREEN failures go to
-`coder`, failed refactoring to `cleaner`. When `coder` reports a test as invalid, `tester`'s phase
-is retried with that report; `tester` corrects the test, and `coder`'s phase runs again, or
-confirms it valid, which is a stop. Any other stop reported by a delegate is never retried: the
-coordinator records it in the plan's Blockers, as an uncommitted change, and reports it to the
-user, unless it only needs a plan change, which goes to `engineer: replanning`.
+A failed phase is retried a few times by the agent responsible for the failure, as
+[agent-delegation](../.agents/skills/agent-delegation/SKILL.md#failure-routing) details. A stop
+that it does not route is never retried: the coordinator records it in the plan's Blockers and
+reports it to the user.
 
 The coordinator commits each Removed entry, each step, and each Finalization phase with its
 markers, and the plan after each replanning, `docs(<spec-slug-id>): replan specification`. It
@@ -99,7 +128,10 @@ never pushes, merges, or tags.
 
 `reviewer` never changes a status. No transition can be skipped, and every commit after the
 approval must leave the specification unchanged except for `Status`. At `Coded` without the
-user's approval, a resumed coordinator runs the pending Finalization phases. A coordinator
+user's approval, a resumed coordinator first runs the phases before Finalization that a
+replanning left pending, keeping `Coded`, then the pending Finalization phases, and repeats
+`coder: full-validation` and `reviewer: implementation-review` only when a phase before them was
+pending. A coordinator
 authorized on a `Verified` or `Released` specification does nothing and reports its status.
 
 ## Revisions
