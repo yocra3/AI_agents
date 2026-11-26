@@ -1,6 +1,6 @@
 ---
 name: building-container-images
-description: Choose the base image and resolve the package versions of a tier-4 container image of an analysis implementation plan, write its pinned recipe, build the image, and add its registry entry with the installed versions. Use for coder's `image-build` phase. Never modify tests, image checks, or existing registry entries.
+description: Choose the base image and resolve the package versions of a tier-4 container image of an analysis implementation plan, write its pinned recipe, build the image, and add its registry entry with the installed versions. Use for coder's `image-build` phase. Never modify tests, image checks, or committed registry entries.
 ---
 
 # Purpose
@@ -24,8 +24,8 @@ Resolve global placeholders from `{Agents_file}`. Read:
   its execution rules, which declare whether the project runs images with Apptainer or Docker.
 
 Stop and report when a placeholder cannot be resolved, when `{Analysis_Images_file}` already has
-an entry with the image ID, or when `git check-ignore` shows that `{Analysis_Images_Folder}` is
-not ignored by Git.
+a committed entry with the image ID, or when `git check-ignore` shows that
+`{Analysis_Images_Folder}` is not ignored by Git.
 
 # Workflow
 
@@ -33,6 +33,9 @@ To resolve versions and to build, run the package manager and the build in the c
 with the container runtime of the execution rules in `{Agents_file}`; send outside only image
 names, tags, and package names, and never mount project data, for example with Apptainer's
 `--containall`.
+
+On a retry, first remove the uncommitted entry and the image file that the failed attempt added
+under the image ID, as the registry rules allow; `git diff` shows the entry as uncommitted.
 
 1. **Base image.** Choose the base image of the image's ecosystem, its latest stable tag, and
    that tag's digest, as the reference defines them.
@@ -57,7 +60,8 @@ names, tags, and package names, and never mount project data, for example with A
 6. **Register.** Compute the sha256 of the image file with `sha256sum` and add one entry under
    the image ID, as the registry template defines: the image file path, `sha256:<digest>`,
    source `recipe`, the recipe path, and the Contents with the versions read in step 5.
-7. **GREEN.** Run tester's image check for the image and report its result.
+7. **GREEN.** Run tester's image check for the image and report its result. When it fails,
+   report the failure, leaving the entry and the image file in place; never modify the entry.
 
 # Stops
 
@@ -70,14 +74,12 @@ names, tags, and package names, and never mount project data, for example with A
   report the packages; the user chooses the base image.
 - **Unavailable fixed version.** When a version that the methods document fixes cannot be
   installed, alone or with the other packages, stop and report it; only the user changes it.
-- **Failed check.** When tester's image check fails after the entry is added, stop and report it;
-  never modify the entry.
 
 # Boundaries
 
 - Never create, modify, or delete tests, image checks, or test support code.
-- Never modify or remove a registry entry, an existing image file, or the recipe of another image.
-  A rebuild of a registered image needs a new ID from the implementation plan.
+- Never modify or remove a committed registry entry, its image file, or the recipe of another
+  image. A rebuild of a registered image needs a new ID from the implementation plan.
 - Never modify the implementation plan; `engineer` records the installed versions there from the
   registry entry.
 - Never send project data to an external service or into an image; queries and the build

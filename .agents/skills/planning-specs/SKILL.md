@@ -18,8 +18,8 @@ Read:
   rules;
 - the phase reference, `{Agents_Folder}/references/phases/common.md` and `specs.md`, which
   defines the phases that the markers name;
-- for Nextflow work, also [Nextflow planning](references/nextflow.md),
-  [test-data discovery](test-data.md), and `{Agents_Folder}/references/phases/nextflow.md`.
+- for a specification that changes Nextflow code, [Nextflow planning](references/nextflow.md),
+  in the parts that its case in step 2 needs.
 
 Plan only an approved specification. Find its last approval commit with read-only Git commands,
 and stop when there is none or when the specification differs from it in anything other than
@@ -47,7 +47,17 @@ taking the diff below.
 ## 2. Design the implementation
 
 Understand the specification's requirements, consider the repository's conventions and existing
-interfaces, and choose the simplest viable approach.
+interfaces, and choose the simplest viable approach. Decide which case the specification is, from
+what it changes, not from the project:
+
+- **No Nextflow code**: plan it without Nextflow planning.
+- **Nextflow without new processing**: it changes only wiring, channels, configuration,
+  parameters, or the internals of existing components. Apply the Every Nextflow change section
+  of Nextflow planning; search no components and plan no reference implementation.
+- **New Nextflow processing**: it requires processing that the pipeline does not perform yet.
+  Also apply the New processing section, which uses nfcore-component-reuse only for those
+  requirements, and the Reference implementation section for each new component that requires
+  reference outputs.
 
 ## 3. Decompose it in steps
 
@@ -102,7 +112,10 @@ the implementation plan step, without editing the specification or choosing for 
 - the specification has no approval commit or differs from it in anything other than `Status`;
 - several implementation plans match the specification, or an existing one has no
   `Approval commit` in its header;
-- a required placeholder, input artifact, or framework-profile field cannot be resolved.
+- a required placeholder, input artifact, or framework-profile field cannot be resolved;
+- for new Nextflow processing, nfcore-component-reuse cannot check nf-core;
+- a new Nextflow component requires a reference implementation and `{Agents_file}` declares no
+  `Nextflow_Reference_Folder`.
 
 # Output
 

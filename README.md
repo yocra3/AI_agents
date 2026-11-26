@@ -71,33 +71,24 @@ Validation does not approve the contract; your authorization to `implementation-
 by `analyst` and an ADD by `architect`. `engineer` plans it as ordered steps; each step runs
 `tester: test` (RED), `coder: implementation` (GREEN) and `cleaner: refactor`, or a direct or
 Nextflow-specific phase when the plan says why. A full validation and an independent
-implementation review close the work before the user's review. See
+implementation review close the work before the user's review. The figure summarizes the steps
+that the user sees; the detailed sequence and its figure are in
 [docs/programming-workflow.md](docs/programming-workflow.md).
 
 ```mermaid
 flowchart TD
-    AN["analyst: PRD"] -. optional .-> PO
-    AR["architect: ADD"] -. optional .-> PO
     PO["product-owner<br/>specification: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
     MV -.-> HA
-    PO --> HA{{"Human authorization<br/>to execute the named specification"}}
-    HA --> IC["implementation-coordinator"]
-    IC --> RV["reviewer: contract-validation"]
-    RV -- "blocking findings:<br/>stays Draft, no branch" --> PO
-    RV -- "no blocking findings" --> AP["task branch and approval commit<br/>specification: Approved"]
-    AP --> EN["engineer: planning<br/>implementation plan and ER model<br/>specification: Planned"]
-    EN --> PC["plan commit"]
-    PC --> RM["Removed entries<br/>tester: remove-tests, coder: remove-code"]
-    RM --> INC
-    subgraph INC ["For each implementation plan step"]
-        direction LR
-        T["tester: test<br/>RED"] --> C["coder: implementation<br/>GREEN"] --> CL["cleaner: refactor<br/>REFACTOR"] --> CM["commit"]
+    PO --> HA{{"User authorizes<br/>the specification"}}
+    HA --> IC
+    subgraph IC ["implementation-coordinator"]
+        direction TB
+        RV["reviewer validates<br/>the specification"] --> EN["engineer plans<br/>the implementation"]
+        EN --> TC["tester and coder<br/>implement it with TDD"] --> FR["final review"]
     end
-    INC --> CO["specification: Coded"]
-    CO --> FI["Finalization<br/>coder: full-validation, fixes committed,<br/>reviewer: implementation-review"]
-    FI --> HR{{"Human implementation review"}}
-    HR --> VE["specification: Verified"]
-    VE -. on request .-> DO["dev-ops<br/>documentation, release: Released"]
+    IC --> UR{{"User reviews<br/>the implementation"}}
+    UR --> VE["specification: Verified"]
+    VE -. on request .-> DO["dev-ops<br/>release: Released"]
 ```
 
 ### Analysis workflow
@@ -106,32 +97,23 @@ flowchart TD
 a paper. `engineer` plans it with container images, synthetic test data rules and formal
 acceptance criteria. Agents run every script only on synthetic data and reference subsets, and on
 the real data only the input checks; tests check form, never results. The user runs the full
-analysis, and agents never interpret results. See
+analysis, and agents never interpret results. The figure summarizes the steps that the user
+sees; the detailed sequence and its figure are in
 [docs/analysis-workflow.md](docs/analysis-workflow.md).
 
 ```mermaid
 flowchart TD
     DA["data-analyst<br/>methods document: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
     MV -.-> HA
-    DA --> HA{{"Human authorization<br/>to execute the named methods document"}}
-    HA --> IC["implementation-coordinator"]
-    IC --> RV["reviewer: contract-validation"]
-    RV -- "blocking findings:<br/>stays Draft, no branch" --> DA
-    RV -- "no blocking findings" --> AP["task branch and approval commit<br/>methods document: Approved"]
-    AP --> EN["engineer: planning<br/>implementation plan, images, test data rules<br/>methods document: Planned"]
-    EN --> PC["plan commit"]
-    PC --> RM["Removed entries<br/>tester: remove-tests, coder: remove-code"]
-    RM --> SE["Setup, committed after each phase or RED and GREEN pair<br/>coder: renumber, tier-4 images, software versions,<br/>test support code, real configuration, input checks on the real data"]
-    SE --> INC
-    subgraph INC ["For each increment, in NN order"]
-        direction LR
-        T["synthetic: tester: test<br/>formal checks: RED"] --> C["coder: implementation<br/>script on synthetic data: GREEN"] --> CM["commit"]
-        PT["post-run: tester: post-run-checks<br/>checks that run after the user's full run"] --> PI["coder: post-run-implementation<br/>lint and syntax checks only"] --> CM
+    DA --> HA{{"User authorizes<br/>the methods document"}}
+    HA --> IC
+    subgraph IC ["implementation-coordinator"]
+        direction TB
+        RV["reviewer validates<br/>the methods document"] --> EN["engineer plans<br/>the implementation"]
+        EN --> TC["tester and coder<br/>implement it with TDD<br/>on synthetic data"] --> FR["final review"]
     end
-    INC --> CO["methods document: Coded"]
-    CO --> FI["Finalization<br/>refactor, run script, full validation,<br/>implementation review, comments"]
-    FI --> US{{"User<br/>implementation review, full run on real data,<br/>post-run checks"}}
-    US --> VE["methods document: Verified"]
+    IC --> UR{{"User reviews the implementation,<br/>runs the full analysis on the real data<br/>and the post-run checks"}}
+    UR --> VE["methods document: Verified"]
     VE -. on request .-> DO["dev-ops<br/>release: Released"]
 ```
 
@@ -148,7 +130,7 @@ The external tools that the framework itself needs:
 | Wave CLI `wave` | `selecting-container-images`, for Seqera Containers images (tier 3) | Optional, in analysis projects | The images that tier 3 would provide fall back to a recipe built in Setup (tier 4) |
 | ToolUniverse CLI `tu` | `searching-tooluniverse-catalog`, for `data-analyst` | Optional, when `AGENTS.md` declares its path as `ToolUniverse_CLI` | `data-analyst` designs the methods without the ToolUniverse catalog |
 | Nextflow | The Nextflow specification workflow: its nf-tests and `nextflow lint` | Nextflow projects | Required |
-| nf-core tools `nf-core` | `nfcore-component-reuse` while planning, `importing-nf-core`, and `linting` of the project's own modules, subworkflows and pipeline | Nextflow projects | `nfcore-component-reuse` and `importing-nf-core` stop; `linting` reports the nf-core checks as unavailable |
+| nf-core tools `nf-core` | `nfcore-component-reuse` while planning new processing, `importing-nf-core`, and `linting` of the project's own modules, subworkflows and pipeline | Nextflow projects | `nfcore-component-reuse` and `importing-nf-core` stop; `linting` reports the nf-core checks as unavailable |
 
 Each language's test framework and linter, such as testthat and lintr or pytest and ruff, are not
 dependencies of the framework: the project's Tech Stack in `AGENTS.md` declares them, and they are
@@ -196,7 +178,8 @@ Then, in the target repository:
    language of the Tech Stack, a test framework, a linter and recommended packages, and for R
    Markdown reports an output format, by default `BiocStyle::html_document`; accept, edit or
    decline each. `linting`, `testing-unit` and `selecting-container-images` use the declared
-   toolchain.
+   toolchain. A Nextflow line in the Tech Stack, by default with nf-test and `nextflow lint`,
+   makes the project a Nextflow project.
 2. Add a `CLAUDE.md` that imports it with `@AGENTS.md`, plus the Claude Code note that skills are
    shared through `.claude/skills`. Run user-facing roles as the main session with
    `claude --agent <name>`; this includes `product-owner`, `data-analyst`,

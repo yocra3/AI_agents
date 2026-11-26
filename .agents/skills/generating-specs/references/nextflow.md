@@ -1,6 +1,5 @@
 # Nextflow specifications
 
-Use this profile when the requested behavior will be implemented with Nextflow or nf-core.
 Product owner writes one functional specification only. When the request is for a subworkflow,
 specify that subworkflow's external behavior and do not decompose it into internal modules. Module
 boundaries, implementation choices and reuse decisions belong to the implementation plan.

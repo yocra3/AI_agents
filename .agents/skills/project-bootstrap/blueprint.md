@@ -91,11 +91,12 @@ Git.
 
 One line per language of the Tech Stack, with its toolchain and recommended packages:
 
-- `{Language}`: the language, such as R, Python, or Bash, followed by its version when the
-  project requires one, such as `R 4.4`.
+- `{Language}`: the language, such as R, Python, Bash, or Nextflow, followed by its version when
+  the project requires one, such as `R 4.4`.
 - `{Test_Framework}` and `{Linter}`: the toolchain the repository already uses, otherwise the
   default of the language: R testthat, and lintr with styler; Python pytest and ruff; Bash bats
-  and shellcheck.
+  and shellcheck; Nextflow nf-test, and `nextflow lint` with the nf-core tools lint of the
+  project's own components.
 - `{Language_Packages}`: suggested by default for R dplyr, tidyr, tibble, purrr, stringr,
   forcats, readr, readxl, arrow, ggplot2, patchwork, scales, ggrepel, future, and furrr, as
   individual packages, not the `tidyverse` meta-package; for Python pandas, numpy, pyarrow,
@@ -130,7 +131,7 @@ The following named placeholders guide generation but do not need to remain as g
 
 - `{Product_Name}`, `{Product_Summary}`, `{Product_Characteristics}`: concise product context.
 - `{Tech_Stack}`: technologies that apply to the project and have no language line, such as
-  Nextflow, Apptainer or Docker, or a database.
+  Apptainer or Docker, or a database.
 - `{Setup_Command}`, `{Build_Command}`, `{Run_Command}`, `{Test_Command}`: verified project commands.
 - `{Deploy_Command}`: deployment command when the project has one.
 - `{Profiles}`: optional Markdown profiles mapped to their language, framework, or test scope.

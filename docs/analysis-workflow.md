@@ -29,7 +29,31 @@ are defined in [`.agents/references/phases/`](../.agents/references/phases/).
    `post-run` checks. With all three, the document is `Verified`.
 8. On request, `dev-ops` releases a version, which sets `Released`.
 
-The figure of this sequence is in the [README](../README.md#analysis-workflow).
+```mermaid
+flowchart TD
+    DA["data-analyst<br/>methods document: Draft"] -. recommended .-> MV["reviewer<br/>manual validation"]
+    MV -.-> HA
+    DA --> HA{{"Human authorization<br/>to execute the named methods document"}}
+    HA --> IC["implementation-coordinator"]
+    IC --> RV["reviewer: contract-validation"]
+    RV -- "blocking findings:<br/>stays Draft, no branch" --> DA
+    RV -- "no blocking findings" --> AP["task branch and approval commit<br/>methods document: Approved"]
+    AP --> EN["engineer: planning<br/>implementation plan, images, test data rules<br/>methods document: Planned"]
+    EN --> PC["plan commit"]
+    PC --> RM["Removed entries<br/>tester: remove-tests, coder: remove-code"]
+    RM --> SE["Setup, committed after each phase or RED and GREEN pair<br/>coder: renumber, tier-4 images, software versions,<br/>test support code, real configuration, input checks on the real data"]
+    SE --> INC
+    subgraph INC ["For each increment, in NN order"]
+        direction LR
+        T["synthetic: tester: test<br/>formal checks: RED"] --> C["coder: implementation<br/>script on synthetic data: GREEN"] --> CM["commit"]
+        PT["post-run: tester: post-run-checks<br/>checks that run after the user's full run"] --> PI["coder: post-run-implementation<br/>lint and syntax checks only"] --> CM
+    end
+    INC --> CO["methods document: Coded"]
+    CO --> FI["Finalization<br/>refactor, run script, full validation,<br/>implementation review, comments"]
+    FI --> US{{"User<br/>implementation review, full run on real data,<br/>post-run checks"}}
+    US --> VE["methods document: Verified"]
+    VE -. on request .-> DO["dev-ops<br/>release: Released"]
+```
 
 ## Documents
 
@@ -59,9 +83,9 @@ the analysis rules of that phase, when it has them.
 
 | Section | Phases | Purpose |
 | --- | --- | --- |
-| Removed | `tester: remove-tests`, `coder: remove-code` | At a new version, remove the tests and files of a removed increment. |
+| Removed | `tester: remove-tests`, `coder: remove-code` | At a new version, remove the tests and files of a removed increment. With `tester: remove-tests` only, remove the image check of a tier-4 image that the plan no longer uses. |
 | Setup | `coder: renumber` | At a new version that renumbers increments, rename their files. |
-| Setup | `tester: image-check`, `coder: image-build`, per tier-4 image | A permanent image check in RED, then the base image, the resolved versions, the pinned recipe, the build, and the registry entry with the installed versions. |
+| Setup | `tester: image-check`, `coder: image-build`, per tier-4 image | The image check in RED, then the base image, the resolved versions, the pinned recipe, the build, and the registry entry with the installed versions. |
 | Setup | `engineer: software-versions` | After the last image pair, fill the plan's `pending image-build` versions and effective parameters of the tier-4 software. |
 | Setup | `tester: test-setup`, `coder: test-setup` | The setup tests in RED, then the test support code and the test inputs to GREEN. |
 | Setup | `coder: real-config`, `tester: real-input-check` | The real configuration, then the input checks on the real inputs. |
@@ -70,9 +94,7 @@ the analysis rules of that phase, when it has them.
 | Finalization | `cleaner: analysis-refactor`, `coder: run-script`, `coder: full-validation`, `reviewer: implementation-review`, `dev-ops: code-documentation` | Refactor all analysis code once, write `run-analysis.sh`, run the full validation, review read-only, and add comments. |
 
 The delegations that are not plan markers, the retries, and the stops follow the
-[programming workflow](programming-workflow.md#phases). A `full-validation` failure goes, as
-`<agent>: validation-fix`, to `tester` for tests and image checks, to `cleaner` for a file that
-`cleaner: analysis-refactor` changed, and to `coder` for any other file.
+[programming workflow](programming-workflow.md#phases).
 
 The coordinator commits each Removed entry, each increment, each Finalization phase, and the plan
 after each replanning, `docs(<analysis-id>): replan methods vN`. In Setup it commits
@@ -80,7 +102,8 @@ after each replanning, `docs(<analysis-id>): replan methods vN`. In Setup it com
 `tester: real-input-check` each on its own, and each RED and GREEN pair together: each
 `tester: image-check` with its `coder: image-build`, and `tester: test-setup` with
 `coder: test-setup`, so a phase that ends in RED is never committed alone. At `Coded` without
-the user's approval, a resumed coordinator runs the pending Finalization phases, and repeats
+the user's approval, a resumed coordinator first runs the phases before Finalization that a
+replanning left pending, keeping `Coded`, then the pending Finalization phases, and repeats
 `coder: full-validation` and `reviewer: implementation-review` only when a phase before them was
 pending.
 
@@ -110,7 +133,7 @@ check in its image:
 | Mode | What it runs | Used by |
 | --- | --- | --- |
 | `increment <NN>` | Increment `NN`'s scripts and checks, reusing the earlier increments' outputs. | RED and GREEN of `tester: test` and `coder: implementation`. |
-| `synthetic [NN]` | The full run from scratch: image checks, setup tests, input checks, then every `synthetic` increment with its checks, up to `NN` when given. | `cleaner: analysis-refactor`, `coder: full-validation`, and `synthetic <NN>` to locate an `increment <NN>` failure. |
+| `synthetic [NN]` | The full run from scratch: setup tests, input checks, then every `synthetic` increment with its checks, up to `NN` when given. | `cleaner: analysis-refactor`, `coder: full-validation`, and `synthetic <NN>` to locate an `increment <NN>` failure. |
 | `setup` | Only the setup tests. | `coder: test-setup`. |
 | `input-check` | Only the input checks, on the real inputs. | `tester: real-input-check`. |
 | `post-run` | Only the output checks, on the outputs of the user's full run. | The user, after the full run. |
@@ -126,18 +149,30 @@ check in its image:
   figures, that the plan declares for its increments or the input checks, starting from the
   packages of the Tech Stack and, for reports, the package of the report format. A replanning
   re-resolves an image only on the user's request, for a methods change, or when implementation
-  shows that it lacks a support package.
+  shows that it fails, such as by lacking a support package; a re-resolved image is a new image,
+  with a new ID, and only the Software rows of the increments and input checks for which it is
+  re-resolved move to it. The old image keeps its other rows while anything still uses it; when
+  nothing does, the plan drops it and its Setup pair, and a Removed entry deletes its image
+  check; its registry entry stays.
 - The plan gives a tier-4 image only its requirements: its packages, without versions except
   those that the methods document fixes, the test framework, the linter, and rmarkdown and Pandoc
   for reports. Its Software rows keep `pending image-build` until the image is built.
-- `coder` builds each tier-4 image in Setup, after `tester` writes its permanent image check,
-  which checks that every package is present and that the versions the document fixes match. It
+- `coder` builds each tier-4 image in Setup, after `tester` writes its image check, which checks
+  that every package is present and that the versions the document fixes match. It
   starts from the latest stable release of the base image of the ecosystem, such as
   `rocker/r-ver` or `python`, pinned by tag and digest, never a development, pre-release or
   floating tag; resolves the latest stable package versions with the native package manager; pins
   them in the recipe, so that a rebuild gives the same image; and records the installed versions
-  in the registry entry. `engineer: software-versions` then fills the pending versions and
-  effective parameters from that entry, and a replanning that adds a tier-4 image runs it again.
+  in the registry entry. When the image check then fails, the agent responsible retries, as
+  [agent-delegation](../.agents/skills/agent-delegation/SKILL.md#failure-routing) details; a
+  committed registry entry is never changed. `engineer: software-versions` then fills the
+  pending versions and effective parameters from that entry, and a replanning that adds a tier-4
+  image, also by re-resolving one, runs it again.
+- An image check runs only while its image is built; once it passes, the image is assumed
+  correct, and neither `run-tests.sh` nor `run-analysis.sh` runs it again. It stays in the
+  repository as the record of the image's requirements. When an image fails later, the failure
+  is diagnosed, with its image check for a tier-4 image, and a replanning replaces the image with
+  a new one.
 - Recipes are versioned in `{Analysis_Recipes_Folder}`; built images are not.
 
 ## Versions and revisions

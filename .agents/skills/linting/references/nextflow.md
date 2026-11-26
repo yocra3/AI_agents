@@ -1,8 +1,8 @@
 # Nextflow linting with Nextflow and nf-core tools
 
-Use the repository's pinned Nextflow version and the available nf-core tools installation, and
-confirm options with each command's `--help`. From the repository root, select the requested
-scope:
+Use the Nextflow version that the Nextflow line of the Tech Stack in `{Agents_file}` declares and
+the available nf-core tools installation, and confirm options with each command's `--help`. From
+the repository root, select the requested scope:
 
 - Scripts and configuration files: `nextflow lint <file>`, available from Nextflow 25.04. Fix:
   `nextflow lint -format <file>` formats files without errors; resolve errors by hand.

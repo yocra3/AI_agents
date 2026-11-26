@@ -127,10 +127,10 @@ They never read the user's `INPUT_<NAME>` data.
 The execution runner is `run-tests.sh` in `{Analysis_Test_Code_Folder}`, run as
 `run-tests.sh <mode> [NN]`. It runs on the host, because scripts run in different images, and may
 therefore drive several frameworks. For analysis, it replaces the session-level setup of the
-testing frameworks. It sets `ANALYSIS_TEST_MODE` for the checks to `synthetic` in the `increment`
-and `synthetic` modes and to `post-run` in the `post-run` mode, passes the environment variables
-of this section into each container, and makes the configured input paths visible in it, as the
-execution rules require.
+testing frameworks; no mode runs the image checks. It sets `ANALYSIS_TEST_MODE` for the checks
+to `synthetic` in the `increment` and `synthetic` modes and to `post-run` in the `post-run` mode,
+passes the environment variables of this section into each container, and makes the configured
+input paths visible in it, as the execution rules require.
 
 In the `increment` and `synthetic` modes, it sets `ANALYSIS_CONFIG` to the test configuration
 and `ANALYSIS_OUTPUT_ROOT` to `{Analysis_Test_Run_Folder}`. It runs each script and render
@@ -142,11 +142,10 @@ tracked files.
 - `increment <NN>`: run only the scripts and render scripts of increment `NN`, then its checks,
   reusing the earlier increments' outputs already in `{Analysis_Test_Run_Folder}`, which it does
   not empty. For a `post-run` increment, it runs no script, and its checks skip.
-- `synthetic [NN]` (default): the full run from scratch. Run every image check, then the setup
-  tests in the image of the input checks, then the input checks, and stop at the first failure.
-  Then empty `{Analysis_Test_Run_Folder}` and run the scripts and render scripts of the
-  `synthetic` increments in implementation plan order, up to increment `NN` when given, then
-  their checks.
+- `synthetic [NN]` (default): the full run from scratch. Run the setup tests in the image of the
+  input checks, then the input checks, and stop at the first failure. Then empty
+  `{Analysis_Test_Run_Folder}` and run the scripts and render scripts of the `synthetic`
+  increments in implementation plan order, up to increment `NN` when given, then their checks.
 - `setup`: run only the setup tests, in the image of the input checks.
 - `post-run`: no script is executed; the runner runs only the output checks, each increment's in
   its image. They load the real configuration and read the version folders written by the user's

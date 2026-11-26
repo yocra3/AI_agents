@@ -97,8 +97,9 @@ entry to the delegate, complete on its own, in this format:
 - In the AI_agents repository only, where the framework is developed, update, where they
   describe what changed: the Unreleased section of `{Agents_Folder}/CHANGELOG.md`, rewriting any
   entry that the change supersedes so that it states the net change from the last released
-  version; `README.md`, whose Programming workflow and Analysis workflow subsections hold the only
-  figure of each flow; and `docs/programming-workflow.md` and `docs/analysis-workflow.md`. In a
+  version; `README.md`, whose figure of each workflow is a user-facing summary; and
+  `docs/programming-workflow.md` and `docs/analysis-workflow.md`, which hold the detailed figure
+  of each flow. In a
   project that installs the framework, skip this step: these documents describe the framework
   and change only upstream.
 - Regenerate the agents, which also regenerates `docs/catalog.md` from the agent and skill

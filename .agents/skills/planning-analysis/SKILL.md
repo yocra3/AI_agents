@@ -115,8 +115,16 @@ Replanning for implementation evidence, with no document change, follows the sam
   markers, also when renumbered.
 - Keep the resolved versions and the chosen images, also an image that a missing Wave CLI sent
   to tier 4. Re-resolve an image only when the user asks, a methods change requires it, or
-  implementation evidence shows that it lacks a support package, which you then declare; only a
-  version that the user fixes in the document updates a version, which may need a new image ID.
+  implementation evidence shows that it fails, such as by lacking a support package, which you
+  then declare; only a version that the user fixes in the document updates a version. A
+  re-resolved image is a new image with a new ID, which replaces the old ID only in the increments
+  and input checks for which it is re-resolved. Only their Software and effective parameters rows
+  move to the new ID, splitting a row by `Steps` when other users of the old image share it, with
+  the new image's digest, versions, and effective parameters as the template's rules give them
+  for its tier. While any increment or the input checks still use the old image, it keeps its
+  other rows, its Images row, whose `Used by` lists only those users, and, for a tier-4 image,
+  its Setup pair. When nothing uses it any more, remove its Images row and, for a tier-4 image, its Setup pair, and add a Removed entry for
+  its image check; its registry entry stays.
 - Reset to pending:
   - the Execution markers of every modified increment;
   - every Finalization marker;
@@ -127,8 +135,8 @@ Replanning for implementation evidence, with no document change, follows the sam
     frozen test support code must change or fails functionally, and also
     `tester: real-input-check` when the change affects the input checks;
   - `coder: renumber` when a new version changes some increment number;
-  - `engineer: software-versions` when a new tier-4 image is added, which also adds its new,
-    pending image pair.
+  - `engineer: software-versions` when a new tier-4 image is added, also by re-resolving an
+    image, which also adds its new, pending `tester: image-check` and `coder: image-build` pair.
 - Within a version, only append: new increments go at the end, with the next `NN`, and no
   increment is removed or renumbered.
 - At a new version, move each removed increment from Increments to Removed, as one entry with all
@@ -152,10 +160,13 @@ the document or choosing for it, when:
   methods template's revision rules, such as a removed or modified step, or a change needs an
   increment inserted before an existing one, such as a new dependency of an increment on a later
   one; suggest a new version, which only the user sets;
-- the document has no approval commit or differs from it, several implementation plans match,
-  or a package version cannot be provided by any image tier;
+- the document has no approval commit or differs from it, or several implementation plans
+  match;
 - the Tech Stack of `{Agents_file}` declares no test framework or linter for the language of an
   increment or of the input checks.
+
+A package version that no image of tiers 1 to 3 provides is not a stop here: its image goes to
+tier 4, whose build stops when a version that the document fixes cannot be installed.
 
 For a scientific gap, say in plain language what the document must state, not which value to
 choose.

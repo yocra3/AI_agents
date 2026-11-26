@@ -6,7 +6,8 @@ Phases shared by specification and analysis implementation plans, and the delega
 
 ## `tester: remove-tests`
 
-- **Meaning**: Remove the tests of a removed step, acceptance criterion, or increment.
+- **Meaning**: Remove the tests of a removed step, acceptance criterion, or increment, or the
+  image check of a tier-4 image that an analysis plan no longer uses.
 - **Skill**: testing-unit.
 - **Steps**:
   1. Remove only the tests of the removed item that the Removed entry names, and the static test

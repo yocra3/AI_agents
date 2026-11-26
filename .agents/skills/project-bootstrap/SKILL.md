@@ -24,7 +24,8 @@ not already exist.
    - the Analysis workflow, Analysis layout, and Container execution rules sections only when the
      project has an analysis workflow, with the layout's defaults and each execution rule
      confirmed with the user;
-   - `Nextflow_Reference_Folder` only in a Nextflow project;
+   - `Nextflow_Reference_Folder` only in a Nextflow project, whose Tech Stack has a Nextflow
+     line;
    - `ToolUniverse_CLI` only when the user gives its path;
    - in the Tech Stack, only the toolchains, packages, and report format that the user accepted
      or edited, without the parts declined or empty lines; `{Tech_Stack}` only when a technology

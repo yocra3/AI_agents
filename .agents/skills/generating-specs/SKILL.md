@@ -35,7 +35,8 @@ Types of specifications to generate include:
 
 Read and follow the specific [spec template](../../references/templates/spec.template.md) to generate the document.
 
-For Nextflow work, also load [Nextflow specifications](references/nextflow.md).
+When the specified behavior will be implemented with Nextflow or nf-core, also load
+[Nextflow specifications](references/nextflow.md).
 
 ## Steps to follow:
 

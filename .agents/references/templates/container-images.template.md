@@ -30,6 +30,8 @@ ID.
 - Contents record the versions installed in the image, never requested ones; for a tier-4 image,
   every item of its Contents in the implementation plan, with the version read in the built
   image.
-- Never modify or remove an entry. A rebuilt image gets a new ID and a new entry.
+- Never modify or remove an entry once it is committed. A rebuilt image gets a new ID and a new
+  entry. Only a retry of `coder: image-build` removes the uncommitted entry and image file that
+  its failed attempt added, before building again under the same ID.
 - Recipes are versioned in `{Analysis_Recipes_Folder}`. Built image files are kept in
   `{Analysis_Images_Folder}`, which Git ignores.

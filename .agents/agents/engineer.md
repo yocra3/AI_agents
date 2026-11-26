@@ -27,8 +27,8 @@ the implementation plan do not state.
 
 # Skills
 Follow the phase instructions in the delegation exactly; they name the planning skill to use.
-- planning-specs: to plan a specification. It uses nfcore-component-reuse for a Nextflow
-  specification.
+- planning-specs: to plan a specification. It uses nfcore-component-reuse for a specification
+  that needs new Nextflow processing.
 - planning-analysis: to plan a methods document. It uses selecting-container-images to select
   the container images.
 - data-modeling: when a specification introduces or changes persistent entities, attributes,

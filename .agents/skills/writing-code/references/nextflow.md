@@ -2,7 +2,8 @@
 
 These guidelines apply to general Nextflow pipelines, modules, subworkflows, and configuration.
 Project conventions take precedence. For nf-core code, apply these guidelines together with
-[`nf-core.md`](./nf-core.md).
+[`nf-core.md`](./nf-core.md). Write for the Nextflow version that the Nextflow line of the Tech
+Stack in `{Agents_file}` declares, called the declared Nextflow version below.
 
 The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as described in
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
@@ -10,8 +11,7 @@ The keywords "MUST", "MUST NOT", "SHOULD", etc. are to be interpreted as describ
 ## Language and syntax
 
 - New code MUST use DSL2 and SHOULD be valid under the strict syntax parser.
-- Code MUST be free of the parser and runtime warnings of the repository's pinned Nextflow
-  version.
+- Code MUST be free of the parser and runtime warnings of the declared Nextflow version.
 - Variables MUST be declared with `def` or an explicit type. Do not create variables through an
   undeclared assignment.
 - Deprecated features, including the `shell:` process section, MUST NOT be introduced.
@@ -50,7 +50,8 @@ workflow ALIGN_PAIR {
 - Inputs and outputs SHOULD use descriptive names. Outputs consumed downstream SHOULD use `emit`.
 - Output patterns MUST be as narrow as practical so logs, inputs, and unrelated files are not
   published accidentally.
-- Declare `arity` when the number of expected input or output files is part of the contract and the repository's pinned Nextflow version supports it.
+- Declare `arity` when the number of expected input or output files is part of the contract and
+  the declared Nextflow version supports it.
 - Mark an output `optional: true` only when absence is a valid, documented result.
 - Conditional routing SHOULD happen in the calling workflow with branching or filtering. Use a
   conditional process script only when the selected command is inherently part of that process.
@@ -116,7 +117,7 @@ reads
 - Resource requests SHOULD use Nextflow units such as `4.GB` and `2.h`. Commands SHOULD consume
   allocated resources through `task.cpus`, `task.memory`, and related task properties.
 - Dynamic retry resources SHOULD be bounded by explicit limits and based on `task.attempt` or the
-  previous task trace, according to the repository's supported Nextflow version.
+  previous task trace, according to the declared Nextflow version.
 - Software dependencies MUST be reproducible. Pin container tags or digests and package versions;
   do not introduce mutable tags such as `latest`.
 - Secrets MUST use the repository's supported secret mechanism and MUST NOT be committed, embedded in

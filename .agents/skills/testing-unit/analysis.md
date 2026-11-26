@@ -30,12 +30,14 @@ These rules override the skill's general guidance on reference outputs and test 
 
 ## Image checks
 
-Write one permanent image check per tier-4 image, a Bash script run on the host that finds the
-image through its `{Analysis_Images_file}` entry and runs read-only commands in it. It checks that
-the entry and its image file exist, that the image provides every package of the image's Contents
-in the Images table, the test framework and the linter listed there, and rmarkdown and Pandoc
-when listed, and that each version given there matches. Contents give only the versions that the
-methods document fixes; the check tests no other version, since the build resolves them. A
+Write one image check per tier-4 image, a Bash script run on the host that finds the image
+through its `{Analysis_Images_file}` entry and runs read-only commands in it. It stays in the
+repository as the record of the image's requirements, used to diagnose a later failure of the
+image. It checks that the entry and its image file exist, that the image provides every package
+of the image's Contents in the Images table, the test framework and the linter listed there, and
+rmarkdown and Pandoc when listed, and that each version given there matches. Contents give only
+the versions that the methods document fixes; the check tests no other version, since the build
+resolves them. A
 missing entry or image file means the image is missing.
 
 ## Setup tests
@@ -73,9 +75,9 @@ slug in the framework's pattern.
 
 The execution runner, `run-tests.sh`, runs the checks and, for analysis, replaces the
 session-level setup of the language profiles. Its `increment <NN>` mode runs the checks of one
-increment; its `synthetic [NN]` mode runs the image checks, the setup tests, the input checks,
-and the checks of every `synthetic` increment, up to `NN` when given; its `setup` mode runs only
-the setup tests; and its `post-run` mode runs only the output checks. It sets
+increment; its `synthetic [NN]` mode runs the setup tests, the input checks, and the checks of
+every `synthetic` increment, up to `NN` when given; its `setup` mode runs only the setup tests;
+and its `post-run` mode runs only the output checks. It sets
 `ANALYSIS_TEST_MODE` to `synthetic` in its `increment` and `synthetic` modes and to `post-run` in
 its `post-run` mode; in these rules, `synthetic` mode and `post-run` mode mean that value.
 

@@ -23,8 +23,13 @@ implementation plan, including `<agent>: validation-fix`.
   `{Analysis_Test_Run_Folder}` and reruns from scratch up to increment `NN`; handle missing or
   stale earlier outputs in no other way.
 - Only `cleaner: analysis-refactor` and `coder: full-validation` use the full run,
-  `run-tests.sh synthetic` without `NN`. Otherwise the image checks, the setup tests, and the
-  input checks run only in their Setup phases and within `run-tests.sh synthetic <NN>`.
+  `run-tests.sh synthetic` without `NN`. Otherwise the setup tests and the input checks run only
+  in their Setup phases and within `run-tests.sh synthetic <NN>`.
+- An image check runs only in `tester: image-check` and `coder: image-build`; once it passes, the
+  image is assumed correct. When an image fails later, such as when it lacks a tool that a script
+  needs, stop and report the failure, with the result of its image check for a tier-4 image, run
+  to diagnose it: the image goes back to generation through `engineer: replanning`, as a new
+  image.
 - The test support code is the test configuration, `run-tests.sh`, the reference subset script,
   the synthetic data generator, and the input checks. Once `coder: test-setup` is GREEN, it is
   frozen: only a Setup phase changes it, and an `<agent>: validation-fix` may fix lint findings
@@ -51,7 +56,7 @@ implementation plan, including `<agent>: validation-fix`.
 
 ## `tester: image-check`
 
-- **Meaning**: Write the permanent check of one tier-4 image, in RED.
+- **Meaning**: Write the image check of one tier-4 image, in RED.
 - **Skill**: testing-unit.
 - **Steps**:
   1. Write the image check of the image that the marker names, as testing-unit's analysis
@@ -71,13 +76,15 @@ implementation plan, including `<agent>: validation-fix`.
   registry entry, to GREEN.
 - **Skill**: building-container-images.
 - **Steps**:
-  1. Run tester's image check from the brief and confirm the expected RED. When tester reported
-     that the image already exists and passes, change nothing and report it.
+  1. On a retry, first remove what the failed attempt added, as building-container-images
+     states. Run tester's image check from the brief and confirm the expected RED. When tester
+     reported that the image already exists and passes, change nothing and report it.
   2. Build the image that the marker names with building-container-images: it chooses the base
      image, resolves and pins the versions, builds the image, records the installed versions in
      the registry entry, and ends with the image check passing.
 - **Evidence**: the skill's output.
-- **Stops**: the skill's stops.
+- **Stops**: the RED does not reproduce, or the image check is invalid or contradicts the
+  implementation plan: report why, and never change the check; and the skill's stops.
 
 ## `engineer: software-versions`
 
@@ -124,8 +131,8 @@ implementation plan, including `<agent>: validation-fix`.
 - **Evidence**: the files written, the test inputs created, the exact commands and results, and
   the lint results.
 - **Stops**: a Test data rule cannot be applied; a reference resource is not at its Location,
-  naming the missing file; or a setup test is invalid or contradicts the implementation plan:
-  report why, and never change the test.
+  naming the missing file; or the RED does not reproduce, or a setup test is invalid or
+  contradicts the implementation plan: report why, and never change the test.
 
 ## `coder: real-config`
 
@@ -228,9 +235,9 @@ Each of these rules follows the entry of its phase in [common.md](common.md).
 
 ### `tester: remove-tests`
 
-- Do not confirm GREEN. An increment is removed only at a new version, which leaves
-  `tester: test-setup` pending, so the test inputs and configuration are not yet current; the
-  full run of `coder: full-validation` covers the remaining increments.
+- Do not confirm GREEN; the full run of `coder: full-validation` covers what remains. An
+  increment is removed only at a new version, which leaves `tester: test-setup` pending, so the
+  test inputs and configuration are not yet current.
 
 ### `tester: test`
 
@@ -262,5 +269,5 @@ Each of these rules follows the entry of its phase in [common.md](common.md).
 - The complete test suite is the full run, `run-tests.sh synthetic` without `NN`. Never run the
   `post-run` or `input-check` modes of `run-tests.sh`, anything on the real inputs, or
   `run-analysis.sh`.
-- Also report the result of the image checks, the setup tests, the input checks, and each
-  increment's checks, and the increment or check of every failure.
+- Also report the result of the setup tests, the input checks, and each increment's checks, and
+  the increment or check of every failure.

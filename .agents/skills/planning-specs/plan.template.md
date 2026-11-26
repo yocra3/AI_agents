@@ -26,7 +26,7 @@ the specification `{Specs_Folder}/<spec-slug-id>.spec.md`. `engineer` owns the c
 
 | Component | Classification | Contract and evidence | Source |
 | --- | --- | --- | --- |
-| `<component>` | `<reuse-local | import-nf-core | new | local-wiring>` | `<public interface, channel shape and compatibility evidence>` | `<local path, or nf-core type/name/modules SHA, or not-applicable>` |
+| `<component>` | `<reuse-local | import-nf-core | new | modify-local | local-wiring>` | `<public interface, channel shape and compatibility evidence>` | `<local path, or nf-core type/name/modules SHA, or not-applicable>` |
 
 ## Acceptance criteria coverage
 

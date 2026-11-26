@@ -26,9 +26,9 @@ procedures that apply them.
    values and defaults, and the project-bootstrap skill when to include each part.
 7. **Documentation follows every change.** In the AI_agents repository only, each change updates
    the CHANGELOG's Unreleased section, `README.md`, and the workflow documents in `docs/` where
-   they describe what changed.
-   The figure of each workflow lives only in its `README.md` subsection; a change to a flow
-   updates that figure.
+   they describe what changed. The detailed figure of each workflow lives in its document in
+   `docs/`, and a change to a flow updates it. The figure of each workflow in `README.md` is a
+   user-facing summary, which changes only when the steps that the user sees change.
 8. **The CHANGELOG starts from the last release.** Every entry of the CHANGELOG's Unreleased
    section, the upgrade notes included, describes the net change from the last released version,
    never an intermediate state of the unreleased cycle. A change made and then reverted or

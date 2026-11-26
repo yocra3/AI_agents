@@ -280,9 +280,11 @@ Every marker names its phase as `<agent>: <phase>`, one of the phases that
   `coder: renumber` marker is complete except at a new version in which some increment number
   changes.
 - The Removed section holds one entry per increment removed at a new version, with the phases
-  `tester: remove-tests` then `coder: remove-code`, and is empty when no increment has been
-  removed. An entry lists all the increment's old files, for example
-  `Removed: 04-report.Rmd, 04-report.sh`, and takes no number in the increment sequence.
+  `tester: remove-tests` then `coder: remove-code`, and one entry per image check of a tier-4
+  image that the plan no longer uses, with only `tester: remove-tests`; it is empty when nothing
+  has been removed. An increment's entry lists all its old files, for example
+  `Removed: 04-report.Rmd, 04-report.sh`, and takes no number in the increment sequence; an image
+  check's entry lists the check's file.
 - Finalization always has the five phases of the template, in that order.
 
 ## Blockers

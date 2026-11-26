@@ -1,12 +1,12 @@
 ---
 name: nfcore-component-reuse
-description: Analyze a Nextflow functional specification before implementation planning to identify reusable local and nf-core modules or subworkflows, reusable compositions, and functionality that requires new implementation. Use from planning-specs before designing the final Nextflow component structure.
+description: Identify which local or nf-core modules and subworkflows, alone or composed, can provide the new processing that a Nextflow specification requires, and which processing requires new implementation. Use from planning-specs only for a specification that needs processing the pipeline does not perform yet, before designing its components; not for changes to wiring, channels, configuration, parameters, or component internals.
 ---
 
 # Purpose
 
-Determine what existing Nextflow components can satisfy a functional specification before
-`planning-specs` designs the final implementation.
+Determine what existing Nextflow components can satisfy the new processing of a functional
+specification before `planning-specs` designs the final implementation.
 
 Do not design the final Nextflow structure or implement missing components.
 
@@ -14,7 +14,8 @@ Do not design the final Nextflow structure or implement missing components.
 
 ## 1. Derive functional requirements
 
-Read the specification and identify:
+Read the specification and identify, for the processing that the pipeline does not perform
+yet:
 
 - inputs and outputs
 - processing operations and dependencies
